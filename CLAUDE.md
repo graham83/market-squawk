@@ -45,6 +45,7 @@ economic-calendar/
 ## 🎨 Design System & Components
 
 ### Component Guidelines
+- Always use material tailwind components where relevant
 - Use semantic HTML elements
 - Implement proper ARIA labels for accessibility
 - Follow mobile-first responsive design
