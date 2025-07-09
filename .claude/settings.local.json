@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__MongoDB__list-collections"
+    ],
+    "deny": []
+  }
+}
