@@ -38,28 +38,11 @@ economic-calendar/
 ├── package.json
 └── README.md
 ```
+## Repository Etiquette
+- Maintain linear git history using rebase and no merge commits
+- Keep commit messages to a single encompassing message upto 100 characters
 
 ## 🎨 Design System & Components
-
-### Color Palette
-- **Primary**: Blue shades for main actions and branding
-- **Gray**: Neutral colors for text and backgrounds
-- **Success**: Green for positive actions
-- **Warning**: Yellow/Orange for cautions
-- **Error**: Red for errors and destructive actions
-
-### Typography
-```css
-/* Heading styles */
-.heading-1 { @apply text-4xl font-bold text-gray-900; }
-.heading-2 { @apply text-3xl font-semibold text-gray-800; }
-.heading-3 { @apply text-2xl font-medium text-gray-800; }
-
-/* Body text */
-.body-large { @apply text-lg text-gray-700; }
-.body-base { @apply text-base text-gray-600; }
-.body-small { @apply text-sm text-gray-500; }
-```
 
 ### Component Guidelines
 - Use semantic HTML elements
@@ -89,22 +72,6 @@ const economicEvent = {
   updated_at: string         // ISO 8601 timestamp
 };
 ```
-
-### Key Features to Implement
-- **Calendar View**: Monthly, weekly, daily views
-- **Event Filtering**: By country, currency, impact level
-- **Time Zone Support**: Display events in user's local time
-- **Event Details**: Modal/sidebar with full event information
-- **Search Functionality**: Search events by title, country, or category
-- **Responsive Design**: Mobile-first calendar layout
-
-### Component Architecture
-- `CalendarGrid`: Main calendar display component
-- `EventCard`: Individual event display
-- `EventFilter`: Filtering controls
-- `EventModal`: Detailed event view
-- `TimeZoneSelector`: User timezone preferences
-- `CountryFlag`: Display country flags for events
 
 ## 🎯 Best Practices
 
