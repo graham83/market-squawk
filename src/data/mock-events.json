@@ -1,0 +1,122 @@
+[
+  {
+    "_id": "686cc9d475975c82be8fe76c",
+    "date": "2025-07-03T12:30:00.000Z",
+    "country": "USA",
+    "event": "Employment Situation - June",
+    "importance": "high",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": [],
+    "created_at": "2025-07-08T07:33:45.279Z",
+    "updated_at": "2025-07-08T07:45:30.000Z"
+  },
+  {
+    "_id": "686ccb5675975c82be8fe787",
+    "date": "2025-07-15T12:30:00.000Z",
+    "tags": ["consumer"],
+    "event": "Consumer Price Index (CPI) - June",
+    "source": {
+      "url": "https://www.bls.gov/schedule/2025/home.htm",
+      "name": "BLS"
+    },
+    "country": "USA",
+    "category": "inflation",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:45:30.000Z"
+  },
+  {
+    "_id": "686ccb5675975c82be8fe788",
+    "date": "2025-07-16T12:30:00.000Z",
+    "tags": ["producer"],
+    "event": "Producer Price Index (PPI) - June",
+    "source": {
+      "url": "https://www.bls.gov/schedule/2025/home.htm",
+      "name": "BLS"
+    },
+    "country": "USA",
+    "category": "inflation",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:52:00.000Z"
+  },
+  {
+    "_id": "686ccb5675975c82be8fe789",
+    "date": "2025-07-29T18:00:00.000Z",
+    "tags": [],
+    "event": "FOMC Meeting - Day 1",
+    "source": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "name": "Federal Reserve"
+    },
+    "country": "USA",
+    "category": "monetary_policy",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:57:00.000Z"
+  },
+  {
+    "_id": "686ccb5675975c82be8fe78a",
+    "date": "2025-07-30T12:30:00.000Z",
+    "tags": ["quarterly", "advance"],
+    "event": "GDP Q2 2025 Advance Estimate",
+    "source": {
+      "url": "https://www.bea.gov/news/schedule",
+      "name": "BEA"
+    },
+    "country": "USA",
+    "category": "gdp",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:45:30.000Z"
+  },
+  {
+    "_id": "686ccb5f75975c82be8fe78b",
+    "date": "2025-07-30T18:00:00.000Z",
+    "tags": [],
+    "event": "FOMC Rate Decision & Economic Projections",
+    "source": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "name": "Federal Reserve"
+    },
+    "country": "USA",
+    "category": "monetary_policy",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:45:30.000Z"
+  },
+  {
+    "_id": "686ccb5f75975c82be8fe78c",
+    "date": "2025-07-30T18:30:00.000Z",
+    "tags": [],
+    "event": "Fed Chair Powell Press Conference",
+    "source": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "name": "Federal Reserve"
+    },
+    "country": "USA",
+    "category": "monetary_policy",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:58:00.000Z"
+  },
+  {
+    "_id": "686ccb5f75975c82be8fe78d",
+    "date": "2025-07-31T12:30:00.000Z",
+    "tags": ["monthly"],
+    "event": "Personal Income and Outlays - June",
+    "source": {
+      "url": "https://www.bea.gov/news/schedule",
+      "name": "BEA"
+    },
+    "country": "USA",
+    "category": "income",
+    "created_at": "2025-07-08T07:36:22.625Z",
+    "importance": "high",
+    "updated_at": "2025-07-08T07:58:00.000Z"
+  }
+]
