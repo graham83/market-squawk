@@ -6,7 +6,7 @@ A modern, responsive economic calendar web application built with React and Tail
 
 - **Frontend Framework**: React 18+ with hooks
 - **Styling**: Material Tailwind
-- **Build Tool**: Create React App
+- **Build Tool**: Vite
 - **Language**: JavaScript/TypeScript
 - **Package Manager**: npm
 
@@ -24,19 +24,20 @@ Before getting started, ensure you have the following installed:
 ### 1. Initialize the Project
 
 ```bash
-# Create React App
-npx create-react-app economic-calendar
+# Create Vite React app with TypeScript
+npm create vite@latest economic-calendar -- --template react-ts
 cd economic-calendar
+npm install
 ```
 
-### 2. Install Material Tailwind
+### 2. Install and Configure Tailwind CSS
 
 ```bash
 # Install Tailwind CSS and its dependencies
-npm install -D tailwindcss@3
+npm install -D tailwindcss postcss autoprefixer
 
 # Generate Tailwind config files
-npx tailwindcss init
+npx tailwindcss init -p
 ```
 
 ### 3. Install Material Tailwind
@@ -47,15 +48,15 @@ npm i @material-tailwind/react
 
 ```
 
-### 4. Configure Material Tailwind
+### 4. Configure Tailwind CSS
 
-Replace the contents of `src/index.css`:
+Update `tailwind.config.js`:
 
 ```javascript
 const withMT = require("@material-tailwind/react/utils/withMT");
 
 module.exports = withMT({
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {},
   },
@@ -63,27 +64,32 @@ module.exports = withMT({
 });
 ```
 
-### 4. Setup Material Tailwind Theme Provider
+Replace the contents of `src/index.css`:
 
-Update `src/index.js`:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
 
-```javascript
+### 5. Setup Material Tailwind Theme Provider
+
+Update `src/main.tsx`:
+
+```typescript
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { ThemeProvider } from "@material-tailwind/react";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-root.render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider>
       <App />
     </ThemeProvider>
   </React.StrictMode>
 );
-
 ```
 
 ## 🔧 Development Workflow
@@ -92,16 +98,16 @@ root.render(
 
 ```bash
 # Start development server
-npm start
+npm run dev
 
 # Build for production
 npm run build
 
-# Run tests
-npm test
+# Preview production build
+npm run preview
 
-# Eject from Create React App (use with caution)
-npm run eject
+# Run linting
+npm run lint
 ```
 
 ### Code Quality Tools
@@ -135,13 +141,13 @@ npm run build
 2. **Netlify**
    - Connect your Git repository
    - Set build command: `npm run build`
-   - Set publish directory: `build` (Create React App)
+   - Set publish directory: `dist` (Vite)
 
 3. **GitHub Pages**
    ```bash
    npm install -D gh-pages
    npm run build
-   npx gh-pages -d build
+   npx gh-pages -d dist
    ```
 
 ## 🔍 Troubleshooting

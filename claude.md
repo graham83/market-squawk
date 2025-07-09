@@ -6,7 +6,7 @@ Development guidelines for building the Economic Calendar with React and Tailwin
 
 - **Frontend Framework**: React 18+ with hooks
 - **Styling**: Material Tailwind
-- **Build Tool**: Create React App
+- **Build Tool**: Vite
 - **Language**: JavaScript/TypeScript
 - **Package Manager**: npm
 
@@ -15,8 +15,7 @@ Development guidelines for building the Economic Calendar with React and Tailwin
 ```
 economic-calendar/
 ├── public/
-│   ├── favicon.ico
-│   └── index.html
+│   └── vite.svg
 ├── src/
 │   ├── components/
 │   │   ├── ui/           # Reusable UI components (buttons, cards, etc.)
@@ -27,10 +26,15 @@ economic-calendar/
 │   ├── data/            # Mock data and constants
 │   ├── styles/          # Additional CSS files
 │   ├── assets/          # Images, icons, etc.
-│   ├── App.jsx
-│   ├── index.js
-│   └── index.css
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   └── vite-env.d.ts
+├── index.html
 ├── tailwind.config.js
+├── postcss.config.js
+├── vite.config.ts
+├── tsconfig.json
 ├── package.json
 └── README.md
 ```
