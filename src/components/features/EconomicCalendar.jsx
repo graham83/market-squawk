@@ -1,15 +1,101 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography } from '@material-tailwind/react';
+import { 
+  Card, 
+  Typography, 
+  Button, 
+  IconButton, 
+  Select, 
+  Option, 
+  Chip 
+} from '@material-tailwind/react';
 import NextEventTypewriter from './NextEventTypewriter';
 import mockEvents from '../../data/mock-events.json';
 
 const EconomicCalendar = () => {
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [selectedWeek, setSelectedWeek] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [eventsPerPage] = useState(5);
+
+  // Generate week options based on available event dates
+  const getWeekOptions = () => {
+    const weeks = [];
+    const sortedEvents = [...mockEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    if (sortedEvents.length === 0) return weeks;
+    
+    // Add "All Events" option
+    weeks.push({ value: 'all', label: 'All Events' });
+    
+    // Group events by week
+    const startDate = new Date(sortedEvents[0].date);
+    const endDate = new Date(sortedEvents[sortedEvents.length - 1].date);
+    
+    let currentWeekStart = new Date(startDate);
+    currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Start of week (Sunday)
+    
+    while (currentWeekStart <= endDate) {
+      const weekEnd = new Date(currentWeekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6); // End of week (Saturday)
+      
+      const weekEvents = sortedEvents.filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate >= currentWeekStart && eventDate <= weekEnd;
+      });
+      
+      if (weekEvents.length > 0) {
+        const weekLabel = `${currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        weeks.push({
+          value: currentWeekStart.toISOString(),
+          label: weekLabel,
+          start: new Date(currentWeekStart),
+          end: new Date(weekEnd)
+        });
+      }
+      
+      currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+    }
+    
+    return weeks;
+  };
+
+  const weekOptions = getWeekOptions();
+
+  // Filter events based on selected week
+  useEffect(() => {
+    let filtered = [...mockEvents];
+    
+    if (selectedWeek !== 'all') {
+      const selectedWeekOption = weekOptions.find(week => week.value === selectedWeek);
+      if (selectedWeekOption && selectedWeekOption.start && selectedWeekOption.end) {
+        filtered = mockEvents.filter(event => {
+          const eventDate = new Date(event.date);
+          return eventDate >= selectedWeekOption.start && eventDate <= selectedWeekOption.end;
+        });
+      }
+    }
+    
+    // Sort by date
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    setFilteredEvents(filtered);
+    setCurrentPage(1); // Reset to first page when filter changes
+  }, [selectedWeek]);
 
   useEffect(() => {
     // Load mock events
     setEvents(mockEvents);
   }, []);
+
+  // Pagination logic
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
@@ -20,11 +106,16 @@ const EconomicCalendar = () => {
         </Typography>
         <div className="flex items-center space-x-4">
           {/* Theme toggle placeholder */}
-          <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+          <IconButton
+            variant="outlined"
+            color="gray"
+            size="sm"
+            className="border-gray-600 text-yellow-400 hover:bg-gray-700"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
             </svg>
-          </div>
+          </IconButton>
         </div>
       </div>
 
@@ -36,12 +127,25 @@ const EconomicCalendar = () => {
         <Typography variant="h6" className="text-gray-300 mb-2">
           Select Week
         </Typography>
-        <select className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="jul7-13">Jul 7 - Jul 13</option>
-          <option value="jul14-20">Jul 14 - Jul 20</option>
-          <option value="jul21-27">Jul 21 - Jul 27</option>
-          <option value="jul28-aug3">Jul 28 - Aug 3</option>
-        </select>
+        <div className="w-64">
+          <Select 
+            value={selectedWeek}
+            onChange={setSelectedWeek}
+            className="bg-gray-800 border-gray-700 text-white"
+            containerProps={{
+              className: "min-w-0"
+            }}
+            menuProps={{
+              className: "bg-gray-800 border-gray-700 text-white"
+            }}
+          >
+            {weekOptions.map(week => (
+              <Option key={week.value} value={week.value} className="text-white hover:bg-gray-700">
+                {week.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
       </div>
 
       {/* Events Table */}
@@ -59,7 +163,7 @@ const EconomicCalendar = () => {
               </tr>
             </thead>
             <tbody>
-              {events.map((event, index) => (
+              {currentEvents.map((event, index) => (
                 <tr key={event._id} className="border-b border-gray-700 hover:bg-gray-700/50">
                   <td className="p-4">
                     <div className="text-white font-mono text-sm">
@@ -82,12 +186,13 @@ const EconomicCalendar = () => {
                     {event.tags && event.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {event.tags.map((tag, tagIndex) => (
-                          <span
+                          <Chip
                             key={tagIndex}
-                            className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded"
-                          >
-                            {tag}
-                          </span>
+                            value={tag}
+                            size="sm"
+                            variant="outlined"
+                            className="bg-gray-700 text-gray-300 border-gray-600 text-xs"
+                          />
                         ))}
                       </div>
                     )}
@@ -96,17 +201,18 @@ const EconomicCalendar = () => {
                     <span className="text-white">{event.country}</span>
                   </td>
                   <td className="p-4">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-bold ${
+                    <Chip
+                      value={event.importance.toUpperCase()}
+                      size="sm"
+                      color={
                         event.importance === 'high'
-                          ? 'bg-red-500 text-white'
+                          ? 'red'
                           : event.importance === 'medium'
-                          ? 'bg-yellow-500 text-black'
-                          : 'bg-green-500 text-white'
-                      }`}
-                    >
-                      {event.importance.toUpperCase()}
-                    </span>
+                          ? 'amber'
+                          : 'green'
+                      }
+                      className="font-bold"
+                    />
                   </td>
                   <td className="p-4">
                     <span
@@ -145,18 +251,59 @@ const EconomicCalendar = () => {
       {/* Pagination */}
       <div className="flex items-center justify-between mt-6">
         <div className="text-gray-400 text-sm">
-          Showing 1 to 5 of 5 results
+          Showing {indexOfFirstEvent + 1} to {Math.min(indexOfLastEvent, filteredEvents.length)} of {filteredEvents.length} results
         </div>
         <div className="flex space-x-2">
-          <button className="px-3 py-1 bg-purple-600 text-white rounded">
-            1
-          </button>
-          <button className="px-3 py-1 bg-gray-700 text-gray-300 rounded hover:bg-gray-600">
-            2
-          </button>
-          <button className="px-3 py-1 bg-gray-700 text-gray-300 rounded hover:bg-gray-600">
+          {/* Previous button */}
+          <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            variant="outlined"
+            size="sm"
+            className={`${
+              currentPage === 1
+                ? 'border-gray-700 text-gray-600'
+                : 'border-gray-600 text-gray-300 hover:bg-gray-700'
+            }`}
+          >
+            «
+          </Button>
+          
+          {/* Page numbers */}
+          {[...Array(totalPages)].map((_, index) => {
+            const pageNumber = index + 1;
+            return (
+              <Button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                variant={currentPage === pageNumber ? "filled" : "outlined"}
+                color={currentPage === pageNumber ? "purple" : "gray"}
+                size="sm"
+                className={
+                  currentPage === pageNumber
+                    ? ""
+                    : "border-gray-600 text-gray-300 hover:bg-gray-700"
+                }
+              >
+                {pageNumber}
+              </Button>
+            );
+          })}
+          
+          {/* Next button */}
+          <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            variant="outlined"
+            size="sm"
+            className={`${
+              currentPage === totalPages
+                ? 'border-gray-700 text-gray-600'
+                : 'border-gray-600 text-gray-300 hover:bg-gray-700'
+            }`}
+          >
             »
-          </button>
+          </Button>
         </div>
       </div>
     </div>
