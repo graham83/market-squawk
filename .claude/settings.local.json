@@ -5,7 +5,8 @@
       "mcp__MongoDB__list-databases",
       "mcp__MongoDB__collection-schema",
       "mcp__MongoDB__find",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npm run test:run:*)"
     ],
     "deny": []
   }
