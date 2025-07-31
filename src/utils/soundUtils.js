@@ -2,14 +2,18 @@
 class TypewriterSound {
   constructor() {
     this.audioContext = null;
-    this.isEnabled = true;
-    this.init();
+    this.isEnabled = false; // Start disabled to prevent autoplay issues
+    this.isInitialized = false;
   }
 
-  init() {
+  initializeAudioContext() {
+    if (this.isInitialized) return;
+    
     try {
-      // Create audio context on first user interaction
+      // Create audio context after user interaction
       this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      this.isInitialized = true;
+      console.log('Audio context initialized successfully');
     } catch (error) {
       console.warn('Audio context not supported:', error);
       this.isEnabled = false;
