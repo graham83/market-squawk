@@ -16,7 +16,11 @@
       "mcp__playwright__browser_take_screenshot",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "WebFetch(domain:graham83.github.io)",
+      "Bash(gh run view:*)",
+      "mcp__playwright__browser_evaluate",
+      "Bash(rm:*)"
     ],
     "deny": []
   }
