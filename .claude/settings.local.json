@@ -20,7 +20,9 @@
       "WebFetch(domain:graham83.github.io)",
       "Bash(gh run view:*)",
       "mcp__playwright__browser_evaluate",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "mcp__playwright__browser_network_requests",
+      "Bash(gh run list:*)"
     ],
     "deny": []
   }

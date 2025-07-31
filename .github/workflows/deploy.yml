@@ -39,6 +39,13 @@ jobs:
       run: npm run build
       env:
         NODE_ENV: production
+    
+    - name: Verify build output
+      run: |
+        echo "Verifying dist/ contains correct files..."
+        ls -la dist/
+        echo "Checking index.html contains correct paths..."
+        grep -E "(market-squawk|assets)" dist/index.html || (echo "ERROR: index.html missing production paths" && exit 1)
 
     - name: Setup Pages
       if: github.ref == 'refs/heads/main'
@@ -49,6 +56,7 @@ jobs:
       uses: actions/upload-pages-artifact@v3
       with:
         path: ./dist
+        retention-days: 1
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
