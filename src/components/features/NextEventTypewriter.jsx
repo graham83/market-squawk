@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import typewriterSound from '../../utils/soundUtils';
 
-const NextEventTypewriter = ({ events }) => {
+const NextEventTypewriter = ({ events, selectedEvent }) => {
   const [displayText, setDisplayText] = useState('');
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
@@ -30,9 +30,12 @@ const NextEventTypewriter = ({ events }) => {
     return date.toLocaleString('en-US', options);
   };
 
-  const nextEvent = getNextEvent();
-  const fullText = nextEvent 
-    ? `Next Event: ${nextEvent.event} at ${formatEventTime(nextEvent.date)}`
+  // Use selected event if available, otherwise use next upcoming event
+  const eventToDisplay = selectedEvent || getNextEvent();
+  const fullText = eventToDisplay 
+    ? selectedEvent 
+      ? `${formatEventTime(selectedEvent.date)}: ${selectedEvent.event}`
+      : `Next Event: ${eventToDisplay.event} at ${formatEventTime(eventToDisplay.date)}`
     : 'No upcoming events scheduled';
 
   // Typewriter effect
@@ -62,12 +65,12 @@ const NextEventTypewriter = ({ events }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Reset animation when events change
+  // Reset animation when events change or selected event changes
   useEffect(() => {
     setDisplayText('');
     setCurrentCharIndex(0);
     setIsTyping(false);
-  }, [events]);
+  }, [events, selectedEvent]);
 
   return (
     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 mb-6 font-mono text-sm">
@@ -86,15 +89,16 @@ const NextEventTypewriter = ({ events }) => {
       </div>
       
       {/* Status indicator */}
-      {nextEvent && (
+      {eventToDisplay && (
         <div className="mt-2 flex items-center text-xs">
           <div className={`w-2 h-2 rounded-full mr-2 ${
-            nextEvent.importance === 'high' ? 'bg-red-500' : 
-            nextEvent.importance === 'medium' ? 'bg-yellow-500' : 
+            eventToDisplay.importance === 'high' ? 'bg-red-500' : 
+            eventToDisplay.importance === 'medium' ? 'bg-yellow-500' : 
             'bg-green-500'
           }`}></div>
           <span className="text-gray-400">
-            {nextEvent.importance.toUpperCase()} | {nextEvent.country} | {nextEvent.category}
+            {eventToDisplay.importance.toUpperCase()} | {eventToDisplay.country} | {eventToDisplay.category}
+            {selectedEvent && ' | SELECTED'}
           </span>
         </div>
       )}

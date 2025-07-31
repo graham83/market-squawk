@@ -19,6 +19,7 @@ const EconomicCalendar = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [eventsPerPage] = useState(5);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Generate week options based on available event dates
   const getWeekOptions = () => {
@@ -111,6 +112,10 @@ const EconomicCalendar = () => {
     typewriterSound.setEnabled(newAudioState);
   };
 
+  const handleRowClick = (event) => {
+    setSelectedEvent(event);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       {/* Header */}
@@ -155,7 +160,7 @@ const EconomicCalendar = () => {
       </div>
 
       {/* Next Event Terminal Display */}
-      <NextEventTypewriter events={events} />
+      <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
 
       {/* Week Selector */}
       <div className="mb-6">
@@ -199,7 +204,11 @@ const EconomicCalendar = () => {
             </thead>
             <tbody>
               {currentEvents.map((event, index) => (
-                <tr key={event._id} className="border-b border-gray-700 hover:bg-gray-700/50">
+                <tr 
+                  key={event._id} 
+                  className="border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors"
+                  onClick={() => handleRowClick(event)}
+                >
                   <td className="p-4">
                     <div className="text-white font-mono text-sm">
                       {new Date(event.date).toLocaleDateString('en-US', {
