@@ -6,7 +6,15 @@
       "mcp__MongoDB__collection-schema",
       "mcp__MongoDB__find",
       "Bash(npm run dev:*)",
-      "Bash(npm run test:run:*)"
+      "Bash(npm run test:run:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "mcp__playwright__browser_navigate",
+      "Bash(find:*)",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
