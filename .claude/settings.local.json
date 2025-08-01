@@ -25,7 +25,10 @@
       "Bash(gh run list:*)",
       "mcp__playwright__browser_snapshot",
       "Bash(NODE_ENV=production npm run build)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:data-dev.pricesquawk.com)",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }

@@ -9,11 +9,14 @@ import {
   Chip 
 } from '@material-tailwind/react';
 import NextEventTypewriter from './NextEventTypewriter';
-import mockEvents from '../../data/mock-events.json';
+import useEvents from '../../hooks/useEvents';
 import typewriterSound from '../../utils/soundUtils';
 
 const EconomicCalendar = () => {
-  const [events, setEvents] = useState([]);
+  // API integration
+  const { events, loading, error, refresh } = useEvents();
+  
+  // Component state
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +27,7 @@ const EconomicCalendar = () => {
   // Generate week options based on available event dates
   const getWeekOptions = () => {
     const weeks = [];
-    const sortedEvents = [...mockEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
     
     if (sortedEvents.length === 0) return weeks;
     
@@ -67,12 +70,12 @@ const EconomicCalendar = () => {
 
   // Filter events based on selected week
   useEffect(() => {
-    let filtered = [...mockEvents];
+    let filtered = [...events];
     
     if (selectedWeek !== 'all') {
       const selectedWeekOption = weekOptions.find(week => week.value === selectedWeek);
       if (selectedWeekOption && selectedWeekOption.start && selectedWeekOption.end) {
-        filtered = mockEvents.filter(event => {
+        filtered = events.filter(event => {
           const eventDate = new Date(event.date);
           return eventDate >= selectedWeekOption.start && eventDate <= selectedWeekOption.end;
         });
@@ -83,12 +86,12 @@ const EconomicCalendar = () => {
     filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     setFilteredEvents(filtered);
     setCurrentPage(1); // Reset to first page when filter changes
-  }, [selectedWeek]);
+  }, [selectedWeek, events]);
 
+  // Reset current page when events change
   useEffect(() => {
-    // Load mock events
-    setEvents(mockEvents);
-  }, []);
+    setCurrentPage(1);
+  }, [events]);
 
   // Pagination logic
   const indexOfLastEvent = currentPage * eventsPerPage;
@@ -124,6 +127,20 @@ const EconomicCalendar = () => {
           Economic Calendar
         </Typography>
         <div className="flex items-center space-x-4">
+          {/* Refresh button */}
+          <IconButton
+            variant="outlined"
+            color="gray"
+            size="sm"
+            className="border-gray-600 text-blue-400 hover:bg-gray-700"
+            onClick={refresh}
+            disabled={loading}
+          >
+            <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </IconButton>
+          
           {/* Audio toggle */}
           <IconButton
             variant="outlined"
@@ -158,6 +175,36 @@ const EconomicCalendar = () => {
           </IconButton>
         </div>
       </div>
+
+      {/* Error State */}
+      {error && (
+        <Card className="bg-red-900/50 border border-red-700 mb-6">
+          <div className="p-4 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <Typography variant="small" className="text-red-400 font-semibold">
+                  Failed to load events
+                </Typography>
+                <Typography variant="small" className="text-red-300">
+                  {error}
+                </Typography>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              variant="outlined"
+              className="border-red-600 text-red-400 hover:bg-red-800/50"
+              onClick={refresh}
+              disabled={loading}
+            >
+              Retry
+            </Button>
+          </div>
+        </Card>
+      )}
 
       {/* Next Event Terminal Display */}
       <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
@@ -203,7 +250,55 @@ const EconomicCalendar = () => {
               </tr>
             </thead>
             <tbody>
-              {currentEvents.map((event, index) => (
+              {loading ? (
+                // Loading skeleton rows
+                [...Array(eventsPerPage)].map((_, index) => (
+                  <tr key={`skeleton-${index}`} className="border-b border-gray-700">
+                    <td className="p-4">
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-600 rounded mb-2"></div>
+                        <div className="h-3 bg-gray-700 rounded w-3/4"></div>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-600 rounded mb-2"></div>
+                        <div className="h-3 bg-gray-700 rounded w-1/2"></div>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <div className="animate-pulse h-4 bg-gray-600 rounded w-12"></div>
+                    </td>
+                    <td className="p-4">
+                      <div className="animate-pulse h-6 bg-gray-600 rounded w-16"></div>
+                    </td>
+                    <td className="p-4">
+                      <div className="animate-pulse h-4 bg-gray-600 rounded w-20"></div>
+                    </td>
+                    <td className="p-4">
+                      <div className="animate-pulse h-4 bg-gray-600 rounded w-16"></div>
+                    </td>
+                  </tr>
+                ))
+              ) : currentEvents.length === 0 ? (
+                // Empty state
+                <tr>
+                  <td colSpan="6" className="p-8 text-center">
+                    <div className="flex flex-col items-center space-y-2">
+                      <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3a4 4 0 118 0v4m-4 8a2 2 0 100-4 2 2 0 000 4zm0 0v4a2 2 0 004 0v-4" />
+                      </svg>
+                      <Typography variant="h6" className="text-gray-500">
+                        No events found
+                      </Typography>
+                      <Typography variant="small" className="text-gray-600">
+                        Try adjusting your filters or refresh the page
+                      </Typography>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                currentEvents.map((event, index) => (
                 <tr 
                   key={event._id} 
                   className="border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors"
@@ -286,7 +381,8 @@ const EconomicCalendar = () => {
                     </a>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
         </div>
