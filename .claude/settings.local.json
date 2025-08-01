@@ -22,7 +22,10 @@
       "mcp__playwright__browser_evaluate",
       "Bash(rm:*)",
       "mcp__playwright__browser_network_requests",
-      "Bash(gh run list:*)"
+      "Bash(gh run list:*)",
+      "mcp__playwright__browser_snapshot",
+      "Bash(NODE_ENV=production npm run build)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }
