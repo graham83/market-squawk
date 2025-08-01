@@ -19,9 +19,8 @@ vi.mock('../../../utils/soundUtils', () => ({
   }
 }));
 
-// Mock the data module with static data
-vi.mock('../../../data/mock-events.json', () => ({
-  default: [
+// Mock the useEvents hook with static data
+const mockEvents = [
     {
       _id: '1',
       date: '2025-07-01T12:30:00.000Z',
@@ -82,7 +81,20 @@ vi.mock('../../../data/mock-events.json', () => ({
       created_at: '2025-07-22T00:00:00.000Z',
       updated_at: '2025-07-22T00:00:00.000Z'
     }
-  ]
+  ];
+
+// Mock the useEvents hook
+vi.mock('../../../hooks/useEvents', () => ({
+  default: () => ({
+    events: mockEvents,
+    loading: false,
+    error: null,
+    refresh: vi.fn(),
+    retry: vi.fn(),
+    hasEvents: true,
+    isEmpty: false,
+    isStale: false
+  })
 }));
 
 describe('EconomicCalendar - Business Logic & Data Processing', () => {

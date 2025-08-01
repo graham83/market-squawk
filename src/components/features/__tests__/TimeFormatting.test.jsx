@@ -20,8 +20,7 @@ vi.mock('../NextEventTypewriter', () => ({
 }));
 
 // Mock EconomicCalendar data
-vi.mock('../../../data/mock-events.json', () => ({
-  default: [
+const mockEvents = [
     {
       _id: '1',
       date: '2025-07-15T09:30:00.000Z',
@@ -52,7 +51,20 @@ vi.mock('../../../data/mock-events.json', () => ({
       country: 'USA',
       tags: []
     }
-  ]
+  ];
+
+// Mock the useEvents hook
+vi.mock('../../../hooks/useEvents', () => ({
+  default: () => ({
+    events: mockEvents,
+    loading: false,
+    error: null,
+    refresh: vi.fn(),
+    retry: vi.fn(),
+    hasEvents: true,
+    isEmpty: false,
+    isStale: false
+  })
 }));
 
 describe('Time Formatting and Display Logic', () => {

@@ -14,20 +14,31 @@ vi.mock('../../../utils/soundUtils', () => ({
   }
 }));
 
-// Mock the data
-vi.mock('../../../data/mock-events.json', () => ({
-  default: [
-    {
-      _id: '1',
-      date: '2025-07-01T12:30:00.000Z',
-      event: 'Test Event',
-      importance: 'high',
-      source: { name: 'BLS', url: 'https://example.com' },
-      category: 'employment',
-      country: 'USA',
-      tags: ['monthly']
-    }
-  ]
+// Mock the data and useEvents hook
+const mockEvents = [
+  {
+    _id: '1',
+    date: '2025-07-01T12:30:00.000Z',
+    event: 'Test Event',
+    importance: 'high',
+    source: { name: 'BLS', url: 'https://example.com' },
+    category: 'employment',
+    country: 'USA',
+    tags: ['monthly']
+  }
+];
+
+vi.mock('../../../hooks/useEvents', () => ({
+  default: () => ({
+    events: mockEvents,
+    loading: false,
+    error: null,
+    refresh: vi.fn(),
+    retry: vi.fn(),
+    hasEvents: true,
+    isEmpty: false,
+    isStale: false
+  })
 }));
 
 describe('EconomicCalendar - Basic Rendering', () => {

@@ -19,8 +19,7 @@ vi.mock('../../../utils/soundUtils', () => ({
 }));
 
 // Mock the data module with test data that covers date logic scenarios
-vi.mock('../../../data/mock-events.json', () => ({
-  default: [
+const mockEvents = [
     // Scattered events across different weeks for week generation tests
     {
       _id: '1',
@@ -73,7 +72,20 @@ vi.mock('../../../data/mock-events.json', () => ({
       country: 'USA',
       tags: []
     }
-  ]
+  ];
+
+// Mock the useEvents hook
+vi.mock('../../../hooks/useEvents', () => ({
+  default: () => ({
+    events: mockEvents,
+    loading: false,
+    error: null,
+    refresh: vi.fn(),
+    retry: vi.fn(),
+    hasEvents: true,
+    isEmpty: false,
+    isStale: false
+  })
 }));
 
 describe('EconomicCalendar - Date Logic and Week Generation', () => {

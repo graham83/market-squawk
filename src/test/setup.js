@@ -78,6 +78,8 @@ afterAll(() => {
   console.warn = originalWarn;
 });
 
+// Global API mocks are handled in individual test files
+
 // Clean up after each test
 afterEach(() => {
   vi.clearAllMocks();
