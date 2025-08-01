@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import eventService from '../services/eventService.js';
 
 /**
@@ -21,6 +21,7 @@ export const useEvents = (options = {}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [lastFetch, setLastFetch] = useState(null);
+  const hasFetchedRef = useRef(false);
 
   /**
    * Fetch events from the API
@@ -36,6 +37,7 @@ export const useEvents = (options = {}) => {
       
       setEvents(fetchedEvents);
       setLastFetch(new Date());
+      hasFetchedRef.current = true;
       
       if (import.meta.env.DEV) {
         console.log(`Fetched ${fetchedEvents.length} events`);
@@ -43,15 +45,14 @@ export const useEvents = (options = {}) => {
     } catch (err) {
       setError(err.message);
       console.error('Error fetching events:', err);
+      hasFetchedRef.current = true; // Mark as attempted even on error
       
-      // If we have cached events, keep them
-      if (events.length === 0) {
-        setEvents([]);
-      }
+      // Don't clear events on error - keep previous data if available
+      setEvents(prevEvents => prevEvents);
     } finally {
       setLoading(false);
     }
-  }, [filters, events.length]);
+  }, [filters]);
 
   /**
    * Retry the last failed request
@@ -107,23 +108,44 @@ export const useEvents = (options = {}) => {
     }
   }, []);
 
-  // Auto-fetch on mount
+  // Auto-fetch on mount (only once)
   useEffect(() => {
-    if (autoFetch) {
-      fetchEvents();
-    }
-  }, [autoFetch, fetchEvents]);
+    if (autoFetch && !hasFetchedRef.current) {
+      const doFetch = async () => {
+        hasFetchedRef.current = true;
+        setLoading(true);
+        setError(null);
 
-  // Auto-refetch interval
+        try {
+          const fetchedEvents = await eventService.fetchEvents(filters);
+          setEvents(fetchedEvents);
+          setLastFetch(new Date());
+          
+          if (import.meta.env.DEV) {
+            console.log(`Initial fetch: ${fetchedEvents.length} events`);
+          }
+        } catch (err) {
+          setError(err.message);
+          console.error('Error fetching events on mount:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      doFetch();
+    }
+  }, [autoFetch, filters]);
+
+  // Auto-refetch interval (disabled by default)
   useEffect(() => {
-    if (refetchInterval && refetchInterval > 0) {
+    if (refetchInterval && refetchInterval > 0 && !error) {
       const interval = setInterval(() => {
         fetchEvents();
       }, refetchInterval);
 
       return () => clearInterval(interval);
     }
-  }, [refetchInterval, fetchEvents]);
+  }, [refetchInterval, fetchEvents, error]);
 
   // Derived state
   const isStale = lastFetch && (Date.now() - lastFetch.getTime() > 300000); // 5 minutes

@@ -28,7 +28,10 @@
       "Bash(ls:*)",
       "Bash(gh api:*)",
       "WebFetch(domain:data-dev.pricesquawk.com)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_close"
     ],
     "deny": []
   }
