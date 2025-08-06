@@ -7,13 +7,15 @@ import eventService from '../services/eventService.js';
  * @param {boolean} options.autoFetch - Whether to fetch data on mount (default: true)
  * @param {number} options.refetchInterval - Auto-refetch interval in milliseconds (default: null)
  * @param {Object} options.filters - Default filters to apply
+ * @param {Object} options.dateRange - Date range filter {fromDate, toDate}
  * @returns {Object} Hook state and actions
  */
 export const useEvents = (options = {}) => {
   const {
     autoFetch = true,
     refetchInterval = null,
-    filters = {}
+    filters = {},
+    dateRange = null
   } = options;
 
   // State management
@@ -26,13 +28,22 @@ export const useEvents = (options = {}) => {
   /**
    * Fetch events from the API
    * @param {Object} customFilters - Override default filters
+   * @param {Object} customDateRange - Override default date range
    */
-  const fetchEvents = useCallback(async (customFilters = {}) => {
+  const fetchEvents = useCallback(async (customFilters = {}, customDateRange = null) => {
     setLoading(true);
     setError(null);
 
     try {
       const allFilters = { ...filters, ...customFilters };
+      const currentDateRange = customDateRange || dateRange;
+      
+      // Add date range parameters if provided
+      if (currentDateRange) {
+        allFilters.fromDate = currentDateRange.fromDate;
+        allFilters.toDate = currentDateRange.toDate;
+      }
+      
       const fetchedEvents = await eventService.fetchEvents(allFilters);
       
       setEvents(fetchedEvents);
@@ -52,7 +63,7 @@ export const useEvents = (options = {}) => {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, dateRange]);
 
   /**
    * Retry the last failed request
@@ -68,6 +79,18 @@ export const useEvents = (options = {}) => {
    */
   const refresh = useCallback(() => {
     fetchEvents();
+  }, [fetchEvents]);
+
+  /**
+   * Fetch events with a specific date range
+   */
+  const fetchEventsWithDateRange = useCallback(async (dateRange) => {
+    const apiParams = dateRange ? {
+      fromDate: dateRange.fromDate,
+      toDate: dateRange.toDate
+    } : {};
+    
+    await fetchEvents({}, apiParams);
   }, [fetchEvents]);
 
   /**
@@ -117,7 +140,15 @@ export const useEvents = (options = {}) => {
         setError(null);
 
         try {
-          const fetchedEvents = await eventService.fetchEvents(filters);
+          const allFilters = { ...filters };
+          
+          // Add date range parameters if provided
+          if (dateRange) {
+            allFilters.fromDate = dateRange.fromDate;
+            allFilters.toDate = dateRange.toDate;
+          }
+          
+          const fetchedEvents = await eventService.fetchEvents(allFilters);
           setEvents(fetchedEvents);
           setLastFetch(new Date());
           
@@ -134,7 +165,7 @@ export const useEvents = (options = {}) => {
       
       doFetch();
     }
-  }, [autoFetch, filters]);
+  }, [autoFetch, filters, dateRange]);
 
   // Auto-refetch interval (disabled by default)
   useEffect(() => {
@@ -166,6 +197,7 @@ export const useEvents = (options = {}) => {
     
     // Actions
     fetchEvents,
+    fetchEventsWithDateRange,
     fetchEventsByDateRange,
     fetchEventsByImportance,
     refresh,

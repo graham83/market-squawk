@@ -17,10 +17,17 @@ import useImportance from '../../hooks/useImportance';
 import typewriterSound from '../../utils/soundUtils';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
 import { filterEventsByImportance } from '../../utils/importanceUtils';
+import { getPeriodOptions, getDateRangeForPeriod, formatRangeForAPI } from '../../utils/dateRangeUtils';
 
 const EconomicCalendar = () => {
+  // Date range management
+  const [selectedPeriod, setSelectedPeriod] = useState('thisWeek'); // Default to "This Week"
+  const [currentDateRange, setCurrentDateRange] = useState(null);
+  
   // API integration
-  const { events, loading, error, refresh } = useEvents();
+  const { events, loading, error, refresh, fetchEventsWithDateRange } = useEvents({
+    autoFetch: false // We'll fetch manually based on date range
+  });
   
   // Timezone management
   const { selectedTimezone, updateTimezone } = useTimezone();
@@ -30,84 +37,56 @@ const EconomicCalendar = () => {
   
   // Component state
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [selectedWeek, setSelectedWeek] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [eventsPerPage] = useState(5);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Generate week options based on available event dates
-  const getWeekOptions = () => {
-    const weeks = [];
-    const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Get period options
+  const periodOptions = getPeriodOptions();
+
+  // Handle period change and fetch events with new date range
+  const handlePeriodChange = async (newPeriod) => {
+    setSelectedPeriod(newPeriod);
+    const dateRange = getDateRangeForPeriod(newPeriod);
     
-    if (sortedEvents.length === 0) return weeks;
-    
-    // Add "All Events" option
-    weeks.push({ value: 'all', label: 'All Events' });
-    
-    // Group events by week
-    const startDate = new Date(sortedEvents[0].date);
-    const endDate = new Date(sortedEvents[sortedEvents.length - 1].date);
-    
-    let currentWeekStart = new Date(startDate);
-    currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Start of week (Sunday)
-    
-    while (currentWeekStart <= endDate) {
-      const weekEnd = new Date(currentWeekStart);
-      weekEnd.setDate(weekEnd.getDate() + 6); // End of week (Saturday)
-      
-      const weekEvents = sortedEvents.filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate >= currentWeekStart && eventDate <= weekEnd;
-      });
-      
-      if (weekEvents.length > 0) {
-        const weekLabel = `${currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-        weeks.push({
-          value: currentWeekStart.toISOString(),
-          label: weekLabel,
-          start: new Date(currentWeekStart),
-          end: new Date(weekEnd)
-        });
-      }
-      
-      currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+    if (dateRange) {
+      const apiParams = formatRangeForAPI(dateRange);
+      setCurrentDateRange(apiParams);
+      await fetchEventsWithDateRange(apiParams);
     }
-    
-    return weeks;
   };
 
-  const weekOptions = getWeekOptions();
-
-  // Filter events based on selected week and importance
+  // Initialize with default period on mount
   useEffect(() => {
-    let filtered = [...events];
-    
-    // Filter by importance first
-    filtered = filterEventsByImportance(filtered, selectedImportance);
-    
-    // Then filter by week
-    if (selectedWeek !== 'all') {
-      const selectedWeekOption = weekOptions.find(week => week.value === selectedWeek);
-      if (selectedWeekOption && selectedWeekOption.start && selectedWeekOption.end) {
-        filtered = filtered.filter(event => {
-          const eventDate = new Date(event.date);
-          return eventDate >= selectedWeekOption.start && eventDate <= selectedWeekOption.end;
-        });
-      }
+    if (!currentDateRange) {
+      handlePeriodChange(selectedPeriod);
     }
+  }, []);
+
+  // Filter events based on importance (client-side filtering for importance only)
+  useEffect(() => {
+    let filtered = filterEventsByImportance(events, selectedImportance);
     
     // Sort by date
     filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     setFilteredEvents(filtered);
     setCurrentPage(1); // Reset to first page when filter changes
-  }, [selectedWeek, selectedImportance, events]);
+  }, [selectedImportance, events]);
 
   // Reset current page when events change
   useEffect(() => {
     setCurrentPage(1);
   }, [events]);
+
+  const handleRefresh = () => {
+    if (currentDateRange) {
+      fetchEventsWithDateRange(currentDateRange);
+    } else {
+      // Fallback to current period
+      handlePeriodChange(selectedPeriod);
+    }
+  };
 
   // Pagination logic
   const indexOfLastEvent = currentPage * eventsPerPage;
@@ -149,7 +128,7 @@ const EconomicCalendar = () => {
             color="gray"
             size="sm"
             className="border-gray-600 text-blue-400 hover:bg-gray-700"
-            onClick={refresh}
+            onClick={handleRefresh}
             disabled={loading}
           >
             <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,7 +192,7 @@ const EconomicCalendar = () => {
               size="sm"
               variant="outlined"
               className="border-red-600 text-red-400 hover:bg-red-800/50"
-              onClick={refresh}
+              onClick={handleRefresh}
               disabled={loading}
             >
               Retry
@@ -225,17 +204,17 @@ const EconomicCalendar = () => {
       {/* Next Event Terminal Display */}
       <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
 
-      {/* Week Selector, Importance Selector, and Timezone Selector */}
+      {/* Period Selector, Importance Selector, and Timezone Selector */}
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
-        {/* Week Selector */}
+        {/* Period Selector */}
         <div className="flex-1">
           <Typography variant="h6" className="text-gray-300 mb-2">
-            Select Week
+            Select Period
           </Typography>
           <div className="w-64">
             <Select 
-              value={selectedWeek}
-              onChange={setSelectedWeek}
+              value={selectedPeriod}
+              onChange={handlePeriodChange}
               className="bg-gray-800 border-gray-700 text-white"
               containerProps={{
                 className: "min-w-0"
@@ -244,9 +223,9 @@ const EconomicCalendar = () => {
                 className: "bg-gray-800 border-gray-700 text-white"
               }}
             >
-              {weekOptions.map(week => (
-                <Option key={week.value} value={week.value} className="text-white hover:bg-gray-700">
-                  {week.label}
+              {periodOptions.map(period => (
+                <Option key={period.value} value={period.value} className="text-white hover:bg-gray-700">
+                  {period.label}
                 </Option>
               ))}
             </Select>

@@ -82,6 +82,7 @@ vi.mock('../../../hooks/useEvents', () => ({
     error: null,
     refresh: vi.fn(),
     retry: vi.fn(),
+    fetchEventsWithDateRange: vi.fn(),
     hasEvents: true,
     isEmpty: false,
     isStale: false
@@ -104,7 +105,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
       // The component should render without timeout
       expect(screen.getByText('Economic Calendar')).toBeInTheDocument();
-      expect(screen.getByText('Select Week')).toBeInTheDocument();
+      expect(screen.getByText('Select Period')).toBeInTheDocument();
       
       // Check that events are displayed - look for actual event names from our mock
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -121,8 +122,8 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     it('creates appropriate week labels', async () => {
       render(<EconomicCalendar />);
 
-      // Should show week selector
-      expect(screen.getByText('Select Week')).toBeInTheDocument();
+      // Should show period selector
+      expect(screen.getByText('Select Period')).toBeInTheDocument();
       // Check that there are multiple events visible
       expect(screen.getByText('First Event')).toBeInTheDocument();
     });
@@ -130,7 +131,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     it('handles empty date ranges gracefully', async () => {
       render(<EconomicCalendar />);
 
-      expect(screen.getByText('Select Week')).toBeInTheDocument();
+      expect(screen.getByText('Select Period')).toBeInTheDocument();
       // Component should still render
       expect(screen.getByText('Economic Calendar')).toBeInTheDocument();
     });
