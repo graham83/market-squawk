@@ -363,8 +363,8 @@ const EconomicCalendar = () => {
                         event.importance === 'high'
                           ? 'red'
                           : event.importance === 'medium'
-                          ? 'amber'
-                          : 'green'
+                          ? 'orange'
+                          : 'blue'
                       }
                       className="font-bold"
                     />
