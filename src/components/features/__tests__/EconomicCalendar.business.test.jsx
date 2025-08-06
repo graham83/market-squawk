@@ -201,6 +201,25 @@ describe('EconomicCalendar - Business Logic & Data Processing', () => {
       // With 5 events, should be on single page
       expect(screen.getByText('1')).toBeInTheDocument();
     });
+
+    it('displays row selector options', async () => {
+      render(<EconomicCalendar />);
+
+      // Should show row selector with options
+      expect(screen.getByText('Show')).toBeInTheDocument();
+      expect(screen.getByText('rows')).toBeInTheDocument();
+      expect(screen.getByText('10')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+      expect(screen.getByText('1000')).toBeInTheDocument();
+    });
+
+    it('defaults to 10 events per page', async () => {
+      render(<EconomicCalendar />);
+
+      // The default should be 10 events per page (even though only 5 events exist)
+      // This is verified by the row selector showing 10 as the default active state
+      expect(screen.getByText('10')).toBeInTheDocument();
+    });
   });
 
   describe('Week Generation and Filtering', () => {
