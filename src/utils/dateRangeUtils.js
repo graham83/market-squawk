@@ -1,0 +1,150 @@
+/**
+ * Utility functions for calculating date ranges for the economic calendar
+ */
+
+/**
+ * Get the start and end of a week (Monday to Sunday)
+ * @param {Date} date - Reference date
+ * @returns {Object} Object with start and end dates
+ */
+export const getWeekRange = (date) => {
+  const startOfWeek = new Date(date);
+  const dayOfWeek = startOfWeek.getDay();
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Handle Sunday (0) as last day
+  
+  startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
+  startOfWeek.setHours(0, 0, 0, 0);
+  
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(endOfWeek.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
+  
+  return { start: startOfWeek, end: endOfWeek };
+};
+
+/**
+ * Get the start and end of a month
+ * @param {Date} date - Reference date
+ * @returns {Object} Object with start and end dates
+ */
+export const getMonthRange = (date) => {
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  startOfMonth.setHours(0, 0, 0, 0);
+  
+  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  endOfMonth.setHours(23, 59, 59, 999);
+  
+  return { start: startOfMonth, end: endOfMonth };
+};
+
+/**
+ * Get date range for "Recent" period (one week ago to now)
+ * @returns {Object} Object with start and end dates
+ */
+export const getRecentRange = () => {
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  
+  const start = new Date();
+  start.setDate(start.getDate() - 7);
+  start.setHours(0, 0, 0, 0);
+  
+  return { start, end };
+};
+
+/**
+ * Get date range for "This Week" (Monday to Sunday of current week)
+ * @returns {Object} Object with start and end dates
+ */
+export const getThisWeekRange = () => {
+  return getWeekRange(new Date());
+};
+
+/**
+ * Get date range for "Next Week" (Monday to Sunday of next week)
+ * @returns {Object} Object with start and end dates
+ */
+export const getNextWeekRange = () => {
+  const nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  return getWeekRange(nextWeek);
+};
+
+/**
+ * Get date range for "This Month" (current month)
+ * @returns {Object} Object with start and end dates
+ */
+export const getThisMonthRange = () => {
+  return getMonthRange(new Date());
+};
+
+/**
+ * Get date range for "Next Month" (next month)
+ * @returns {Object} Object with start and end dates
+ */
+export const getNextMonthRange = () => {
+  const nextMonth = new Date();
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+  return getMonthRange(nextMonth);
+};
+
+/**
+ * Get all available period options for the date range selector
+ * @returns {Array} Array of period option objects
+ */
+export const getPeriodOptions = () => {
+  return [
+    {
+      value: 'recent',
+      label: 'Recent',
+      description: 'Previous events within one week of today',
+      getRange: getRecentRange
+    },
+    {
+      value: 'thisWeek',
+      label: 'This Week',
+      description: 'All events from Monday to Sunday',
+      getRange: getThisWeekRange
+    },
+    {
+      value: 'nextWeek',
+      label: 'Next Week', 
+      description: 'Next week from Monday to the following Sunday',
+      getRange: getNextWeekRange
+    },
+    {
+      value: 'thisMonth',
+      label: 'This Month',
+      description: 'Events for this current month',
+      getRange: getThisMonthRange
+    },
+    {
+      value: 'nextMonth',
+      label: 'Next Month',
+      description: 'Events for next month',
+      getRange: getNextMonthRange
+    }
+  ];
+};
+
+/**
+ * Get date range for a specific period
+ * @param {string} period - Period identifier
+ * @returns {Object|null} Object with start and end dates, or null if invalid period
+ */
+export const getDateRangeForPeriod = (period) => {
+  const option = getPeriodOptions().find(opt => opt.value === period);
+  return option ? option.getRange() : null;
+};
+
+/**
+ * Format date range for API parameters
+ * @param {Object} range - Range object with start and end dates
+ * @returns {Object} Object with fromDate and toDate as ISO strings
+ */
+export const formatRangeForAPI = (range) => {
+  return {
+    fromDate: range.start.toISOString(),
+    toDate: range.end.toISOString()
+  };
+};

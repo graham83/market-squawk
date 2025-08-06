@@ -35,6 +35,7 @@ vi.mock('../../../hooks/useEvents', () => ({
     error: null,
     refresh: vi.fn(),
     retry: vi.fn(),
+    fetchEventsWithDateRange: vi.fn(),
     hasEvents: true,
     isEmpty: false,
     isStale: false
@@ -52,9 +53,9 @@ describe('EconomicCalendar - Basic Rendering', () => {
     expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
   });
 
-  it('renders week selector', () => {
+  it('renders period selector', () => {
     render(<EconomicCalendar />);
-    expect(screen.getByText('Select Week')).toBeInTheDocument();
+    expect(screen.getByText('Select Period')).toBeInTheDocument();
   });
 
   it('renders table headers', () => {

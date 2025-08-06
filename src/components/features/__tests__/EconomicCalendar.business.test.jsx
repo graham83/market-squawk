@@ -91,6 +91,7 @@ vi.mock('../../../hooks/useEvents', () => ({
     error: null,
     refresh: vi.fn(),
     retry: vi.fn(),
+    fetchEventsWithDateRange: vi.fn(),
     hasEvents: true,
     isEmpty: false,
     isStale: false
@@ -226,8 +227,8 @@ describe('EconomicCalendar - Business Logic & Data Processing', () => {
     it('generates week options based on event dates', async () => {
       render(<EconomicCalendar />);
 
-      // Should show week selector
-      expect(screen.getByText('Select Week')).toBeInTheDocument();
+      // Should show period selector
+      expect(screen.getByText('Select Period')).toBeInTheDocument();
     });
 
     it('filters events by selected week', async () => {

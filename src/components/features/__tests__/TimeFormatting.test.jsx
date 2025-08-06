@@ -61,6 +61,7 @@ vi.mock('../../../hooks/useEvents', () => ({
     error: null,
     refresh: vi.fn(),
     retry: vi.fn(),
+    fetchEventsWithDateRange: vi.fn(),
     hasEvents: true,
     isEmpty: false,
     isStale: false
