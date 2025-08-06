@@ -1,4 +1,5 @@
 import api from './api.js';
+import mockEvents from '../data/mock-events.json';
 
 /**
  * Service for handling economic calendar event API calls
@@ -16,7 +17,16 @@ export const eventService = {
    */
   async fetchEvents(params = {}) {
     try {
-      const response = await api.get('/calendar', { params });
+      let response;
+      
+      // Use mock data in development or when API fails
+      if (import.meta.env.DEV) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+        response = { data: mockEvents };
+        console.log('Using mock data for development');
+      } else {
+        response = await api.get('/calendar', { params });
+      }
       
       // Validate response data structure
       if (!Array.isArray(response.data)) {

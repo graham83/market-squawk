@@ -83,7 +83,17 @@ export const getImportanceConfig = (importanceValue) => {
 };
 
 /**
- * Filter events by importance level
+ * Importance hierarchy mapping (higher numbers = more important)
+ */
+const IMPORTANCE_HIERARCHY = {
+  'low': 1,
+  'medium': 2,
+  'high': 3
+};
+
+/**
+ * Filter events by importance level using hierarchical filtering
+ * Shows selected importance level and all higher importance levels
  * @param {Array} events - Array of events to filter
  * @param {string} importance - The importance level to filter by ('all' for no filter)
  * @returns {Array} Filtered events array
@@ -97,5 +107,16 @@ export const filterEventsByImportance = (events, importance) => {
     return events;
   }
   
-  return events.filter(event => event.importance === importance);
+  // Get the minimum importance level to show
+  const minImportanceLevel = IMPORTANCE_HIERARCHY[importance];
+  
+  if (minImportanceLevel === undefined) {
+    // If importance level is not recognized, show all events
+    return events;
+  }
+  
+  return events.filter(event => {
+    const eventImportanceLevel = IMPORTANCE_HIERARCHY[event.importance];
+    return eventImportanceLevel !== undefined && eventImportanceLevel >= minImportanceLevel;
+  });
 };
