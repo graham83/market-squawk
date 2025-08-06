@@ -140,11 +140,11 @@ export const getDateRangeForPeriod = (period) => {
 /**
  * Format date range for API parameters
  * @param {Object} range - Range object with start and end dates
- * @returns {Object} Object with fromDate and toDate as ISO strings
+ * @returns {Object} Object with fromDate and toDate as date strings (YYYY-MM-DD)
  */
 export const formatRangeForAPI = (range) => {
   return {
-    fromDate: range.start.toISOString(),
-    toDate: range.end.toISOString()
+    fromDate: range.start.toISOString().split('T')[0],
+    toDate: range.end.toISOString().split('T')[0]
   };
 };

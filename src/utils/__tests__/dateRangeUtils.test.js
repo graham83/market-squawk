@@ -189,9 +189,31 @@ describe('dateRangeUtils', () => {
       const formatted = formatRangeForAPI(range);
       
       expect(formatted).toEqual({
-        fromDate: '2024-01-15T00:00:00.000Z',
-        toDate: '2024-01-21T23:59:59.999Z'
+        fromDate: '2024-01-15',
+        toDate: '2024-01-21'
       });
+    });
+
+    it('should return date-only format without timestamps', () => {
+      // Test case that mimics the issue: dates with full timestamps should be formatted to date-only
+      const range = {
+        start: new Date('2025-08-03T14:00:00.000Z'),
+        end: new Date('2025-08-10T13:59:59.999Z')
+      };
+      
+      const formatted = formatRangeForAPI(range);
+      
+      // Should return date-only format (YYYY-MM-DD) instead of full ISO strings
+      expect(formatted).toEqual({
+        fromDate: '2025-08-03',
+        toDate: '2025-08-10'
+      });
+      
+      // Verify that the result doesn't contain time components
+      expect(formatted.fromDate).not.toContain('T');
+      expect(formatted.toDate).not.toContain('T');
+      expect(formatted.fromDate).not.toContain('Z');
+      expect(formatted.toDate).not.toContain('Z');
     });
   });
 });
