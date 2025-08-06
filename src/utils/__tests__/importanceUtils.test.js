@@ -133,14 +133,27 @@ describe('ImportanceUtils', () => {
       expect(filterEventsByImportance(mockEvents, 'all')).toEqual(mockEvents);
     });
 
-    it('should filter events by importance level', () => {
+    it('should filter events by importance level hierarchically', () => {
+      // High importance: should only show high events
       const highEvents = filterEventsByImportance(mockEvents, 'high');
       expect(highEvents).toHaveLength(1);
       expect(highEvents[0].importance).toBe('high');
 
+      // Medium importance: should show medium and high events
       const mediumEvents = filterEventsByImportance(mockEvents, 'medium');
-      expect(mediumEvents).toHaveLength(2);
-      expect(mediumEvents.every(event => event.importance === 'medium')).toBe(true);
+      expect(mediumEvents).toHaveLength(3); // 2 medium + 1 high
+      const mediumImportances = mediumEvents.map(event => event.importance);
+      expect(mediumImportances).toContain('medium');
+      expect(mediumImportances).toContain('high');
+      expect(mediumImportances).not.toContain('low');
+
+      // Low importance: should show all events (low, medium, high)
+      const lowEvents = filterEventsByImportance(mockEvents, 'low');
+      expect(lowEvents).toHaveLength(4); // All events
+      const lowImportances = lowEvents.map(event => event.importance);
+      expect(lowImportances).toContain('low');
+      expect(lowImportances).toContain('medium');
+      expect(lowImportances).toContain('high');
     });
 
     it('should handle empty events array', () => {
@@ -155,6 +168,24 @@ describe('ImportanceUtils', () => {
     it('should handle invalid importance by returning all events', () => {
       expect(filterEventsByImportance(mockEvents, '')).toEqual(mockEvents);
       expect(filterEventsByImportance(mockEvents, null)).toEqual(mockEvents);
+      expect(filterEventsByImportance(mockEvents, 'invalid')).toEqual(mockEvents);
+    });
+
+    it('should handle events with invalid importance levels', () => {
+      const mixedEvents = [
+        { id: 1, event: 'Event 1', importance: 'low' },
+        { id: 2, event: 'Event 2', importance: 'invalid' },
+        { id: 3, event: 'Event 3', importance: 'high' }
+      ];
+
+      // Events with invalid importance should be filtered out
+      const highEvents = filterEventsByImportance(mixedEvents, 'high');
+      expect(highEvents).toHaveLength(1);
+      expect(highEvents[0].importance).toBe('high');
+
+      const lowEvents = filterEventsByImportance(mixedEvents, 'low');
+      expect(lowEvents).toHaveLength(2); // low and high (invalid is filtered out)
+      expect(lowEvents.some(event => event.importance === 'invalid')).toBe(false);
     });
   });
 });
