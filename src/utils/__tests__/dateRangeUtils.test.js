@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   getWeekRange,
   getMonthRange,
+  getTodayRange,
+  getTomorrowRange,
   getRecentRange,
   getThisWeekRange,
   getNextWeekRange,
@@ -82,6 +84,54 @@ describe('dateRangeUtils', () => {
     });
   });
 
+  describe('getTodayRange', () => {
+    it('should return range for today from 00:00:00 to 23:59:59', () => {
+      const range = getTodayRange();
+      
+      // Start should be current day at 00:00:00
+      expect(range.start.toISOString()).toBe('2024-01-15T00:00:00.000Z');
+      // End should be current day at 23:59:59
+      expect(range.end.toISOString()).toBe('2024-01-15T23:59:59.999Z');
+    });
+
+    it('should return same date for start and end', () => {
+      const range = getTodayRange();
+      
+      expect(range.start.getDate()).toBe(range.end.getDate());
+      expect(range.start.getMonth()).toBe(range.end.getMonth());
+      expect(range.start.getFullYear()).toBe(range.end.getFullYear());
+    });
+  });
+
+  describe('getTomorrowRange', () => {
+    it('should return range for tomorrow from 00:00:00 to 23:59:59', () => {
+      const range = getTomorrowRange();
+      
+      // Start should be next day at 00:00:00
+      expect(range.start.toISOString()).toBe('2024-01-16T00:00:00.000Z');
+      // End should be next day at 23:59:59
+      expect(range.end.toISOString()).toBe('2024-01-16T23:59:59.999Z');
+    });
+
+    it('should return same date for start and end', () => {
+      const range = getTomorrowRange();
+      
+      expect(range.start.getDate()).toBe(range.end.getDate());
+      expect(range.start.getMonth()).toBe(range.end.getMonth());
+      expect(range.start.getFullYear()).toBe(range.end.getFullYear());
+    });
+
+    it('should be one day after today', () => {
+      const todayRange = getTodayRange();
+      const tomorrowRange = getTomorrowRange();
+      
+      const todayDate = todayRange.start.getDate();
+      const tomorrowDate = tomorrowRange.start.getDate();
+      
+      expect(tomorrowDate).toBe(todayDate + 1);
+    });
+  });
+
   describe('getRecentRange', () => {
     it('should return range from one week ago to now', () => {
       const range = getRecentRange();
@@ -135,8 +185,10 @@ describe('dateRangeUtils', () => {
     it('should return all period options', () => {
       const options = getPeriodOptions();
       
-      expect(options).toHaveLength(5);
+      expect(options).toHaveLength(7);
       expect(options.map(opt => opt.value)).toEqual([
+        'today',
+        'tomorrow',
         'recent',
         'thisWeek', 
         'nextWeek',
@@ -149,13 +201,27 @@ describe('dateRangeUtils', () => {
       const options = getPeriodOptions();
       
       expect(options[0]).toEqual({
+        value: 'today',
+        label: 'Today',
+        description: 'All events for today',
+        getRange: expect.any(Function)
+      });
+
+      expect(options[1]).toEqual({
+        value: 'tomorrow',
+        label: 'Tomorrow',
+        description: 'All events for tomorrow',
+        getRange: expect.any(Function)
+      });
+
+      expect(options[2]).toEqual({
         value: 'recent',
         label: 'Recent',
         description: 'Previous events within one week of today',
         getRange: expect.any(Function)
       });
 
-      expect(options[1]).toEqual({
+      expect(options[3]).toEqual({
         value: 'thisWeek',
         label: 'This Week',
         description: 'All events from Monday to Sunday',
@@ -165,6 +231,20 @@ describe('dateRangeUtils', () => {
   });
 
   describe('getDateRangeForPeriod', () => {
+    it('should return correct range for today period', () => {
+      const range = getDateRangeForPeriod('today');
+      
+      expect(range.start.toISOString()).toBe('2024-01-15T00:00:00.000Z');
+      expect(range.end.toISOString()).toBe('2024-01-15T23:59:59.999Z');
+    });
+
+    it('should return correct range for tomorrow period', () => {
+      const range = getDateRangeForPeriod('tomorrow');
+      
+      expect(range.start.toISOString()).toBe('2024-01-16T00:00:00.000Z');
+      expect(range.end.toISOString()).toBe('2024-01-16T23:59:59.999Z');
+    });
+
     it('should return correct range for valid period', () => {
       const range = getDateRangeForPeriod('thisWeek');
       
