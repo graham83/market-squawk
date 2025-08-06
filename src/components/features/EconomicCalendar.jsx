@@ -32,7 +32,7 @@ const EconomicCalendar = () => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [eventsPerPage] = useState(5);
+  const [eventsPerPage, setEventsPerPage] = useState(10);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -117,6 +117,11 @@ const EconomicCalendar = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleEventsPerPageChange = (newEventsPerPage) => {
+    setEventsPerPage(newEventsPerPage);
+    setCurrentPage(1); // Reset to first page when changing events per page
   };
 
   const handleAudioToggle = () => {
@@ -476,6 +481,30 @@ const EconomicCalendar = () => {
           >
             »
           </Button>
+        </div>
+      </div>
+
+      {/* Rows per page selector */}
+      <div className="flex items-center justify-center mt-4">
+        <div className="flex items-center space-x-2 text-gray-400 text-sm">
+          <span>Show</span>
+          {[10, 100, 1000].map((option) => (
+            <Button
+              key={option}
+              onClick={() => handleEventsPerPageChange(option)}
+              variant={eventsPerPage === option ? "filled" : "text"}
+              color={eventsPerPage === option ? "purple" : "gray"}
+              size="sm"
+              className={`min-w-0 px-2 py-1 ${
+                eventsPerPage === option
+                  ? ""
+                  : "text-gray-400 hover:text-gray-300 hover:bg-gray-700/50"
+              }`}
+            >
+              {option}
+            </Button>
+          ))}
+          <span>rows</span>
         </div>
       </div>
     </div>
