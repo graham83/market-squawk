@@ -9,12 +9,18 @@ import {
   Chip 
 } from '@material-tailwind/react';
 import NextEventTypewriter from './NextEventTypewriter';
+import TimezoneSelector from '../ui/TimezoneSelector';
 import useEvents from '../../hooks/useEvents';
+import useTimezone from '../../hooks/useTimezone';
 import typewriterSound from '../../utils/soundUtils';
+import { formatDateInTimezone } from '../../utils/timezoneUtils';
 
 const EconomicCalendar = () => {
   // API integration
   const { events, loading, error, refresh } = useEvents();
+  
+  // Timezone management
+  const { selectedTimezone, updateTimezone } = useTimezone();
   
   // Component state
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -209,30 +215,40 @@ const EconomicCalendar = () => {
       {/* Next Event Terminal Display */}
       <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
 
-      {/* Week Selector */}
-      <div className="mb-6">
-        <Typography variant="h6" className="text-gray-300 mb-2">
-          Select Week
-        </Typography>
-        <div className="w-64">
-          <Select 
-            value={selectedWeek}
-            onChange={setSelectedWeek}
-            className="bg-gray-800 border-gray-700 text-white"
-            containerProps={{
-              className: "min-w-0"
-            }}
-            menuProps={{
-              className: "bg-gray-800 border-gray-700 text-white"
-            }}
-          >
-            {weekOptions.map(week => (
-              <Option key={week.value} value={week.value} className="text-white hover:bg-gray-700">
-                {week.label}
-              </Option>
-            ))}
-          </Select>
+      {/* Week Selector and Timezone Selector */}
+      <div className="flex flex-col lg:flex-row gap-6 mb-6">
+        {/* Week Selector */}
+        <div className="flex-1">
+          <Typography variant="h6" className="text-gray-300 mb-2">
+            Select Week
+          </Typography>
+          <div className="w-64">
+            <Select 
+              value={selectedWeek}
+              onChange={setSelectedWeek}
+              className="bg-gray-800 border-gray-700 text-white"
+              containerProps={{
+                className: "min-w-0"
+              }}
+              menuProps={{
+                className: "bg-gray-800 border-gray-700 text-white"
+              }}
+            >
+              {weekOptions.map(week => (
+                <Option key={week.value} value={week.value} className="text-white hover:bg-gray-700">
+                  {week.label}
+                </Option>
+              ))}
+            </Select>
+          </div>
         </div>
+
+        {/* Timezone Selector */}
+        <TimezoneSelector
+          selectedTimezone={selectedTimezone}
+          onTimezoneChange={updateTimezone}
+          className="flex-1"
+        />
       </div>
 
       {/* Events Table */}
@@ -305,20 +321,19 @@ const EconomicCalendar = () => {
                   onClick={() => handleRowClick(event)}
                 >
                   <td className="p-4">
-                    <div className="text-white font-mono text-sm">
-                      {new Date(event.date).toLocaleDateString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </div>
-                    <div className="text-gray-400 font-mono text-xs">
-                      {new Date(event.date).toLocaleTimeString('en-US', {
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        timeZoneName: 'short'
-                      })}
-                    </div>
+                    {(() => {
+                      const formatted = formatDateInTimezone(event.date, selectedTimezone);
+                      return (
+                        <div>
+                          <div className="text-white font-mono text-sm">
+                            {formatted.date}
+                          </div>
+                          <div className="text-gray-400 font-mono text-xs">
+                            {formatted.time}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="p-4">
                     <div className="text-white">{event.event}</div>
