@@ -38,6 +38,36 @@ export const getMonthRange = (date) => {
 };
 
 /**
+ * Get date range for "Today" period (current day from 00:00:00 to 23:59:59)
+ * @returns {Object} Object with start and end dates
+ */
+export const getTodayRange = () => {
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  
+  return { start, end };
+};
+
+/**
+ * Get date range for "Tomorrow" period (next day from 00:00:00 to 23:59:59)
+ * @returns {Object} Object with start and end dates
+ */
+export const getTomorrowRange = () => {
+  const start = new Date();
+  start.setDate(start.getDate() + 1);
+  start.setHours(0, 0, 0, 0);
+  
+  const end = new Date();
+  end.setDate(end.getDate() + 1);
+  end.setHours(23, 59, 59, 999);
+  
+  return { start, end };
+};
+
+/**
  * Get date range for "Recent" period (one week ago to now)
  * @returns {Object} Object with start and end dates
  */
@@ -94,6 +124,18 @@ export const getNextMonthRange = () => {
  */
 export const getPeriodOptions = () => {
   return [
+    {
+      value: 'today',
+      label: 'Today',
+      description: 'All events for today',
+      getRange: getTodayRange
+    },
+    {
+      value: 'tomorrow',
+      label: 'Tomorrow',
+      description: 'All events for tomorrow',
+      getRange: getTomorrowRange
+    },
     {
       value: 'recent',
       label: 'Recent',
