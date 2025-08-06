@@ -102,7 +102,7 @@ const EconomicCalendar = () => {
     filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     setFilteredEvents(filtered);
     setCurrentPage(1); // Reset to first page when filter changes
-  }, [selectedWeek, selectedImportance, events, weekOptions]);
+  }, [selectedWeek, selectedImportance, events]);
 
   // Reset current page when events change
   useEffect(() => {
