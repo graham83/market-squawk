@@ -56,6 +56,27 @@ describe('TimezoneUtils', () => {
       expect(result.time).toContain('UTC');
     });
 
+    it('should handle API date format without Z suffix as UTC', () => {
+      // Test the exact case from the bug report
+      const apiDate = '2025-08-07T12:30:00'; // No Z suffix - this is the bug!
+      const result = formatDateInTimezone(apiDate, 'UTC');
+      
+      // Should show 12:30 PM UTC, not 2:30 AM UTC
+      expect(result.time).toContain('12:30');
+      expect(result.time).toContain('PM');
+      expect(result.time).toContain('UTC');
+    });
+
+    it('should convert API date format to Eastern Time correctly', () => {
+      // Test the exact case from the bug report
+      const apiDate = '2025-08-07T12:30:00'; // No Z suffix 
+      const result = formatDateInTimezone(apiDate, 'America/New_York');
+      
+      // 12:30 PM UTC should be 8:30 AM EDT in August
+      expect(result.time).toContain('8:30');
+      expect(result.time).toContain('AM');
+    });
+
     it('should format EIA event correctly in Eastern Time', () => {
       const eiaDate = '2025-07-02T14:30:00.000Z';
       const result = formatDateInTimezone(eiaDate, 'America/New_York');
