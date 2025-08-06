@@ -61,7 +61,7 @@ describe('TimezoneUtils', () => {
       const apiDate = '2025-08-07T12:30:00'; // No Z suffix - this is the bug!
       const result = formatDateInTimezone(apiDate, 'UTC');
       
-      // Should show 12:30 PM UTC, not 2:30 AM UTC
+      // Should show 12:30 PM UTC, not be affected by local timezone
       expect(result.time).toContain('12:30');
       expect(result.time).toContain('PM');
       expect(result.time).toContain('UTC');
@@ -75,6 +75,20 @@ describe('TimezoneUtils', () => {
       // 12:30 PM UTC should be 8:30 AM EDT in August
       expect(result.time).toContain('8:30');
       expect(result.time).toContain('AM');
+    });
+
+    it('should still handle dates with Z suffix correctly', () => {
+      // Ensure existing behavior with Z suffix still works
+      const utcDate = '2025-08-07T12:30:00Z';
+      const resultUTC = formatDateInTimezone(utcDate, 'UTC');
+      const resultET = formatDateInTimezone(utcDate, 'America/New_York');
+      
+      expect(resultUTC.time).toContain('12:30');
+      expect(resultUTC.time).toContain('PM');
+      expect(resultUTC.time).toContain('UTC');
+      
+      expect(resultET.time).toContain('8:30');
+      expect(resultET.time).toContain('AM');
     });
 
     it('should format EIA event correctly in Eastern Time', () => {

@@ -112,6 +112,23 @@ export const storeTimezone = (timezone) => {
 };
 
 /**
+ * Parse a date string as UTC, ensuring consistent timezone interpretation
+ * @param {string} dateString - The date string to parse
+ * @returns {Date} Date object in UTC
+ */
+const parseAsUTC = (dateString) => {
+  // If the date string doesn't end with 'Z' and doesn't have timezone info,
+  // append 'Z' to ensure it's parsed as UTC
+  if (typeof dateString === 'string' && 
+      !dateString.endsWith('Z') && 
+      !dateString.includes('+') && 
+      !dateString.includes('-', 10)) { // Don't match negative dates, only timezone offsets
+    return new Date(dateString + 'Z');
+  }
+  return new Date(dateString);
+};
+
+/**
  * Format a date in the specified timezone
  * @param {string|Date} date - The date to format
  * @param {string} timezone - The timezone identifier
@@ -119,7 +136,7 @@ export const storeTimezone = (timezone) => {
  * @returns {Object} Formatted date and time strings
  */
 export const formatDateInTimezone = (date, timezone = DEFAULT_TIMEZONE, options = {}) => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const dateObj = typeof date === 'string' ? parseAsUTC(date) : date;
   
   if (isNaN(dateObj.getTime())) {
     console.error('Invalid date provided:', date);
