@@ -110,6 +110,33 @@ describe('EconomicCalendar - Business Logic & Data Processing', () => {
     vi.useRealTimers();
   });
 
+  describe('Importance Filtering', () => {
+    it('displays importance selector', async () => {
+      render(<EconomicCalendar />);
+
+      // Should show importance selector
+      expect(screen.getByText('Importance')).toBeInTheDocument();
+    });
+
+    it('shows all events by default', async () => {
+      render(<EconomicCalendar />);
+
+      // Should show all events initially (high, medium, low importance)
+      expect(screen.getByText('Employment Situation - June')).toBeInTheDocument(); // high importance
+      expect(screen.getByText('EIA Petroleum Status Report')).toBeInTheDocument(); // medium importance
+    });
+
+    it('renders importance filter component correctly', async () => {
+      render(<EconomicCalendar />);
+
+      // Check that importance selector is rendered
+      expect(screen.getByText('Importance')).toBeInTheDocument();
+      // Note: Testing Material Tailwind Select interaction for filtering would require
+      // more complex setup, but the component structure and filtering logic are tested
+      // in the importanceUtils tests.
+    });
+  });
+
   describe('Data Processing and Sorting', () => {
     it('sorts events chronologically by date', async () => {
       render(<EconomicCalendar />);

@@ -10,10 +10,13 @@ import {
 } from '@material-tailwind/react';
 import NextEventTypewriter from './NextEventTypewriter';
 import TimezoneSelector from '../ui/TimezoneSelector';
+import ImportanceSelector from '../ui/ImportanceSelector';
 import useEvents from '../../hooks/useEvents';
 import useTimezone from '../../hooks/useTimezone';
+import useImportance from '../../hooks/useImportance';
 import typewriterSound from '../../utils/soundUtils';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
+import { filterEventsByImportance } from '../../utils/importanceUtils';
 
 const EconomicCalendar = () => {
   // API integration
@@ -21,6 +24,9 @@ const EconomicCalendar = () => {
   
   // Timezone management
   const { selectedTimezone, updateTimezone } = useTimezone();
+  
+  // Importance filtering
+  const { selectedImportance, updateImportance } = useImportance();
   
   // Component state
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -74,14 +80,18 @@ const EconomicCalendar = () => {
 
   const weekOptions = getWeekOptions();
 
-  // Filter events based on selected week
+  // Filter events based on selected week and importance
   useEffect(() => {
     let filtered = [...events];
     
+    // Filter by importance first
+    filtered = filterEventsByImportance(filtered, selectedImportance);
+    
+    // Then filter by week
     if (selectedWeek !== 'all') {
       const selectedWeekOption = weekOptions.find(week => week.value === selectedWeek);
       if (selectedWeekOption && selectedWeekOption.start && selectedWeekOption.end) {
-        filtered = events.filter(event => {
+        filtered = filtered.filter(event => {
           const eventDate = new Date(event.date);
           return eventDate >= selectedWeekOption.start && eventDate <= selectedWeekOption.end;
         });
@@ -92,7 +102,7 @@ const EconomicCalendar = () => {
     filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     setFilteredEvents(filtered);
     setCurrentPage(1); // Reset to first page when filter changes
-  }, [selectedWeek, events]);
+  }, [selectedWeek, selectedImportance, events, weekOptions]);
 
   // Reset current page when events change
   useEffect(() => {
@@ -215,7 +225,7 @@ const EconomicCalendar = () => {
       {/* Next Event Terminal Display */}
       <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
 
-      {/* Week Selector and Timezone Selector */}
+      {/* Week Selector, Importance Selector, and Timezone Selector */}
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
         {/* Week Selector */}
         <div className="flex-1">
@@ -242,6 +252,13 @@ const EconomicCalendar = () => {
             </Select>
           </div>
         </div>
+
+        {/* Importance Selector */}
+        <ImportanceSelector
+          selectedImportance={selectedImportance}
+          onImportanceChange={updateImportance}
+          className="flex-1"
+        />
 
         {/* Timezone Selector */}
         <TimezoneSelector
