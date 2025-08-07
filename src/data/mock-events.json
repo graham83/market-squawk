@@ -1048,5 +1048,65 @@
     "tags": ["weekly"],
     "created_at": "2025-07-09T05:35:16.559Z",
     "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "test-aug-7-today",
+    "date": "2025-08-07T14:00:00.000Z",
+    "country": "USA",
+    "event": "Today Test Event - August 7",
+    "importance": "high",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["today"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  },
+  {
+    "_id": "test-aug-8-tomorrow",
+    "date": "2025-08-08T15:00:00.000Z",
+    "country": "USA",
+    "event": "Tomorrow Test Event - August 8",
+    "importance": "medium",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["tomorrow"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  },
+  {
+    "_id": "test-aug-4-thisweek",
+    "date": "2025-08-04T16:00:00.000Z",
+    "country": "USA",
+    "event": "This Week Monday Event - August 4",
+    "importance": "low",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["thisweek"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  },
+  {
+    "_id": "test-aug-10-thisweek",
+    "date": "2025-08-10T17:00:00.000Z",
+    "country": "USA",
+    "event": "This Week Sunday Event - August 10",
+    "importance": "medium",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["thisweek"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
   }
 ]

@@ -14,6 +14,7 @@ import useEvents from '../../hooks/useEvents';
 import useTimezone from '../../hooks/useTimezone';
 import typewriterSound from '../../utils/soundUtils';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
+import { getDateRangeForPeriod, formatRangeForAPI } from '../../utils/dateRangeUtils';
 
 const EconomicCalendar = () => {
   // Component state for filtering
@@ -27,75 +28,19 @@ const EconomicCalendar = () => {
   // Timezone management
   const { selectedTimezone, updateTimezone } = useTimezone();
 
-  // Calculate date range based on selected period
+  // Get date range using the tested utilities
   const getDateRange = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
-    switch (selectedPeriod) {
-      case 'today':
-        return {
-          fromDate: today.toISOString().split('T')[0],
-          toDate: today.toISOString().split('T')[0]
-        };
-      case 'tomorrow': {
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        return {
-          fromDate: tomorrow.toISOString().split('T')[0],
-          toDate: tomorrow.toISOString().split('T')[0]
-        };
-      }
-      case 'thisWeek': {
-        const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday
-        return {
-          fromDate: startOfWeek.toISOString().split('T')[0],
-          toDate: endOfWeek.toISOString().split('T')[0]
-        };
-      }
-      case 'nextWeek': {
-        const startOfNextWeek = new Date(today);
-        startOfNextWeek.setDate(today.getDate() - today.getDay() + 7); // Next Sunday
-        const endOfNextWeek = new Date(startOfNextWeek);
-        endOfNextWeek.setDate(startOfNextWeek.getDate() + 6); // Next Saturday
-        return {
-          fromDate: startOfNextWeek.toISOString().split('T')[0],
-          toDate: endOfNextWeek.toISOString().split('T')[0]
-        };
-      }
-      case 'thisMonth': {
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        return {
-          fromDate: startOfMonth.toISOString().split('T')[0],
-          toDate: endOfMonth.toISOString().split('T')[0]
-        };
-      }
-      case 'nextMonth': {
-        const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-        const endOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-        return {
-          fromDate: startOfNextMonth.toISOString().split('T')[0],
-          toDate: endOfNextMonth.toISOString().split('T')[0]
-        };
-      }
-      case 'recent': {
-        const threeDaysAgo = new Date(today);
-        threeDaysAgo.setDate(today.getDate() - 3);
-        return {
-          fromDate: threeDaysAgo.toISOString().split('T')[0],
-          toDate: today.toISOString().split('T')[0]
-        };
-      }
-      default:
-        return {
-          fromDate: today.toISOString().split('T')[0],
-          toDate: today.toISOString().split('T')[0]
-        };
+    const range = getDateRangeForPeriod(selectedPeriod);
+    if (range) {
+      return formatRangeForAPI(range);
     }
+    // Fallback to today if period is invalid
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    return {
+      fromDate: todayStr,
+      toDate: todayStr
+    };
   };
 
   // Build API filters with useMemo to recalculate when dependencies change
