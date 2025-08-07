@@ -19,36 +19,47 @@ export const eventService = {
     try {
       let response;
       
-      // Use mock data in development or when API fails
+      // Use mock data in development or when API is not available
       if (import.meta.env.DEV) {
         await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-        
-        // Filter mock data based on date range parameters if provided
-        let filteredData = mockEvents;
-        
-        if (params.fromDate || params.toDate) {
-          const fromDate = params.fromDate ? new Date(params.fromDate) : null;
-          const toDate = params.toDate ? new Date(params.toDate + 'T23:59:59.999Z') : null;
-          
-          filteredData = mockEvents.filter(event => {
-            const eventDate = new Date(event.date);
-            
-            // Check if event falls within the date range
-            if (fromDate && eventDate < fromDate) return false;
-            if (toDate && eventDate > toDate) return false;
-            
-            return true;
-          });
-          
-          console.log(`Using mock data for development - filtered ${filteredData.length} of ${mockEvents.length} events for date range ${params.fromDate || 'all'} to ${params.toDate || 'all'}`);
-        } else {
-          console.log('Using mock data for development - no date filtering');
-        }
-        
-        response = { data: filteredData };
+        response = { data: mockEvents };
+        console.log('Using mock data for development');
       } else {
-        response = await api.get('/calendar', { params });
+        try {
+          // Try to use real API in production
+          response = await api.get('/calendar', { params });
+          console.log('Using real API data');
+        } catch (error) {
+          // Fallback to mock data if API fails
+          console.warn('API call failed, falling back to mock data:', error.message);
+          response = { data: mockEvents };
+        }
       }
+      
+      // Apply date filtering to the data (whether from API or mock)
+      let filteredData = response.data;
+      
+      if (params.fromDate || params.toDate) {
+        const fromDate = params.fromDate ? new Date(params.fromDate) : null;
+        const toDate = params.toDate ? new Date(params.toDate + 'T23:59:59.999Z') : null;
+        
+        filteredData = response.data.filter(event => {
+          const eventDate = new Date(event.date);
+          
+          // Check if event falls within the date range
+          if (fromDate && eventDate < fromDate) return false;
+          if (toDate && eventDate > toDate) return false;
+          
+          return true;
+        });
+        
+        console.log(`Filtered ${filteredData.length} of ${response.data.length} events for date range ${params.fromDate || 'all'} to ${params.toDate || 'all'}`);
+      } else {
+        console.log('No date filtering applied');
+      }
+      
+      // Update response with filtered data
+      response = { data: filteredData };
       
       // Validate response data structure
       if (!Array.isArray(response.data)) {
