@@ -166,7 +166,6 @@ export const useEvents = (options = {}) => {
       
       doFetch();
     }
-<<<<<<< Updated upstream
   }, [autoFetch, JSON.stringify(filters)]); // Use JSON.stringify for deep comparison
 
   // Auto-refetch interval (disabled by default)
