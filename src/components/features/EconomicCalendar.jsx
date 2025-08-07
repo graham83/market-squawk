@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Card, 
   Typography, 
@@ -10,89 +10,151 @@ import {
 } from '@material-tailwind/react';
 import NextEventTypewriter from './NextEventTypewriter';
 import TimezoneSelector from '../ui/TimezoneSelector';
-import ImportanceSelector from '../ui/ImportanceSelector';
 import useEvents from '../../hooks/useEvents';
 import useTimezone from '../../hooks/useTimezone';
-import useImportance from '../../hooks/useImportance';
 import typewriterSound from '../../utils/soundUtils';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
-import { filterEventsByImportance } from '../../utils/importanceUtils';
-import { getPeriodOptions, getDateRangeForPeriod, formatRangeForAPI } from '../../utils/dateRangeUtils';
 
 const EconomicCalendar = () => {
-  // Date range management
-  const [selectedPeriod, setSelectedPeriod] = useState('thisWeek'); // Default to "This Week"
-  const [currentDateRange, setCurrentDateRange] = useState(null);
-  
-  // API integration
-  const { events, loading, error, refresh, fetchEventsWithDateRange } = useEvents({
-    autoFetch: false // We'll fetch manually based on date range
-  });
-  
-  // Timezone management
-  const { selectedTimezone, updateTimezone } = useTimezone();
-  
-  // Importance filtering
-  const { selectedImportance, updateImportance } = useImportance();
-  
-  // Component state
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  // Component state for filtering
+  const [selectedPeriod, setSelectedPeriod] = useState('thisWeek');
+  const [selectedImportance, setSelectedImportance] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [eventsPerPage, setEventsPerPage] = useState(10);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Get period options
-  const periodOptions = getPeriodOptions();
+  // Timezone management
+  const { selectedTimezone, updateTimezone } = useTimezone();
 
-  // Handle period change and fetch events with new date range
-  const handlePeriodChange = async (newPeriod) => {
-    setSelectedPeriod(newPeriod);
-    const dateRange = getDateRangeForPeriod(newPeriod);
+  // Calculate date range based on selected period
+  const getDateRange = () => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
-    if (dateRange) {
-      const apiParams = formatRangeForAPI(dateRange);
-      setCurrentDateRange(apiParams);
-      await fetchEventsWithDateRange(apiParams);
+    switch (selectedPeriod) {
+      case 'today':
+        return {
+          fromDate: today.toISOString().split('T')[0],
+          toDate: today.toISOString().split('T')[0]
+        };
+      case 'tomorrow': {
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return {
+          fromDate: tomorrow.toISOString().split('T')[0],
+          toDate: tomorrow.toISOString().split('T')[0]
+        };
+      }
+      case 'thisWeek': {
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday
+        return {
+          fromDate: startOfWeek.toISOString().split('T')[0],
+          toDate: endOfWeek.toISOString().split('T')[0]
+        };
+      }
+      case 'nextWeek': {
+        const startOfNextWeek = new Date(today);
+        startOfNextWeek.setDate(today.getDate() - today.getDay() + 7); // Next Sunday
+        const endOfNextWeek = new Date(startOfNextWeek);
+        endOfNextWeek.setDate(startOfNextWeek.getDate() + 6); // Next Saturday
+        return {
+          fromDate: startOfNextWeek.toISOString().split('T')[0],
+          toDate: endOfNextWeek.toISOString().split('T')[0]
+        };
+      }
+      case 'thisMonth': {
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        return {
+          fromDate: startOfMonth.toISOString().split('T')[0],
+          toDate: endOfMonth.toISOString().split('T')[0]
+        };
+      }
+      case 'nextMonth': {
+        const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        const endOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+        return {
+          fromDate: startOfNextMonth.toISOString().split('T')[0],
+          toDate: endOfNextMonth.toISOString().split('T')[0]
+        };
+      }
+      case 'recent': {
+        const threeDaysAgo = new Date(today);
+        threeDaysAgo.setDate(today.getDate() - 3);
+        return {
+          fromDate: threeDaysAgo.toISOString().split('T')[0],
+          toDate: today.toISOString().split('T')[0]
+        };
+      }
+      default:
+        return {
+          fromDate: today.toISOString().split('T')[0],
+          toDate: today.toISOString().split('T')[0]
+        };
     }
   };
 
-  // Initialize with default period on mount
-  useEffect(() => {
-    if (!currentDateRange) {
-      handlePeriodChange(selectedPeriod);
-    }
-  }, []);
-
-  // Filter events based on importance (client-side filtering for importance only)
-  useEffect(() => {
-    let filtered = filterEventsByImportance(events, selectedImportance);
+  // Build API filters with useMemo to recalculate when dependencies change
+  const apiFilters = useMemo(() => {
+    const dateRange = getDateRange();
+    const filters = {
+      fromDate: dateRange.fromDate,
+      toDate: dateRange.toDate
+    };
     
-    // Sort by date
-    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-    setFilteredEvents(filtered);
-    setCurrentPage(1); // Reset to first page when filter changes
-  }, [selectedImportance, events]);
+    // Add importance filter if not 'all'
+    if (selectedImportance !== 'all') {
+      filters.importance = selectedImportance;
+    }
+    
+    return filters;
+  }, [selectedPeriod, selectedImportance]);
 
-  // Reset current page when events change
+  // API integration with dynamic filtering
+  const { events, loading, error, refresh } = useEvents({
+    filters: apiFilters
+  });
+
+  // Define period options
+  const periodOptions = [
+    { value: 'today', label: 'Today' },
+    { value: 'tomorrow', label: 'Tomorrow' },
+    { value: 'recent', label: 'Recent' },
+    { value: 'thisWeek', label: 'This Week' },
+    { value: 'nextWeek', label: 'Next Week' },
+    { value: 'thisMonth', label: 'This Month' },
+    { value: 'nextMonth', label: 'Next Month' }
+  ];
+
+  // Define importance options
+  const importanceOptions = [
+    { value: 'all', label: 'All Importance Levels' },
+    { value: 'low', label: 'Low Importance', chip: 'LOW' },
+    { value: 'medium', label: 'Medium Importance', chip: 'MEDIUM' },
+    { value: 'high', label: 'High Importance', chip: 'HIGH' }
+  ];
+
+  // Sort events by date (no more frontend filtering needed)
+  const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [events]);
+  }, [selectedPeriod, selectedImportance]);
 
   const handleRefresh = () => {
-    if (currentDateRange) {
-      fetchEventsWithDateRange(currentDateRange);
-    } else {
-      // Fallback to current period
-      handlePeriodChange(selectedPeriod);
-    }
+    refresh();
   };
 
   // Pagination logic
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
-  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
+  const currentEvents = sortedEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+  const totalPages = Math.ceil(sortedEvents.length / eventsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -209,46 +271,73 @@ const EconomicCalendar = () => {
       {/* Next Event Terminal Display */}
       <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
 
-      {/* Period Selector, Importance Selector, and Timezone Selector */}
-      <div className="flex flex-col lg:flex-row gap-6 mb-6">
+      {/* Filter Controls */}
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Period Selector */}
-        <div className="flex-1">
+        <div>
           <Typography variant="h6" className="text-gray-300 mb-2">
             Select Period
           </Typography>
-          <div className="w-64">
-            <Select 
-              value={selectedPeriod}
-              onChange={handlePeriodChange}
-              className="bg-gray-800 border-gray-700 text-white"
-              containerProps={{
-                className: "min-w-0"
-              }}
-              menuProps={{
-                className: "bg-gray-800 border-gray-700 text-white"
-              }}
-            >
-              {periodOptions.map(period => (
-                <Option key={period.value} value={period.value} className="text-white hover:bg-gray-700">
-                  {period.label}
-                </Option>
-              ))}
-            </Select>
-          </div>
+          <Select 
+            value={selectedPeriod}
+            onChange={setSelectedPeriod}
+            className="bg-gray-800 border-gray-700 text-white"
+            containerProps={{
+              className: "min-w-0"
+            }}
+            menuProps={{
+              className: "bg-gray-800 border-gray-700 text-white"
+            }}
+          >
+            {periodOptions.map(period => (
+              <Option key={period.value} value={period.value} className="text-white hover:bg-gray-700">
+                {period.label}
+              </Option>
+            ))}
+          </Select>
         </div>
 
         {/* Importance Selector */}
-        <ImportanceSelector
-          selectedImportance={selectedImportance}
-          onImportanceChange={updateImportance}
-          className="flex-1"
-        />
+        <div>
+          <Typography variant="h6" className="text-gray-300 mb-2">
+            Importance
+          </Typography>
+          <Select 
+            value={selectedImportance}
+            onChange={setSelectedImportance}
+            className="bg-gray-800 border-gray-700 text-white"
+            containerProps={{
+              className: "min-w-0"
+            }}
+            menuProps={{
+              className: "bg-gray-800 border-gray-700 text-white"
+            }}
+          >
+            {importanceOptions.map(importance => (
+              <Option key={importance.value} value={importance.value} className="text-white hover:bg-gray-700">
+                <div className="flex items-center justify-between w-full">
+                  <span>{importance.label}</span>
+                  {importance.chip && (
+                    <Chip 
+                      value={importance.chip} 
+                      size="sm" 
+                      color={
+                        importance.value === 'high' ? 'red' :
+                        importance.value === 'medium' ? 'amber' : 'green'
+                      }
+                      className="ml-2"
+                    />
+                  )}
+                </div>
+              </Option>
+            ))}
+          </Select>
+        </div>
 
         {/* Timezone Selector */}
         <TimezoneSelector
           selectedTimezone={selectedTimezone}
           onTimezoneChange={updateTimezone}
-          className="flex-1"
         />
       </div>
 
@@ -407,7 +496,7 @@ const EconomicCalendar = () => {
       {/* Pagination */}
       <div className="flex items-center justify-between mt-6">
         <div className="text-gray-400 text-sm">
-          Showing {indexOfFirstEvent + 1} to {Math.min(indexOfLastEvent, filteredEvents.length)} of {filteredEvents.length} results
+          Showing {indexOfFirstEvent + 1} to {Math.min(indexOfLastEvent, sortedEvents.length)} of {sortedEvents.length} results
         </div>
         <div className="flex space-x-2">
           {/* Previous button */}

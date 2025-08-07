@@ -131,11 +131,10 @@ export const useEvents = (options = {}) => {
     }
   }, []);
 
-  // Auto-fetch on mount (only once)
+  // Auto-fetch on mount and when filters change
   useEffect(() => {
-    if (autoFetch && !hasFetchedRef.current) {
+    if (autoFetch) {
       const doFetch = async () => {
-        hasFetchedRef.current = true;
         setLoading(true);
         setError(null);
 
@@ -151,13 +150,15 @@ export const useEvents = (options = {}) => {
           const fetchedEvents = await eventService.fetchEvents(allFilters);
           setEvents(fetchedEvents);
           setLastFetch(new Date());
+          hasFetchedRef.current = true;
           
           if (import.meta.env.DEV) {
-            console.log(`Initial fetch: ${fetchedEvents.length} events`);
+            console.log(`Fetched ${fetchedEvents.length} events with filters:`, filters);
           }
         } catch (err) {
           setError(err.message);
-          console.error('Error fetching events on mount:', err);
+          console.error('Error fetching events:', err);
+          hasFetchedRef.current = true;
         } finally {
           setLoading(false);
         }
@@ -165,7 +166,8 @@ export const useEvents = (options = {}) => {
       
       doFetch();
     }
-  }, [autoFetch, filters, dateRange]);
+<<<<<<< Updated upstream
+  }, [autoFetch, JSON.stringify(filters)]); // Use JSON.stringify for deep comparison
 
   // Auto-refetch interval (disabled by default)
   useEffect(() => {
