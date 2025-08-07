@@ -22,8 +22,30 @@ export const eventService = {
       // Use mock data in development or when API fails
       if (import.meta.env.DEV) {
         await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-        response = { data: mockEvents };
-        console.log('Using mock data for development');
+        
+        // Filter mock data based on date range parameters if provided
+        let filteredData = mockEvents;
+        
+        if (params.fromDate || params.toDate) {
+          const fromDate = params.fromDate ? new Date(params.fromDate) : null;
+          const toDate = params.toDate ? new Date(params.toDate + 'T23:59:59.999Z') : null;
+          
+          filteredData = mockEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            
+            // Check if event falls within the date range
+            if (fromDate && eventDate < fromDate) return false;
+            if (toDate && eventDate > toDate) return false;
+            
+            return true;
+          });
+          
+          console.log(`Using mock data for development - filtered ${filteredData.length} of ${mockEvents.length} events for date range ${params.fromDate || 'all'} to ${params.toDate || 'all'}`);
+        } else {
+          console.log('Using mock data for development - no date filtering');
+        }
+        
+        response = { data: filteredData };
       } else {
         response = await api.get('/calendar', { params });
       }
