@@ -38,6 +38,26 @@ economic-calendar/
 ├── package.json
 └── README.md
 ```
+## AI Development Assistant
+
+### Claude AI Model Information
+This repository utilizes **Claude 3.5 Sonnet** by Anthropic for code completions, development assistance, and documentation generation. Claude is a large language model designed to be helpful, harmless, and honest.
+
+#### Key Capabilities:
+- **Code Generation**: Advanced understanding of React, JavaScript/TypeScript, and modern web development patterns
+- **Architecture Guidance**: Assistance with component design, state management, and best practices
+- **Testing Support**: Help with writing comprehensive tests using Vitest and React Testing Library
+- **Documentation**: Generation of clear, maintainable documentation and code comments
+- **Debugging**: Analysis of code issues and suggestion of targeted fixes
+
+#### Development Workflow Integration:
+- Follows established patterns from Material Tailwind and React ecosystem
+- Maintains consistency with existing codebase structure and conventions
+- Provides context-aware suggestions based on project-specific requirements
+- Ensures compatibility with Vite build system and testing framework
+
+The AI assistant is particularly effective at understanding the Economic Calendar domain and can provide relevant suggestions for financial data visualization, event management, and user interface components.
+
 ## Repository Etiquette
 - Maintain linear git history using rebase and no merge commits
 - Keep commit messages to a single encompassing message upto 100 characters
