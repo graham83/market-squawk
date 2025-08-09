@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import typewriterSound from '../../utils/soundUtils';
 
 const NextEventTypewriter = ({ events, selectedEvent }) => {
@@ -6,6 +6,7 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
+  const audioInitialized = useRef(false);
 
   // Find the next upcoming event
   const getNextEvent = () => {
@@ -30,6 +31,33 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
     return date.toLocaleString('en-US', options);
   };
 
+  // Initialize audio on first user interaction
+  useEffect(() => {
+    const initializeAudio = async () => {
+      if (!audioInitialized.current) {
+        try {
+          await typewriterSound.resume();
+          audioInitialized.current = true;
+        } catch (error) {
+          console.warn('Audio initialization failed:', error);
+        }
+      }
+    };
+
+    const handleFirstInteraction = () => {
+      initializeAudio();
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction, { once: true });
+    document.addEventListener('keydown', handleFirstInteraction, { once: true });
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
   // Use selected event if available, otherwise use next upcoming event
   const eventToDisplay = selectedEvent || getNextEvent();
   const fullText = eventToDisplay 
@@ -38,16 +66,27 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
       : `Next Event: ${eventToDisplay.event} at ${formatEventTime(eventToDisplay.date)}`
     : 'No upcoming events scheduled';
 
+  // Determine key type based on character
+  const getKeyType = (char) => {
+    if (char === ' ') return 'space';
+    if (char === '\n' || char === '\r') return 'enter';
+    return 'normal';
+  };
+
   // Typewriter effect
   useEffect(() => {
     if (currentCharIndex < fullText.length) {
       setIsTyping(true);
       const timeout = setTimeout(() => {
+        const currentChar = fullText[currentCharIndex];
         setDisplayText(fullText.slice(0, currentCharIndex + 1));
         setCurrentCharIndex(currentCharIndex + 1);
         
-        // Play typing sound
-        typewriterSound.playTypingSound();
+        // Play appropriate typing sound based on character type
+        const keyType = getKeyType(currentChar);
+        if (audioInitialized.current) {
+          typewriterSound.playKey(keyType);
+        }
       }, Math.random() * 50 + 30); // Random delay between 30-80ms for realistic typing
       
       return () => clearTimeout(timeout);
