@@ -43,10 +43,33 @@ export const getMonthRange = (date) => {
  * @returns {Object} Object with start and end dates
  */
 export const getTodayRange = (timezone = null) => {
-  // Get current date in the specified timezone
-  const now = timezone 
-    ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
-    : new Date();
+  let now;
+  
+  if (timezone) {
+    // Get the current time in the specified timezone
+    // Create a date representing "now" in the target timezone
+    const utcNow = new Date();
+    const targetTimeString = utcNow.toLocaleString('en-CA', { 
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    
+    // Parse the target time string and create a proper Date object
+    const [datePart, timePart] = targetTimeString.split(', ');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour, minute, second] = timePart.split(':').map(Number);
+    
+    // Create date object representing the current date in the target timezone
+    now = new Date(year, month - 1, day, hour, minute, second);
+  } else {
+    now = new Date();
+  }
   
   const start = new Date(now);
   start.setHours(0, 0, 0, 0);
@@ -63,10 +86,33 @@ export const getTodayRange = (timezone = null) => {
  * @returns {Object} Object with start and end dates
  */
 export const getTomorrowRange = (timezone = null) => {
-  // Get current date in the specified timezone
-  const now = timezone 
-    ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
-    : new Date();
+  let now;
+  
+  if (timezone) {
+    // Get the current time in the specified timezone
+    // Create a date representing "now" in the target timezone
+    const utcNow = new Date();
+    const targetTimeString = utcNow.toLocaleString('en-CA', { 
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    
+    // Parse the target time string and create a proper Date object
+    const [datePart, timePart] = targetTimeString.split(', ');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour, minute, second] = timePart.split(':').map(Number);
+    
+    // Create date object representing the current date in the target timezone
+    now = new Date(year, month - 1, day, hour, minute, second);
+  } else {
+    now = new Date();
+  }
   
   const start = new Date(now);
   start.setDate(start.getDate() + 1);
