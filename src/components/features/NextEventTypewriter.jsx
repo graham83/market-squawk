@@ -85,7 +85,7 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
         if (audioInitialized.current) {
           typewriterSound.playKey(keyType);
         }
-      }, Math.random() * 50 + 30); // Random delay between 30-80ms for realistic typing
+      }, Math.random() * 40 + 24); // Random delay between 24-64ms for realistic typing (20% faster)
       
       return () => clearTimeout(timeout);
     } else {

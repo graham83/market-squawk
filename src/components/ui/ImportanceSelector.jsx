@@ -53,7 +53,7 @@ const ImportanceSelector = ({
                     value={level.value.toUpperCase()}
                     size="sm"
                     variant="filled"
-                    className={`ml-2 text-xs !font-bold ${
+                    className={`ml-2 text-xs !font-bold !text-center !justify-center ${
                       level.value.toLowerCase() === 'high'
                         ? '!bg-red-600 !text-white'
                         : level.value.toLowerCase() === 'medium'

@@ -388,7 +388,7 @@ const EconomicCalendar = () => {
                       value={event.importance.toUpperCase()}
                       size="sm"
                       variant="filled"
-                      className={`text-xs !font-bold ${
+                      className={`text-xs !font-bold !text-center !justify-center ${
                         event.importance.toLowerCase() === 'high'
                           ? '!bg-red-600 !text-white'
                           : event.importance.toLowerCase() === 'medium'
@@ -400,19 +400,7 @@ const EconomicCalendar = () => {
                     />
                   </td>
                   <td className="p-4">
-                    <span
-                      className={`text-sm capitalize ${
-                        event.category === 'employment'
-                          ? 'text-blue-400'
-                          : event.category === 'inflation'
-                          ? 'text-red-400'
-                          : event.category === 'monetary_policy'
-                          ? 'text-purple-400'
-                          : event.category === 'gdp'
-                          ? 'text-green-400'
-                          : 'text-gray-400'
-                      }`}
-                    >
+                    <span className="text-sm capitalize text-gray-400">
                       {event.category.replace('_', ' ')}
                     </span>
                   </td>
