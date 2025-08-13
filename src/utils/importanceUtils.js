@@ -20,7 +20,7 @@ export const IMPORTANCE_LEVELS = [
   {
     value: 'medium',
     label: 'Medium Importance',
-    color: 'orange'
+    color: 'amber'
   },
   {
     value: 'high',
