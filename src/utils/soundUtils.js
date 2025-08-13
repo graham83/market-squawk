@@ -268,11 +268,11 @@ export function createTypewriterAudio(initial = {}) {
       noiseGain.gain.setValueAtTime(clickLevel * 0.3, now);
       noiseGain.gain.exponentialRampToValueAtTime(EXPONENTIAL_RAMP_MIN, now + 0.01);
       
+      const hp = audioContext.createBiquadFilter();
+      
       scheduleNodeCleanup(noiseSource, activeNodes, 0.01);
       scheduleNodeCleanup(noiseGain, activeNodes, 0.01);
       scheduleNodeCleanup(hp, activeNodes, 0.01);
-
-      const hp = audioContext.createBiquadFilter();
       hp.type = "highpass";
       hp.frequency.value = type === "space" ? 800 : 2000;
 
