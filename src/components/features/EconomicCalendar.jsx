@@ -392,7 +392,8 @@ const EconomicCalendar = () => {
                       value={event.importance.toUpperCase()}
                       size="sm"
                       color={getImportanceConfig(event.importance)?.color || 'gray'}
-                      className="font-bold"
+                      variant="filled"
+                      className="font-bold text-white"
                     />
                   </td>
                   <td className="p-4">
