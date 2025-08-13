@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import typewriterSound from '../../utils/soundUtils';
+import { formatDateInTimezone } from '../../utils/timezoneUtils';
 
-const NextEventTypewriter = ({ events, selectedEvent }) => {
+const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone }) => {
   const [displayText, setDisplayText] = useState('');
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
@@ -21,14 +22,15 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
   };
 
   const formatEventTime = (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZoneName: 'short',
-      hour12: true
-    };
-    return date.toLocaleString('en-US', options);
+    const formatted = formatDateInTimezone(dateString, selectedTimezone, {
+      timeOptions: {
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short',
+        hour12: true
+      }
+    });
+    return formatted.time;
   };
 
   // Initialize audio on first user interaction
@@ -107,7 +109,7 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
     setDisplayText('');
     setCurrentCharIndex(0);
     setIsTyping(false);
-  }, [events, selectedEvent]);
+  }, [events, selectedEvent, selectedTimezone]);
 
   return (
     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 mb-6 font-mono text-sm">
