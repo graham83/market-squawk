@@ -15,7 +15,7 @@ import useTimezone from '../../hooks/useTimezone';
 import typewriterSound from '../../utils/soundUtils';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
 import { getDateRangeForPeriod, formatRangeForAPI } from '../../utils/dateRangeUtils';
-import { getImportanceConfig } from '../../utils/importanceUtils';
+import { getImportanceConfig, IMPORTANCE_LEVELS } from '../../utils/importanceUtils';
 
 const EconomicCalendar = () => {
   // Component state for filtering
@@ -76,13 +76,8 @@ const EconomicCalendar = () => {
     { value: 'nextMonth', label: 'Next Month' }
   ];
 
-  // Define importance options
-  const importanceOptions = [
-    { value: 'all', label: 'All Importance Levels' },
-    { value: 'low', label: 'Low Importance', chip: 'LOW' },
-    { value: 'medium', label: 'Medium Importance', chip: 'MEDIUM' },
-    { value: 'high', label: 'High Importance', chip: 'HIGH' }
-  ];
+  // Use standardized importance options from utils
+  const importanceOptions = IMPORTANCE_LEVELS;
 
   // Sort events by date (no more frontend filtering needed)
   const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -263,11 +258,12 @@ const EconomicCalendar = () => {
               <Option key={importance.value} value={importance.value} className="text-white hover:bg-gray-700">
                 <div className="flex items-center justify-between w-full">
                   <span>{importance.label}</span>
-                  {importance.chip && (
+                  {importance.value !== 'all' && (
                     <Chip 
-                      value={importance.chip} 
+                      value={importance.value.toUpperCase()} 
                       size="sm" 
-                      color={getImportanceConfig(importance.value)?.color || 'gray'}
+                      color={importance.color}
+                      variant="filled"
                       className="ml-2"
                     />
                   )}
@@ -391,9 +387,16 @@ const EconomicCalendar = () => {
                     <Chip
                       value={event.importance.toUpperCase()}
                       size="sm"
-                      color={getImportanceConfig(event.importance)?.color || 'gray'}
                       variant="filled"
-                      className="font-bold text-white"
+                      className={`text-xs !font-bold ${
+                        event.importance.toLowerCase() === 'high'
+                          ? '!bg-red-600 !text-white'
+                          : event.importance.toLowerCase() === 'medium'
+                          ? '!bg-amber-600 !text-white'
+                          : event.importance.toLowerCase() === 'low'
+                          ? '!bg-green-600 !text-white'
+                          : '!bg-gray-600 !text-white'
+                      }`}
                     />
                   </td>
                   <td className="p-4">

@@ -52,8 +52,16 @@ const ImportanceSelector = ({
                   <Chip
                     value={level.value.toUpperCase()}
                     size="sm"
-                    color={level.color}
-                    className="font-bold ml-2"
+                    variant="filled"
+                    className={`ml-2 text-xs !font-bold ${
+                      level.value.toLowerCase() === 'high'
+                        ? '!bg-red-600 !text-white'
+                        : level.value.toLowerCase() === 'medium'
+                        ? '!bg-amber-600 !text-white'
+                        : level.value.toLowerCase() === 'low'
+                        ? '!bg-green-600 !text-white'
+                        : '!bg-gray-600 !text-white'
+                    }`}
                   />
                 )}
               </div>
