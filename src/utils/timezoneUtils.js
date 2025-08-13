@@ -82,6 +82,11 @@ export const TIMEZONES = [
 export const DEFAULT_TIMEZONE = 'UTC';
 
 /**
+ * Calendar timezone - Economic events are typically published in Eastern Time
+ */
+export const CALENDAR_TIMEZONE = 'America/New_York';
+
+/**
  * Browser storage key for timezone preference
  */
 export const TIMEZONE_STORAGE_KEY = 'economicCalendar_selectedTimezone';
@@ -224,4 +229,34 @@ export const getBrowserTimezone = () => {
  */
 export const isBrowserTimezone = (timezone) => {
   return timezone === getBrowserTimezone();
+};
+
+/**
+ * Get the current time in the calendar timezone
+ * This is used for determining what events are "next" relative to the calendar's timezone
+ * @returns {Date} Current time in calendar timezone as a Date object
+ */
+export const getCurrentTimeInCalendarTimezone = () => {
+  const now = new Date();
+  
+  // Convert current UTC time to calendar timezone
+  const calendarTimeString = now.toLocaleString('en-CA', {
+    timeZone: CALENDAR_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit', 
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+  
+  // Parse the string back to Date object
+  const [datePart, timePart] = calendarTimeString.split(', ');
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [hour, minute, second] = timePart.split(':').map(Number);
+  
+  // Create Date object representing current time in calendar timezone
+  // This date will be used for comparison with event dates (which are in UTC)
+  return new Date(Date.UTC(year, month - 1, day, hour, minute, second));
 };
