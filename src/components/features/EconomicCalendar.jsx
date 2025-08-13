@@ -15,6 +15,7 @@ import useTimezone from '../../hooks/useTimezone';
 import typewriterSound from '../../utils/soundUtils';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
 import { getDateRangeForPeriod, formatRangeForAPI } from '../../utils/dateRangeUtils';
+import { getImportanceConfig } from '../../utils/importanceUtils';
 
 const EconomicCalendar = () => {
   // Component state for filtering
@@ -266,10 +267,7 @@ const EconomicCalendar = () => {
                     <Chip 
                       value={importance.chip} 
                       size="sm" 
-                      color={
-                        importance.value === 'high' ? 'red' :
-                        importance.value === 'medium' ? 'amber' : 'green'
-                      }
+                      color={getImportanceConfig(importance.value)?.color || 'gray'}
                       className="ml-2"
                     />
                   )}
@@ -393,13 +391,7 @@ const EconomicCalendar = () => {
                     <Chip
                       value={event.importance.toUpperCase()}
                       size="sm"
-                      color={
-                        event.importance === 'high'
-                          ? 'red'
-                          : event.importance === 'medium'
-                          ? 'amber'
-                          : 'green'
-                      }
+                      color={getImportanceConfig(event.importance)?.color || 'gray'}
                       className="font-bold"
                     />
                   </td>
