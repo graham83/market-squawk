@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useTheme from '../../hooks/useTheme.jsx';
 import typewriterSound from '../../utils/soundUtils';
-import { formatDateInTimezone } from '../../utils/timezoneUtils';
+import { formatDateInTimezone, getCurrentTimeInCalendarTimezone } from '../../utils/timezoneUtils';
 
 const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone }) => {
   const [displayText, setDisplayText] = useState('');
@@ -17,9 +17,11 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone }) => {
   const getNextEvent = () => {
     if (!events || events.length === 0) return null;
     
-    const now = new Date();
+    // Use calendar timezone (Eastern Time) for comparison
+    // This ensures the "next event" logic is relative to when events actually happen
+    const nowInCalendarTz = getCurrentTimeInCalendarTimezone();
     const upcomingEvents = events
-      .filter(event => new Date(event.date) > now)
+      .filter(event => new Date(event.date) > nowInCalendarTz)
       .sort((a, b) => new Date(a.date) - new Date(b.date));
     
     return upcomingEvents[0] || null;

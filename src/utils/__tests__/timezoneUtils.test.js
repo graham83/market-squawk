@@ -4,8 +4,10 @@ import {
   getStoredTimezone, 
   storeTimezone, 
   isValidTimezone,
+  getCurrentTimeInCalendarTimezone,
   DEFAULT_TIMEZONE,
-  TIMEZONE_STORAGE_KEY
+  TIMEZONE_STORAGE_KEY,
+  CALENDAR_TIMEZONE
 } from '../../utils/timezoneUtils';
 
 describe('TimezoneUtils', () => {
@@ -166,6 +168,115 @@ describe('TimezoneUtils', () => {
       expect(isValidTimezone('Invalid/Timezone')).toBe(false);
       expect(isValidTimezone('')).toBe(false);
       expect(isValidTimezone(null)).toBe(false);
+    });
+  });
+
+  describe('calendar timezone functionality', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should have calendar timezone set to Eastern Time', () => {
+      expect(CALENDAR_TIMEZONE).toBe('America/New_York');
+    });
+
+    it('should convert current time to calendar timezone correctly', () => {
+      // Mock a specific time - Wednesday Aug 13, 2025 at 8pm Sydney time (10:00 UTC)
+      const mockTime = new Date('2025-08-13T10:00:00.000Z');
+      vi.setSystemTime(mockTime);
+
+      // Mock toLocaleString to simulate Eastern Time conversion
+      const originalToLocaleString = Date.prototype.toLocaleString;
+      vi.spyOn(Date.prototype, 'toLocaleString').mockImplementation(function(locale, options) {
+        if (options?.timeZone === 'America/New_York') {
+          // When it's 10:00 UTC (8pm Sydney), it's 6:00am Eastern
+          return '2025-08-13, 06:00:00';
+        }
+        return originalToLocaleString.call(this, locale, options);
+      });
+
+      const calendarTime = getCurrentTimeInCalendarTimezone();
+      
+      // The returned time should represent 6am Eastern as UTC
+      expect(calendarTime).toBeInstanceOf(Date);
+      expect(calendarTime.getUTCFullYear()).toBe(2025);
+      expect(calendarTime.getUTCMonth()).toBe(7); // August (0-indexed)
+      expect(calendarTime.getUTCDate()).toBe(13);
+      expect(calendarTime.getUTCHours()).toBe(6);
+      expect(calendarTime.getUTCMinutes()).toBe(0);
+    });
+
+    it('should handle DST correctly in calendar timezone', () => {
+      // Mock a time during DST (July when EDT is active)
+      const mockSummerTime = new Date('2025-07-15T14:00:00.000Z');
+      vi.setSystemTime(mockSummerTime);
+
+      // Mock toLocaleString for EDT
+      const originalToLocaleString = Date.prototype.toLocaleString;
+      vi.spyOn(Date.prototype, 'toLocaleString').mockImplementation(function(locale, options) {
+        if (options?.timeZone === 'America/New_York') {
+          // During DST, UTC-4 offset, so 14:00 UTC = 10:00 EDT
+          return '2025-07-15, 10:00:00';
+        }
+        return originalToLocaleString.call(this, locale, options);
+      });
+
+      const calendarTime = getCurrentTimeInCalendarTimezone();
+      
+      expect(calendarTime.getUTCFullYear()).toBe(2025);
+      expect(calendarTime.getUTCMonth()).toBe(6); // July (0-indexed)
+      expect(calendarTime.getUTCDate()).toBe(15);
+      expect(calendarTime.getUTCHours()).toBe(10);
+    });
+
+    it('should handle standard time correctly in calendar timezone', () => {
+      // Mock a time during standard time (December when EST is active)
+      const mockWinterTime = new Date('2025-12-15T15:00:00.000Z');
+      vi.setSystemTime(mockWinterTime);
+
+      // Mock toLocaleString for EST
+      const originalToLocaleString = Date.prototype.toLocaleString;
+      vi.spyOn(Date.prototype, 'toLocaleString').mockImplementation(function(locale, options) {
+        if (options?.timeZone === 'America/New_York') {
+          // During standard time, UTC-5 offset, so 15:00 UTC = 10:00 EST
+          return '2025-12-15, 10:00:00';
+        }
+        return originalToLocaleString.call(this, locale, options);
+      });
+
+      const calendarTime = getCurrentTimeInCalendarTimezone();
+      
+      expect(calendarTime.getUTCFullYear()).toBe(2025);
+      expect(calendarTime.getUTCMonth()).toBe(11); // December (0-indexed)
+      expect(calendarTime.getUTCDate()).toBe(15);
+      expect(calendarTime.getUTCHours()).toBe(10);
+    });
+
+    it('should handle midnight crossovers correctly', () => {
+      // Mock Tuesday 11:30pm Pacific Time which is Wednesday 2:30am Eastern
+      const mockLateNight = new Date('2025-08-13T06:30:00.000Z');
+      vi.setSystemTime(mockLateNight);
+
+      // Mock toLocaleString for Eastern Time
+      const originalToLocaleString = Date.prototype.toLocaleString;
+      vi.spyOn(Date.prototype, 'toLocaleString').mockImplementation(function(locale, options) {
+        if (options?.timeZone === 'America/New_York') {
+          // It's already Wednesday in Eastern Time
+          return '2025-08-13, 02:30:00';
+        }
+        return originalToLocaleString.call(this, locale, options);
+      });
+
+      const calendarTime = getCurrentTimeInCalendarTimezone();
+      
+      // Should correctly show Wednesday in Eastern Time
+      expect(calendarTime.getUTCDate()).toBe(13); // Wednesday
+      expect(calendarTime.getUTCHours()).toBe(2);
+      expect(calendarTime.getUTCMinutes()).toBe(30);
     });
   });
 });
