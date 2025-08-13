@@ -231,7 +231,7 @@ const EconomicCalendar = () => {
       )}
 
       {/* Next Event Terminal Display */}
-      <NextEventTypewriter events={events} selectedEvent={selectedEvent} />
+      <NextEventTypewriter events={events} selectedEvent={selectedEvent} selectedTimezone={selectedTimezone} />
 
       {/* Filter Controls */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
