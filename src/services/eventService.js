@@ -19,14 +19,16 @@ export const eventService = {
     try {
       let response;
       
-      // Use mock data in development or when API is not available
-      if (import.meta.env.DEV) {
+      // Check feature flag for using mock data
+      const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+      
+      if (useMockData) {
         await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
         response = { data: mockEvents };
-        console.log('Using mock data for development');
+        console.log('Using mock data (feature flag enabled)');
       } else {
         try {
-          // Try to use real API in production
+          // Use real API by default
           response = await api.get('/calendar', { params });
           console.log('Using real API data');
         } catch (error) {
