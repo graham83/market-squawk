@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import NextEventTypewriter from '../NextEventTypewriter';
 import EconomicCalendar from '../EconomicCalendar';
+import { ThemeProvider } from '../../../hooks/useTheme.jsx';
 
 // Mock the sound utils
 vi.mock('../../../utils/soundUtils', () => ({
@@ -68,6 +69,15 @@ vi.mock('../../../hooks/useEvents', () => ({
   })
 }));
 
+// Helper function to render component with theme provider
+const renderWithTheme = (component) => {
+  return render(
+    <ThemeProvider>
+      {component}
+    </ThemeProvider>
+  );
+};
+
 describe('Time Formatting and Display Logic', () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -93,7 +103,7 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={morningEvent} />);
+      renderWithTheme(<NextEventTypewriter events={morningEvent} />);
 
       // Component should render correctly with time formatting
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -111,7 +121,7 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={afternoonEvent} />);
+      renderWithTheme(<NextEventTypewriter events={afternoonEvent} />);
 
       // Component should handle afternoon times
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -129,7 +139,7 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={events} />);
+      renderWithTheme(<NextEventTypewriter events={events} />);
 
       // Component should handle UTC times
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -138,7 +148,7 @@ describe('Time Formatting and Display Logic', () => {
 
   describe('EconomicCalendar Time Display', () => {
     it('displays date in correct format', async () => {
-      render(<EconomicCalendar />);
+      renderWithTheme(<EconomicCalendar />);
 
       // Should show formatted date (e.g., "Jul 15")
       expect(screen.getByText('Morning Event')).toBeInTheDocument();
@@ -146,7 +156,7 @@ describe('Time Formatting and Display Logic', () => {
     });
 
     it('shows time consistently across different events', async () => {
-      render(<EconomicCalendar />);
+      renderWithTheme(<EconomicCalendar />);
 
       // Multiple events should display times consistently
       expect(screen.getByText('Morning Event')).toBeInTheDocument();
@@ -155,7 +165,7 @@ describe('Time Formatting and Display Logic', () => {
     });
 
     it('handles pagination with time formatting', async () => {
-      render(<EconomicCalendar />);
+      renderWithTheme(<EconomicCalendar />);
 
       // Check that times are displayed correctly on first page
       expect(screen.getByText('Morning Event')).toBeInTheDocument();
@@ -185,7 +195,7 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={dstEvents} />);
+      renderWithTheme(<NextEventTypewriter events={dstEvents} />);
 
       // Component should handle DST transitions
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -211,7 +221,7 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={edgeTimeEvents} />);
+      renderWithTheme(<NextEventTypewriter events={edgeTimeEvents} />);
 
       // Component should handle edge times
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -220,7 +230,7 @@ describe('Time Formatting and Display Logic', () => {
 
   describe('Cross-Component Time Consistency', () => {
     it('maintains consistent time formatting between components', async () => {
-      render(<EconomicCalendar />);
+      renderWithTheme(<EconomicCalendar />);
 
       // Both components should show consistent time formatting
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -228,7 +238,7 @@ describe('Time Formatting and Display Logic', () => {
     });
 
     it('handles time format changes gracefully', async () => {
-      render(<EconomicCalendar />);
+      renderWithTheme(<EconomicCalendar />);
 
       // Component should handle various time formats
       expect(screen.getByText('Economic Calendar')).toBeInTheDocument();
@@ -247,7 +257,7 @@ describe('Time Formatting and Display Logic', () => {
         category: 'employment'
       }));
 
-      render(<NextEventTypewriter events={manyEvents} />);
+      renderWithTheme(<NextEventTypewriter events={manyEvents} />);
 
       // Component should handle multiple events efficiently
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
@@ -265,7 +275,7 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      const { rerender } = render(<NextEventTypewriter events={initialEvents} />);
+      const { rerender } = renderWithTheme(<NextEventTypewriter events={initialEvents} />);
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
 
       // Update with new events
@@ -280,7 +290,11 @@ describe('Time Formatting and Display Logic', () => {
         }
       ];
 
-      rerender(<NextEventTypewriter events={updatedEvents} />);
+      rerender(
+        <ThemeProvider>
+          <NextEventTypewriter events={updatedEvents} />
+        </ThemeProvider>
+      );
 
       // Component should handle updates efficiently
       expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();

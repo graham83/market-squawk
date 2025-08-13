@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import NextEventTypewriter from '../NextEventTypewriter';
+import { ThemeProvider } from '../../../hooks/useTheme.jsx';
 
 // Mock the sound utils
 vi.mock('../../../utils/soundUtils', () => ({
@@ -51,7 +52,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={unsortedEvents} />);
+      render(<ThemeProvider><NextEventTypewriter events={unsortedEvents} /></ThemeProvider>);
 
       // Component should render without errors
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -77,7 +78,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={mixedEvents} />);
+      render(<ThemeProvider><NextEventTypewriter events={mixedEvents} /></ThemeProvider>);
 
       // Component should render and handle filtering
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -103,14 +104,14 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={identicalDateEvents} />);
+      render(<ThemeProvider><NextEventTypewriter events={identicalDateEvents} /></ThemeProvider>);
 
       // Component should handle identical dates
       expect(screen.getByText('█')).toBeInTheDocument();
     });
 
     it('handles empty events array gracefully', async () => {
-      render(<NextEventTypewriter events={[]} />);
+      render(<ThemeProvider><NextEventTypewriter events={[]} /></ThemeProvider>);
 
       // Should render cursor even with no events
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -136,7 +137,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={allPastEvents} />);
+      render(<ThemeProvider><NextEventTypewriter events={allPastEvents} /></ThemeProvider>);
 
       // Should render even when all events are past
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -156,7 +157,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={events} />);
+      render(<ThemeProvider><NextEventTypewriter events={events} /></ThemeProvider>);
 
       // Component should handle time formatting
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -174,7 +175,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={events} />);
+      render(<ThemeProvider><NextEventTypewriter events={events} /></ThemeProvider>);
 
       // Component should handle timezone consistently
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -194,7 +195,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={highImportanceEvent} />);
+      render(<ThemeProvider><NextEventTypewriter events={highImportanceEvent} /></ThemeProvider>);
 
       // Component should handle importance levels
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -212,7 +213,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={events} />);
+      render(<ThemeProvider><NextEventTypewriter events={events} /></ThemeProvider>);
 
       // Component should process different importance levels
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -230,7 +231,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={events} />);
+      render(<ThemeProvider><NextEventTypewriter events={events} /></ThemeProvider>);
 
       // Component should handle categories
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -250,7 +251,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      const { rerender } = render(<NextEventTypewriter events={initialEvents} />);
+      const { rerender } = render(<ThemeProvider><NextEventTypewriter events={initialEvents} /></ThemeProvider>);
       expect(screen.getByText('█')).toBeInTheDocument();
 
       // Change events
@@ -265,14 +266,14 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      rerender(<NextEventTypewriter events={newEvents} />);
+      rerender(<ThemeProvider><NextEventTypewriter events={newEvents} /></ThemeProvider>);
 
       // Component should handle event changes
       expect(screen.getByText('█')).toBeInTheDocument();
     });
 
     it('handles null or undefined events gracefully', async () => {
-      render(<NextEventTypewriter events={null} />);
+      render(<ThemeProvider><NextEventTypewriter events={null} /></ThemeProvider>);
 
       // Should handle null events
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -300,7 +301,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={malformedEvents} />);
+      render(<ThemeProvider><NextEventTypewriter events={malformedEvents} /></ThemeProvider>);
 
       // Component should handle malformed dates gracefully
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -318,7 +319,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={incompleteEvent} />);
+      render(<ThemeProvider><NextEventTypewriter events={incompleteEvent} /></ThemeProvider>);
 
       // Component should display with complete properties
       expect(screen.getByText('█')).toBeInTheDocument();
@@ -336,7 +337,7 @@ describe('NextEventTypewriter - Business Logic', () => {
         }
       ];
 
-      render(<NextEventTypewriter events={longNameEvents} />);
+      render(<ThemeProvider><NextEventTypewriter events={longNameEvents} /></ThemeProvider>);
 
       // Component should handle long names
       expect(screen.getByText('█')).toBeInTheDocument();

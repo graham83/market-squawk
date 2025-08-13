@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import EconomicCalendar from '../EconomicCalendar';
+import { ThemeProvider } from '../../../hooks/useTheme.jsx';
 
 // Mock the NextEventTypewriter component
 vi.mock('../NextEventTypewriter', () => ({
@@ -101,7 +102,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
   describe('Week Generation Algorithm', () => {
     it('generates weeks correctly from scattered dates', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // The component should render without timeout
       expect(screen.getByText('Economic Calendar')).toBeInTheDocument();
@@ -112,7 +113,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('handles events at week boundaries correctly', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Both Sunday and Saturday events should be visible from our mock
       expect(screen.getByText('Sunday Event')).toBeInTheDocument();
@@ -120,7 +121,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('creates appropriate week labels', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Should show period selector
       expect(screen.getByText('Select Period')).toBeInTheDocument();
@@ -129,7 +130,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('handles empty date ranges gracefully', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       expect(screen.getByText('Select Period')).toBeInTheDocument();
       // Component should still render
@@ -139,7 +140,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
   describe('Date Range Filtering', () => {
     it('filters events within correct date ranges', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Events from our 5-event mock should be visible
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -148,7 +149,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('correctly calculates week boundaries', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Sunday event should be at week boundary
       expect(screen.getByText('Sunday Event')).toBeInTheDocument();
@@ -159,7 +160,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
   describe('Date Sorting Logic', () => {
     it('sorts events chronologically regardless of input order', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Events should be displayed - check that they exist
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -168,7 +169,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('handles identical timestamps correctly', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // We only have distinct timestamps in our simplified mock
       // Check that events are handled properly
@@ -179,7 +180,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
   describe('Time Zone Handling', () => {
     it('handles UTC timestamps correctly', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // All our events have UTC timestamps - check they render
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -187,7 +188,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('processes different time formats consistently', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Multiple events should be processed consistently
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -197,7 +198,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
   describe('Date Format Display', () => {
     it('displays dates in correct format', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Check that dates are formatted properly
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -205,7 +206,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('handles different months correctly', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Events from July should be displayed
       expect(screen.getByText('First Event')).toBeInTheDocument();
@@ -215,7 +216,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
 
   describe('Edge Cases in Date Processing', () => {
     it('handles invalid date strings gracefully', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Component should render without errors even with edge cases
       expect(screen.getByText('Economic Calendar')).toBeInTheDocument();
@@ -223,7 +224,7 @@ describe('EconomicCalendar - Date Logic and Week Generation', () => {
     });
 
     it('handles missing date fields', async () => {
-      render(<EconomicCalendar />);
+      render(<ThemeProvider><EconomicCalendar /></ThemeProvider>);
 
       // Should handle missing dates gracefully
       expect(screen.getByText('First Event')).toBeInTheDocument();

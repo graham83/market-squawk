@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import EconomicCalendar from '../EconomicCalendar';
+import { ThemeProvider } from '../../../hooks/useTheme.jsx';
 
 // Mock the NextEventTypewriter component
 vi.mock('../NextEventTypewriter', () => ({
@@ -42,24 +43,33 @@ vi.mock('../../../hooks/useEvents', () => ({
   })
 }));
 
+// Helper function to render component with theme provider
+const renderWithTheme = (component) => {
+  return render(
+    <ThemeProvider>
+      {component}
+    </ThemeProvider>
+  );
+};
+
 describe('EconomicCalendar - Basic Rendering', () => {
   it('renders without crashing', () => {
-    render(<EconomicCalendar />);
+    renderWithTheme(<EconomicCalendar />);
     expect(screen.getByText('Economic Calendar')).toBeInTheDocument();
   });
 
   it('renders NextEventTypewriter component', () => {
-    render(<EconomicCalendar />);
+    renderWithTheme(<EconomicCalendar />);
     expect(screen.getByTestId('next-event-typewriter')).toBeInTheDocument();
   });
 
   it('renders period selector', () => {
-    render(<EconomicCalendar />);
+    renderWithTheme(<EconomicCalendar />);
     expect(screen.getByText('Select Period')).toBeInTheDocument();
   });
 
   it('renders table headers', () => {
-    render(<EconomicCalendar />);
+    renderWithTheme(<EconomicCalendar />);
     expect(screen.getByText('DATE & TIME')).toBeInTheDocument();
     expect(screen.getByText('EVENT')).toBeInTheDocument();
     expect(screen.getByText('COUNTRY')).toBeInTheDocument();
@@ -69,7 +79,7 @@ describe('EconomicCalendar - Basic Rendering', () => {
   });
 
   it('has theme toggle button', () => {
-    render(<EconomicCalendar />);
+    renderWithTheme(<EconomicCalendar />);
     const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBeGreaterThan(0);
   });
