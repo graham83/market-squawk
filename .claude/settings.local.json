@@ -31,7 +31,8 @@
       "Bash(npm install:*)",
       "mcp__playwright__browser_click",
       "mcp__playwright__browser_wait_for",
-      "mcp__playwright__browser_close"
+      "mcp__playwright__browser_close",
+      "Bash(curl:*)"
     ],
     "deny": []
   }
