@@ -46,8 +46,6 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
 
     const handleFirstInteraction = () => {
       initializeAudio();
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
     };
 
     document.addEventListener('click', handleFirstInteraction, { once: true });
