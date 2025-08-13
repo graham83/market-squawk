@@ -50,7 +50,7 @@ describe('soundUtils', () => {
     expect(config.thunkLevel).toBe(0.5);
     expect(config.bellLevel).toBe(0.6);
     expect(config.oscType).toBe('triangle');
-    expect(config.reverbEnabled).toBe(true);
+    expect(config.reverbEnabled).toBe(false);
     expect(config.reverbMix).toBe(0.3);
     expect(config.reverbSize).toBe(3);
   });

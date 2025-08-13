@@ -38,17 +38,66 @@ const defaultConfig = {
   thunkLevel: 0.5,
   bellLevel: 0.6,
   oscType: "triangle",
-  reverbEnabled: true,
+  reverbEnabled: false,
   reverbMix: 0.3,
   reverbSize: 3
 };
+
+const VALID_OSC_TYPES = ["sine", "square", "sawtooth", "triangle"];
+
+function validateConfig(config) {
+  const validated = {};
+  
+  // Only validate and include properties that are explicitly provided
+  if (config.masterVolume !== undefined) {
+    validated.masterVolume = clamp(Number(config.masterVolume), 0, 1);
+  }
+  if (config.baseFreqHz !== undefined) {
+    validated.baseFreqHz = clamp(Number(config.baseFreqHz), 20, 2000);
+  }
+  if (config.clickLevel !== undefined) {
+    validated.clickLevel = clamp(Number(config.clickLevel), 0, 1);
+  }
+  if (config.thunkLevel !== undefined) {
+    validated.thunkLevel = clamp(Number(config.thunkLevel), 0, 1);
+  }
+  if (config.bellLevel !== undefined) {
+    validated.bellLevel = clamp(Number(config.bellLevel), 0, 1);
+  }
+  if (config.reverbMix !== undefined) {
+    validated.reverbMix = clamp(Number(config.reverbMix), 0, 1);
+  }
+  if (config.reverbSize !== undefined) {
+    validated.reverbSize = clamp(Number(config.reverbSize), 0.2, 12);
+  }
+  if (config.oscType !== undefined) {
+    validated.oscType = VALID_OSC_TYPES.includes(config.oscType) ? config.oscType : "triangle";
+  }
+  if (config.reverbEnabled !== undefined) {
+    validated.reverbEnabled = Boolean(config.reverbEnabled);
+  }
+  
+  return validated;
+}
+
+// Constants
+const EXPONENTIAL_RAMP_MIN = 0.001;
+const REVERB_FILTER_FREQ = 4000;
+const REVERB_FILTER_Q = 0.7;
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
 }
 
+function scheduleNodeCleanup(node, activeNodes, delay = 0.1) {
+  activeNodes.add(node);
+  setTimeout(() => {
+    activeNodes.delete(node);
+  }, (delay + 0.1) * 1000);
+}
+
 export function createTypewriterAudio(initial = {}) {
-  let config = { ...defaultConfig, ...initial };
+  let config = { ...defaultConfig, ...validateConfig(initial) };
 
   let audioContext = null;
   let masterGain = null;
@@ -56,11 +105,22 @@ export function createTypewriterAudio(initial = {}) {
   let wetGain = null;
   let convolverNode = null;
   let reverbFilter = null;
+  
+  // Track active audio nodes for cleanup
+  const activeNodes = new Set();
 
   function ensureAudio() {
     if (audioContext) return;
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    audioContext = new Ctx();
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) {
+        throw new Error('Web Audio API not supported');
+      }
+      audioContext = new Ctx();
+    } catch (error) {
+      console.warn('Failed to initialize AudioContext:', error);
+      return;
+    }
 
     // Master
     masterGain = audioContext.createGain();
@@ -74,8 +134,8 @@ export function createTypewriterAudio(initial = {}) {
     convolverNode = audioContext.createConvolver();
     reverbFilter = audioContext.createBiquadFilter();
     reverbFilter.type = "lowpass";
-    reverbFilter.frequency.value = 4000;
-    reverbFilter.Q.value = 0.7;
+    reverbFilter.frequency.value = REVERB_FILTER_FREQ;
+    reverbFilter.Q.value = REVERB_FILTER_Q;
 
     // Connect graph
     dryGain.connect(masterGain);
@@ -171,7 +231,10 @@ export function createTypewriterAudio(initial = {}) {
 
       const g = audioContext.createGain();
       g.gain.setValueAtTime(level * 0.1 * gains[i], now);
-      g.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+      g.gain.exponentialRampToValueAtTime(EXPONENTIAL_RAMP_MIN, now + 0.8);
+      
+      scheduleNodeCleanup(osc, activeNodes, 1);
+      scheduleNodeCleanup(g, activeNodes, 1);
 
       osc.connect(g);
       g.connect(bellGain);
@@ -203,7 +266,11 @@ export function createTypewriterAudio(initial = {}) {
 
       const noiseGain = audioContext.createGain();
       noiseGain.gain.setValueAtTime(clickLevel * 0.3, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
+      noiseGain.gain.exponentialRampToValueAtTime(EXPONENTIAL_RAMP_MIN, now + 0.01);
+      
+      scheduleNodeCleanup(noiseSource, activeNodes, 0.01);
+      scheduleNodeCleanup(noiseGain, activeNodes, 0.01);
+      scheduleNodeCleanup(hp, activeNodes, 0.01);
 
       const hp = audioContext.createBiquadFilter();
       hp.type = "highpass";
@@ -252,7 +319,10 @@ export function createTypewriterAudio(initial = {}) {
 
       const oscGain = audioContext.createGain();
       oscGain.gain.setValueAtTime(g, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      oscGain.gain.exponentialRampToValueAtTime(EXPONENTIAL_RAMP_MIN, now + duration);
+      
+      scheduleNodeCleanup(osc, activeNodes, duration + 0.1);
+      scheduleNodeCleanup(oscGain, activeNodes, duration + 0.1);
 
       osc.connect(oscGain);
       oscGain.connect(keyGain);
@@ -262,7 +332,9 @@ export function createTypewriterAudio(initial = {}) {
 
     // Overall key envelope
     keyGain.gain.setValueAtTime(1, now);
-    keyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    keyGain.gain.exponentialRampToValueAtTime(EXPONENTIAL_RAMP_MIN, now + 0.2);
+    
+    scheduleNodeCleanup(keyGain, activeNodes, 0.2);
   }
 
   return {
@@ -289,14 +361,15 @@ export function createTypewriterAudio(initial = {}) {
 
     setConfig(patch) {
       const prevSize = config.reverbSize;
-      config = { ...config, ...patch };
+      const validatedPatch = validateConfig(patch);
+      config = { ...config, ...validatedPatch };
 
       // Apply live-updatable params
       setMasterVolume(config.masterVolume);
-      if (patch.reverbMix !== undefined || patch.reverbEnabled !== undefined) {
+      if (validatedPatch.reverbMix !== undefined || validatedPatch.reverbEnabled !== undefined) {
         updateReverbMix();
       }
-      if (patch.reverbSize !== undefined && config.reverbSize !== prevSize) {
+      if (validatedPatch.reverbSize !== undefined && config.reverbSize !== prevSize) {
         createReverbImpulse();
       }
     },
@@ -311,11 +384,11 @@ export function createTypewriterAudio(initial = {}) {
     },
 
     playTypingSound() {
-      this.playKey("normal");
+      playKey("normal");
     },
 
     playClickSound() {
-      this.playKey("normal");
+      playKey("normal");
     },
 
     toggle() {
@@ -326,6 +399,25 @@ export function createTypewriterAudio(initial = {}) {
     setEnabled(enabled) {
       config.masterVolume = enabled ? 0.5 : 0;
       setMasterVolume(config.masterVolume);
+    },
+
+    // Cleanup method for proper resource management
+    cleanup() {
+      activeNodes.clear();
+      if (audioContext && audioContext.state !== 'closed') {
+        audioContext.close();
+        audioContext = null;
+        masterGain = null;
+        dryGain = null;
+        wetGain = null;
+        convolverNode = null;
+        reverbFilter = null;
+      }
+    },
+
+    // Get count of active audio nodes for debugging
+    getActiveNodeCount() {
+      return activeNodes.size;
     }
   };
 }
