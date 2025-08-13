@@ -35,7 +35,7 @@ const EconomicCalendar = () => {
 
   // Get date range using the tested utilities
   const getDateRange = () => {
-    const range = getDateRangeForPeriod(selectedPeriod);
+    const range = getDateRangeForPeriod(selectedPeriod, selectedTimezone);
     if (range) {
       return formatRangeForAPI(range);
     }
@@ -62,7 +62,7 @@ const EconomicCalendar = () => {
     }
     
     return filters;
-  }, [selectedPeriod, selectedImportance]);
+  }, [selectedPeriod, selectedImportance, selectedTimezone]);
 
   // API integration with dynamic filtering
   const { events, loading, error, refresh } = useEvents({

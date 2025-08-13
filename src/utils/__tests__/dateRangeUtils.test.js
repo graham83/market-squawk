@@ -296,4 +296,32 @@ describe('dateRangeUtils', () => {
       expect(formatted.toDate).not.toContain('Z');
     });
   });
+
+  describe('Timezone-aware date ranges', () => {
+    it('should handle timezone-aware getDateRangeForPeriod calls', () => {
+      // Test without timezone (backward compatibility)
+      const todayRangeDefault = getDateRangeForPeriod('today');
+      expect(todayRangeDefault).toBeTruthy();
+      expect(todayRangeDefault.start.getDate()).toBe(todayRangeDefault.end.getDate());
+      
+      // Test with timezone parameter
+      const todayRangeWithTZ = getDateRangeForPeriod('today', 'America/New_York');
+      expect(todayRangeWithTZ).toBeTruthy();
+      expect(todayRangeWithTZ.start.getDate()).toBe(todayRangeWithTZ.end.getDate());
+      
+      const tomorrowRangeWithTZ = getDateRangeForPeriod('tomorrow', 'America/New_York');
+      expect(tomorrowRangeWithTZ).toBeTruthy();
+      expect(tomorrowRangeWithTZ.start.getDate()).toBe(tomorrowRangeWithTZ.end.getDate());
+    });
+
+    it('should return same date for fromDate and toDate for today/tomorrow periods', () => {
+      const todayRange = getDateRangeForPeriod('today', 'America/New_York');
+      const formattedToday = formatRangeForAPI(todayRange);
+      expect(formattedToday.fromDate).toBe(formattedToday.toDate);
+      
+      const tomorrowRange = getDateRangeForPeriod('tomorrow', 'America/New_York');
+      const formattedTomorrow = formatRangeForAPI(tomorrowRange);
+      expect(formattedTomorrow.fromDate).toBe(formattedTomorrow.toDate);
+    });
+  });
 });

@@ -39,13 +39,19 @@ export const getMonthRange = (date) => {
 
 /**
  * Get date range for "Today" period (current day from 00:00:00 to 23:59:59)
+ * @param {string} timezone - IANA timezone identifier (optional, defaults to browser timezone)
  * @returns {Object} Object with start and end dates
  */
-export const getTodayRange = () => {
-  const start = new Date();
+export const getTodayRange = (timezone = null) => {
+  // Get current date in the specified timezone
+  const now = timezone 
+    ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+    : new Date();
+  
+  const start = new Date(now);
   start.setHours(0, 0, 0, 0);
   
-  const end = new Date();
+  const end = new Date(now);
   end.setHours(23, 59, 59, 999);
   
   return { start, end };
@@ -53,14 +59,20 @@ export const getTodayRange = () => {
 
 /**
  * Get date range for "Tomorrow" period (next day from 00:00:00 to 23:59:59)
+ * @param {string} timezone - IANA timezone identifier (optional, defaults to browser timezone)
  * @returns {Object} Object with start and end dates
  */
-export const getTomorrowRange = () => {
-  const start = new Date();
+export const getTomorrowRange = (timezone = null) => {
+  // Get current date in the specified timezone
+  const now = timezone 
+    ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+    : new Date();
+  
+  const start = new Date(now);
   start.setDate(start.getDate() + 1);
   start.setHours(0, 0, 0, 0);
   
-  const end = new Date();
+  const end = new Date(now);
   end.setDate(end.getDate() + 1);
   end.setHours(23, 59, 59, 999);
   
@@ -120,21 +132,22 @@ export const getNextMonthRange = () => {
 
 /**
  * Get all available period options for the date range selector
+ * @param {string} timezone - IANA timezone identifier (optional)
  * @returns {Array} Array of period option objects
  */
-export const getPeriodOptions = () => {
+export const getPeriodOptions = (timezone = null) => {
   return [
     {
       value: 'today',
       label: 'Today',
       description: 'All events for today',
-      getRange: getTodayRange
+      getRange: () => getTodayRange(timezone)
     },
     {
       value: 'tomorrow',
       label: 'Tomorrow',
       description: 'All events for tomorrow',
-      getRange: getTomorrowRange
+      getRange: () => getTomorrowRange(timezone)
     },
     {
       value: 'recent',
@@ -172,10 +185,11 @@ export const getPeriodOptions = () => {
 /**
  * Get date range for a specific period
  * @param {string} period - Period identifier
+ * @param {string} timezone - IANA timezone identifier (optional)
  * @returns {Object|null} Object with start and end dates, or null if invalid period
  */
-export const getDateRangeForPeriod = (period) => {
-  const option = getPeriodOptions().find(opt => opt.value === period);
+export const getDateRangeForPeriod = (period, timezone = null) => {
+  const option = getPeriodOptions(timezone).find(opt => opt.value === period);
   return option ? option.getRange() : null;
 };
 
