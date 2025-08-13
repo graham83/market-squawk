@@ -129,13 +129,13 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
       {eventToDisplay && (
         <div className="mt-2 flex items-center text-xs">
           <div className={`w-2 h-2 rounded-full mr-2 ${
-            eventToDisplay.importance === 'high' ? 'bg-red-500' : 
-            eventToDisplay.importance === 'medium' ? 'bg-yellow-500' : 
-            'bg-green-500'
+            eventToDisplay.importance.toLowerCase() === 'high' ? 'bg-red-600' : 
+            eventToDisplay.importance.toLowerCase() === 'medium' ? 'bg-amber-600' : 
+            eventToDisplay.importance.toLowerCase() === 'low' ? 'bg-green-600' :
+            'bg-gray-600'
           }`}></div>
           <span className="text-gray-400">
-            {eventToDisplay.importance.toUpperCase()} | {eventToDisplay.country} | {eventToDisplay.category}
-            {selectedEvent && ' | SELECTED'}
+            {eventToDisplay.importance.toUpperCase()} | {eventToDisplay.country} | {eventToDisplay.category.toUpperCase()}
           </span>
         </div>
       )}
