@@ -32,7 +32,11 @@
       "mcp__playwright__browser_click",
       "mcp__playwright__browser_wait_for",
       "mcp__playwright__browser_close",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm run lint)",
+      "Bash(env)",
+      "mcp__playwright__browser_press_key",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useTheme from '../../hooks/useTheme.jsx';
 import typewriterSound from '../../utils/soundUtils';
 
 const NextEventTypewriter = ({ events, selectedEvent }) => {
@@ -7,6 +8,9 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const audioInitialized = useRef(false);
+  
+  // Theme management
+  const { isDark } = useTheme();
 
   // Find the next upcoming event
   const getNextEvent = () => {
@@ -110,16 +114,24 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
   }, [events, selectedEvent]);
 
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 mb-6 font-mono text-sm">
+    <div className={`rounded-lg p-4 mb-6 font-mono text-sm ${
+      isDark 
+        ? 'bg-gray-900 border border-gray-700' 
+        : 'bg-gray-100 border border-gray-300'
+    }`}>
       <div className="flex items-center">
         {/* Typewriter text */}
-        <span className="text-gray-100">
+        <span className={isDark ? 'text-gray-100' : 'text-gray-800'}>
           {displayText}
         </span>
         
         {/* Retro blinking cursor */}
         <span 
-          className={`text-green-400 font-mono text-lg ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-75`}
+          className={`font-mono text-lg transition-opacity duration-75 ${
+            showCursor ? 'opacity-100' : 'opacity-0'
+          } ${
+            isDark ? 'text-green-400' : 'text-green-600'
+          }`}
         >
           █
         </span>
@@ -134,7 +146,7 @@ const NextEventTypewriter = ({ events, selectedEvent }) => {
             eventToDisplay.importance.toLowerCase() === 'low' ? 'bg-green-600' :
             'bg-gray-600'
           }`}></div>
-          <span className="text-gray-400">
+          <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>
             {eventToDisplay.importance.toUpperCase()} | {eventToDisplay.country} | {eventToDisplay.category.toUpperCase()}
           </span>
         </div>

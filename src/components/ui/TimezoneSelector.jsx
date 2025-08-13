@@ -1,5 +1,6 @@
 import React from 'react';
 import { Select, Option, Typography } from '@material-tailwind/react';
+import useTheme from '../../hooks/useTheme.jsx';
 import { TIMEZONES } from '../../utils/timezoneUtils';
 
 /**
@@ -17,9 +18,13 @@ const TimezoneSelector = ({
   className = '',
   disabled = false 
 }) => {
+  // Theme management
+  const { isDark } = useTheme();
   return (
     <div className={`${className}`}>
-      <Typography variant="h6" className="text-gray-300 mb-2">
+      <Typography variant="h6" className={`mb-2 ${
+        isDark ? 'text-gray-300' : 'text-gray-700'
+      }`}>
         Timezone
       </Typography>
       <div className="w-80">
@@ -27,28 +32,40 @@ const TimezoneSelector = ({
           value={selectedTimezone}
           onChange={onTimezoneChange}
           disabled={disabled}
-          className="bg-gray-800 border-gray-700 text-white"
+          className={isDark 
+            ? "bg-gray-800 border-gray-700 text-white" 
+            : "bg-white border-gray-300 text-gray-900"
+          }
           containerProps={{
             className: "min-w-0"
           }}
           menuProps={{
-            className: "bg-gray-800 border-gray-700 text-white max-h-64 overflow-y-auto"
+            className: `max-h-64 overflow-y-auto ${
+              isDark 
+                ? "bg-gray-800 border-gray-700 text-white" 
+                : "bg-white border-gray-300 text-gray-900"
+            }`
           }}
           labelProps={{
-            className: "text-gray-400"
+            className: isDark ? "text-gray-400" : "text-gray-600"
           }}
         >
           {TIMEZONES.map(timezone => (
             <Option 
               key={timezone.value} 
               value={timezone.value} 
-              className="text-white hover:bg-gray-700 focus:bg-gray-700"
+              className={isDark 
+                ? "text-white hover:bg-gray-700 focus:bg-gray-700" 
+                : "text-gray-900 hover:bg-gray-100 focus:bg-gray-100"
+              }
             >
               <div className="flex flex-col">
                 <span className="text-sm font-medium">
                   {timezone.label}
                 </span>
-                <span className="text-xs text-gray-400">
+                <span className={`text-xs ${
+                  isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
                   {timezone.abbreviation} ({timezone.offset})
                 </span>
               </div>
