@@ -43,41 +43,32 @@ export const getMonthRange = (date) => {
  * @returns {Object} Object with start and end dates
  */
 export const getTodayRange = (timezone = null) => {
-  let now;
-  
   if (timezone) {
-    // Get the current time in the specified timezone
-    // Create a date representing "now" in the target timezone
+    // Get the current date in the specified timezone
     const utcNow = new Date();
-    const targetTimeString = utcNow.toLocaleString('en-CA', { 
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
+    const targetDateString = utcNow.toLocaleDateString('en-CA', { 
+      timeZone: timezone
     });
     
-    // Parse the target time string and create a proper Date object
-    const [datePart, timePart] = targetTimeString.split(', ');
-    const [year, month, day] = datePart.split('-').map(Number);
-    const [hour, minute, second] = timePart.split(':').map(Number);
+    // Create start and end as the same date to ensure single-day range
+    // We'll create UTC dates that represent the target calendar date
+    const targetDate = new Date(targetDateString + 'T00:00:00Z');
     
-    // Create date object representing the current date in the target timezone
-    now = new Date(year, month - 1, day, hour, minute, second);
+    const start = new Date(targetDate);
+    const end = new Date(targetDate);
+    end.setUTCHours(23, 59, 59, 999);
+    
+    return { start, end };
   } else {
-    now = new Date();
+    const now = new Date();
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    
+    const end = new Date(now);
+    end.setHours(23, 59, 59, 999);
+    
+    return { start, end };
   }
-  
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  
-  const end = new Date(now);
-  end.setHours(23, 59, 59, 999);
-  
-  return { start, end };
 };
 
 /**
@@ -86,43 +77,34 @@ export const getTodayRange = (timezone = null) => {
  * @returns {Object} Object with start and end dates
  */
 export const getTomorrowRange = (timezone = null) => {
-  let now;
-  
   if (timezone) {
-    // Get the current time in the specified timezone
-    // Create a date representing "now" in the target timezone
+    // Get the current date in the specified timezone
     const utcNow = new Date();
-    const targetTimeString = utcNow.toLocaleString('en-CA', { 
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
+    const targetDateString = utcNow.toLocaleDateString('en-CA', { 
+      timeZone: timezone
     });
     
-    // Parse the target time string and create a proper Date object
-    const [datePart, timePart] = targetTimeString.split(', ');
-    const [year, month, day] = datePart.split('-').map(Number);
-    const [hour, minute, second] = timePart.split(':').map(Number);
+    // Add one day to the target date
+    const targetDate = new Date(targetDateString + 'T00:00:00Z');
+    targetDate.setUTCDate(targetDate.getUTCDate() + 1);
     
-    // Create date object representing the current date in the target timezone
-    now = new Date(year, month - 1, day, hour, minute, second);
+    const start = new Date(targetDate);
+    const end = new Date(targetDate);
+    end.setUTCHours(23, 59, 59, 999);
+    
+    return { start, end };
   } else {
-    now = new Date();
+    const now = new Date();
+    const start = new Date(now);
+    start.setDate(start.getDate() + 1);
+    start.setHours(0, 0, 0, 0);
+    
+    const end = new Date(now);
+    end.setDate(end.getDate() + 1);
+    end.setHours(23, 59, 59, 999);
+    
+    return { start, end };
   }
-  
-  const start = new Date(now);
-  start.setDate(start.getDate() + 1);
-  start.setHours(0, 0, 0, 0);
-  
-  const end = new Date(now);
-  end.setDate(end.getDate() + 1);
-  end.setHours(23, 59, 59, 999);
-  
-  return { start, end };
 };
 
 /**
@@ -245,8 +227,11 @@ export const getDateRangeForPeriod = (period, timezone = null) => {
  * @returns {Object} Object with fromDate and toDate as date strings (YYYY-MM-DD)
  */
 export const formatRangeForAPI = (range) => {
+  const fromDate = range.start.toISOString().split('T')[0];
+  const toDate = range.end.toISOString().split('T')[0];
+  
   return {
-    fromDate: range.start.toISOString().split('T')[0],
-    toDate: range.end.toISOString().split('T')[0]
+    fromDate: fromDate,
+    toDate: toDate
   };
 };
