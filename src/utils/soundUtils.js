@@ -422,7 +422,179 @@ export function createTypewriterAudio(initial = {}) {
   };
 }
 
+/**
+ * Market Commentary Audio Manager
+ * Handles MP3 streaming for market commentary while managing typewriter sound interactions
+ */
+export function createCommentaryAudioManager() {
+  let currentAudio = null;
+  let isPlaying = false;
+  let wasTypewriterEnabled = false;
+  let onPlaybackStartCallback = null;
+  let onPlaybackEndCallback = null;
+
+  return {
+    /**
+     * Start playing MP3 commentary from URL
+     * @param {string} url - MP3 URL to stream
+     * @param {Object} typewriterAudio - Reference to typewriter audio instance
+     * @returns {Promise<boolean>} Success status
+     */
+    async playCommentary(url, typewriterAudio) {
+      if (!url || typeof url !== 'string') {
+        console.warn('Invalid MP3 URL provided to commentary player');
+        return false;
+      }
+
+      try {
+        // Stop any existing commentary
+        this.stopCommentary();
+
+        // Remember current typewriter state and mute it
+        const currentConfig = typewriterAudio.getConfig();
+        wasTypewriterEnabled = currentConfig.masterVolume > 0;
+        if (wasTypewriterEnabled) {
+          typewriterAudio.setEnabled(false);
+        }
+
+        // Create and configure audio element
+        currentAudio = new Audio(url);
+        currentAudio.crossOrigin = 'anonymous';
+        currentAudio.preload = 'auto';
+        
+        // Set up event listeners
+        currentAudio.addEventListener('loadstart', () => {
+          console.log('Commentary loading started');
+        });
+
+        currentAudio.addEventListener('canplay', () => {
+          console.log('Commentary ready to play');
+        });
+
+        currentAudio.addEventListener('play', () => {
+          isPlaying = true;
+          if (onPlaybackStartCallback) {
+            onPlaybackStartCallback();
+          }
+          console.log('Commentary playback started');
+        });
+
+        currentAudio.addEventListener('ended', () => {
+          this.handleCommentaryEnd(typewriterAudio);
+        });
+
+        currentAudio.addEventListener('error', (e) => {
+          console.error('Commentary playback error:', e);
+          this.handleCommentaryEnd(typewriterAudio);
+        });
+
+        currentAudio.addEventListener('pause', () => {
+          if (isPlaying) {
+            this.handleCommentaryEnd(typewriterAudio);
+          }
+        });
+
+        // Start playback
+        await currentAudio.play();
+        return true;
+
+      } catch (error) {
+        console.error('Failed to play commentary:', error);
+        this.handleCommentaryEnd(typewriterAudio);
+        return false;
+      }
+    },
+
+    /**
+     * Stop commentary playback
+     */
+    stopCommentary() {
+      if (currentAudio) {
+        isPlaying = false;
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio.removeEventListener('ended', this.handleCommentaryEnd);
+        currentAudio.removeEventListener('error', this.handleCommentaryEnd);
+        currentAudio.removeEventListener('pause', this.handleCommentaryEnd);
+        currentAudio = null;
+      }
+    },
+
+    /**
+     * Handle commentary playback ending
+     * @param {Object} typewriterAudio - Reference to typewriter audio instance
+     */
+    handleCommentaryEnd(typewriterAudio) {
+      isPlaying = false;
+      
+      // Restore typewriter sound if it was previously enabled
+      if (wasTypewriterEnabled && typewriterAudio) {
+        typewriterAudio.setEnabled(true);
+      }
+      
+      if (onPlaybackEndCallback) {
+        onPlaybackEndCallback();
+      }
+      
+      console.log('Commentary playback ended');
+      this.stopCommentary();
+    },
+
+    /**
+     * Check if commentary is currently playing
+     * @returns {boolean} Playing status
+     */
+    isCommentaryPlaying() {
+      return isPlaying && currentAudio && !currentAudio.paused;
+    },
+
+    /**
+     * Set callback for when playback starts
+     * @param {Function} callback - Callback function
+     */
+    onPlaybackStart(callback) {
+      onPlaybackStartCallback = callback;
+    },
+
+    /**
+     * Set callback for when playback ends
+     * @param {Function} callback - Callback function
+     */
+    onPlaybackEnd(callback) {
+      onPlaybackEndCallback = callback;
+    },
+
+    /**
+     * Get current playback time
+     * @returns {number} Current time in seconds
+     */
+    getCurrentTime() {
+      return currentAudio ? currentAudio.currentTime : 0;
+    },
+
+    /**
+     * Get total duration
+     * @returns {number} Duration in seconds
+     */
+    getDuration() {
+      return currentAudio ? currentAudio.duration : 0;
+    },
+
+    /**
+     * Cleanup resources
+     */
+    cleanup() {
+      this.stopCommentary();
+      onPlaybackStartCallback = null;
+      onPlaybackEndCallback = null;
+    }
+  };
+}
+
 // Create singleton instance with default configuration
 const typewriterSound = createTypewriterAudio();
+
+// Create commentary audio manager instance
+export const commentaryAudio = createCommentaryAudioManager();
 
 export default typewriterSound;
