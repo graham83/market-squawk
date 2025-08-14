@@ -11,8 +11,24 @@ vi.mock('../NextEventTypewriter', () => ({
 // Mock the sound utils
 vi.mock('../../../utils/soundUtils', () => ({
   default: {
-    playTypingSound: vi.fn()
+    playTypingSound: vi.fn(),
+    initializeAudioContext: vi.fn(),
+    setEnabled: vi.fn(),
+    cleanup: vi.fn()
+  },
+  commentaryAudio: {
+    playCommentary: vi.fn(),
+    stopCommentary: vi.fn(),
+    isCommentaryPlaying: vi.fn().mockReturnValue(false),
+    onPlaybackStart: vi.fn(),
+    onPlaybackEnd: vi.fn(),
+    cleanup: vi.fn()
   }
+}));
+
+// Mock the market commentary service
+vi.mock('../../../services/marketCommentaryService', () => ({
+  getCommentaryUrl: vi.fn().mockResolvedValue(null)
 }));
 
 // Mock the data and useEvents hook
