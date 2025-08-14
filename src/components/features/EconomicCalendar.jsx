@@ -140,6 +140,27 @@ const EconomicCalendar = () => {
           Economic Calendar
         </Typography>
         <div className="flex items-center space-x-4">
+          {/* Audio toggle */}
+            <IconButton
+              variant="outlined"
+              color="grey"
+              size="sm"
+              className={`border-gray-600 hover:bg-gray-700 ${
+                isAudioEnabled ? 'text-grey-400' : 'text-orange-400'
+              }`}
+              onClick={handleAudioToggle}
+            >
+              {isAudioEnabled ? (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.747L4.242 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.242l4.141-3.747a1 1 0 011.617.747zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 animate-ping" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.747L4.242 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.242l4.141-3.747a1 1 0 011.617.747zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                </svg>
+              )}
+            </IconButton>
+         
           {/* Refresh button */}
           <IconButton
             variant="outlined"
@@ -154,26 +175,7 @@ const EconomicCalendar = () => {
             </svg>
           </IconButton>
           
-          {/* Audio toggle */}
-          <IconButton
-            variant="outlined"
-            color="gray"
-            size="sm"
-            className={`border-gray-600 hover:bg-gray-700 ${
-              isAudioEnabled ? 'text-green-400' : 'text-gray-400'
-            }`}
-            onClick={handleAudioToggle}
-          >
-            {isAudioEnabled ? (
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.747L4.242 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.242l4.141-3.747a1 1 0 011.617.747zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.747L4.242 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.242l4.141-3.747a1 1 0 011.617.747zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-              </svg>
-            )}
-          </IconButton>
+         
           
           {/* Theme toggle */}
           <IconButton
