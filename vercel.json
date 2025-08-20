@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/calendar/week", "destination": "/api/calendar/week" },
+    { "source": "/calendar/week/:start", "destination": "/api/calendar/week?start=:start" }
+  ],
+  "functions": {
+    "api/calendar/week.js": {
+      "maxDuration": 30
+    }
+  }
+}
