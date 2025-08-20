@@ -6,6 +6,9 @@
   "functions": {
     "api/calendar/week.js": {
       "maxDuration": 30
+    },
+    "api/calendar/index.js": {
+      "maxDuration": 15
     }
   }
 }
