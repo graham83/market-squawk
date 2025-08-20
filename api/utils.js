@@ -56,7 +56,8 @@ export function linkForWeekOffset(currentWeekStart, weekOffset) {
   offsetDate.setDate(offsetDate.getDate() + weekOffset);
   
   const weekStart = getWeekStartDate(offsetDate);
-  return `https://marketsquawk.ai/calendar/week/${weekStart}`;
+  // Use relative path so the environment (local/dev/prod) base URL is applied correctly
+  return `/calendar/week/${weekStart}`;
 }
 
 /**

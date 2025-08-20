@@ -35,28 +35,28 @@ describe('Week Navigation Endpoints', () => {
       const currentWeek = '2024-08-12'; // Monday
       const prevLink = linkForWeekOffset(currentWeek, -7);
       
-      expect(prevLink).toBe('https://marketsquawk.ai/calendar/week/2024-08-05');
+      expect(prevLink).toBe('/calendar/week/2024-08-05');
     });
 
     it('should generate correct next week link', () => {
       const currentWeek = '2024-08-12'; // Monday
       const nextLink = linkForWeekOffset(currentWeek, +7);
       
-      expect(nextLink).toBe('https://marketsquawk.ai/calendar/week/2024-08-19');
+      expect(nextLink).toBe('/calendar/week/2024-08-19');
     });
 
     it('should handle month boundaries correctly', () => {
       const currentWeek = '2024-07-29'; // Monday, near month end
       const nextLink = linkForWeekOffset(currentWeek, +7);
       
-      expect(nextLink).toBe('https://marketsquawk.ai/calendar/week/2024-08-05');
+  expect(nextLink).toBe('/calendar/week/2024-08-05');
     });
 
     it('should handle year boundaries correctly', () => {
       const currentWeek = '2024-12-30'; // Monday, near year end
       const nextLink = linkForWeekOffset(currentWeek, +7);
       
-      expect(nextLink).toBe('https://marketsquawk.ai/calendar/week/2025-01-06');
+  expect(nextLink).toBe('/calendar/week/2025-01-06');
     });
   });
 
@@ -86,8 +86,8 @@ describe('Week Navigation Endpoints', () => {
       const link = linkForWeekOffset(weekStart, 0);
       
       // Should match pattern /calendar/week/:start where :start is YYYY-MM-DD
-      expect(link).toMatch(/\/calendar\/week\/\d{4}-\d{2}-\d{2}$/);
-      expect(link).toBe('https://marketsquawk.ai/calendar/week/2024-08-12');
+  expect(link).toMatch(/^\/calendar\/week\/\d{4}-\d{2}-\d{2}$/);
+  expect(link).toBe('/calendar/week/2024-08-12');
     });
 
     it('should generate links that work with existing rewrite rules', () => {

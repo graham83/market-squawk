@@ -52,12 +52,12 @@ describe('Server-side Utilities', () => {
   describe('linkForWeekOffset', () => {
     it('should generate correct previous week link', () => {
       const link = linkForWeekOffset('2024-01-15', -7);
-      expect(link).toBe('https://marketsquawk.ai/calendar/week/2024-01-08');
+  expect(link).toBe('/calendar/week/2024-01-08');
     });
 
     it('should generate correct next week link', () => {
       const link = linkForWeekOffset('2024-01-15', 7);
-      expect(link).toBe('https://marketsquawk.ai/calendar/week/2024-01-22');
+  expect(link).toBe('/calendar/week/2024-01-22');
     });
   });
 
