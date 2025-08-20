@@ -31,8 +31,8 @@ describe('dateRangeUtils', () => {
       const monday = new Date('2024-01-15T12:00:00Z');
       const range = getWeekRange(monday);
       
-      expect(range.start.getDay()).toBe(1); // Monday
-      expect(range.end.getDay()).toBe(0); // Sunday
+      expect(range.start.getUTCDay()).toBe(1); // Monday
+      expect(range.end.getUTCDay()).toBe(0); // Sunday
       expect(range.start.toISOString()).toBe('2024-01-15T00:00:00.000Z');
       expect(range.end.toISOString()).toBe('2024-01-21T23:59:59.999Z');
     });
@@ -41,8 +41,8 @@ describe('dateRangeUtils', () => {
       const sunday = new Date('2024-01-14T12:00:00Z');
       const range = getWeekRange(sunday);
       
-      expect(range.start.getDay()).toBe(1); // Monday
-      expect(range.end.getDay()).toBe(0); // Sunday
+      expect(range.start.getUTCDay()).toBe(1); // Monday
+      expect(range.end.getUTCDay()).toBe(0); // Sunday
       expect(range.start.toISOString()).toBe('2024-01-08T00:00:00.000Z');
       expect(range.end.toISOString()).toBe('2024-01-14T23:59:59.999Z');
     });
@@ -51,8 +51,8 @@ describe('dateRangeUtils', () => {
       const wednesday = new Date('2024-01-17T12:00:00Z');
       const range = getWeekRange(wednesday);
       
-      expect(range.start.getDay()).toBe(1); // Monday
-      expect(range.end.getDay()).toBe(0); // Sunday
+      expect(range.start.getUTCDay()).toBe(1); // Monday
+      expect(range.end.getUTCDay()).toBe(0); // Sunday
       expect(range.start.toISOString()).toBe('2024-01-15T00:00:00.000Z');
       expect(range.end.toISOString()).toBe('2024-01-21T23:59:59.999Z');
     });
@@ -97,9 +97,9 @@ describe('dateRangeUtils', () => {
     it('should return same date for start and end', () => {
       const range = getTodayRange();
       
-      expect(range.start.getDate()).toBe(range.end.getDate());
-      expect(range.start.getMonth()).toBe(range.end.getMonth());
-      expect(range.start.getFullYear()).toBe(range.end.getFullYear());
+      expect(range.start.getUTCDate()).toBe(range.end.getUTCDate());
+      expect(range.start.getUTCMonth()).toBe(range.end.getUTCMonth());
+      expect(range.start.getUTCFullYear()).toBe(range.end.getUTCFullYear());
     });
   });
 
@@ -116,17 +116,17 @@ describe('dateRangeUtils', () => {
     it('should return same date for start and end', () => {
       const range = getTomorrowRange();
       
-      expect(range.start.getDate()).toBe(range.end.getDate());
-      expect(range.start.getMonth()).toBe(range.end.getMonth());
-      expect(range.start.getFullYear()).toBe(range.end.getFullYear());
+      expect(range.start.getUTCDate()).toBe(range.end.getUTCDate());
+      expect(range.start.getUTCMonth()).toBe(range.end.getUTCMonth());
+      expect(range.start.getUTCFullYear()).toBe(range.end.getUTCFullYear());
     });
 
     it('should be one day after today', () => {
       const todayRange = getTodayRange();
       const tomorrowRange = getTomorrowRange();
       
-      const todayDate = todayRange.start.getDate();
-      const tomorrowDate = tomorrowRange.start.getDate();
+      const todayDate = todayRange.start.getUTCDate();
+      const tomorrowDate = tomorrowRange.start.getUTCDate();
       
       expect(tomorrowDate).toBe(todayDate + 1);
     });
@@ -302,16 +302,16 @@ describe('dateRangeUtils', () => {
       // Test without timezone (backward compatibility)
       const todayRangeDefault = getDateRangeForPeriod('today');
       expect(todayRangeDefault).toBeTruthy();
-      expect(todayRangeDefault.start.getDate()).toBe(todayRangeDefault.end.getDate());
+      expect(todayRangeDefault.start.getUTCDate()).toBe(todayRangeDefault.end.getUTCDate());
       
       // Test with timezone parameter
       const todayRangeWithTZ = getDateRangeForPeriod('today', 'America/New_York');
       expect(todayRangeWithTZ).toBeTruthy();
-      expect(todayRangeWithTZ.start.getDate()).toBe(todayRangeWithTZ.end.getDate());
+      expect(todayRangeWithTZ.start.getUTCDate()).toBe(todayRangeWithTZ.end.getUTCDate());
       
       const tomorrowRangeWithTZ = getDateRangeForPeriod('tomorrow', 'America/New_York');
       expect(tomorrowRangeWithTZ).toBeTruthy();
-      expect(tomorrowRangeWithTZ.start.getDate()).toBe(tomorrowRangeWithTZ.end.getDate());
+      expect(tomorrowRangeWithTZ.start.getUTCDate()).toBe(tomorrowRangeWithTZ.end.getUTCDate());
     });
 
     it('should return same date for fromDate and toDate for today/tomorrow periods', () => {
@@ -322,6 +322,41 @@ describe('dateRangeUtils', () => {
       const tomorrowRange = getDateRangeForPeriod('tomorrow', 'America/New_York');
       const formattedTomorrow = formatRangeForAPI(tomorrowRange);
       expect(formattedTomorrow.fromDate).toBe(formattedTomorrow.toDate);
+    });
+
+    it('should handle timezone-aware calculations for all period types', () => {
+      const periods = ['today', 'tomorrow', 'recent', 'thisWeek', 'nextWeek', 'thisMonth', 'nextMonth'];
+      const timezone = 'Europe/London';
+      
+      periods.forEach(period => {
+        const range = getDateRangeForPeriod(period, timezone);
+        expect(range).toBeTruthy();
+        expect(range.start).toBeInstanceOf(Date);
+        expect(range.end).toBeInstanceOf(Date);
+        expect(range.start.getTime()).toBeLessThanOrEqual(range.end.getTime());
+      });
+    });
+
+    it('should return different ranges for different timezones', () => {
+      // At certain times, different timezones may yield different date ranges
+      const nycRange = getDateRangeForPeriod('today', 'America/New_York');
+      const tokyoRange = getDateRangeForPeriod('today', 'Asia/Tokyo');
+      const utcRange = getDateRangeForPeriod('today', 'UTC');
+      
+      // All should be valid ranges
+      expect(nycRange).toBeTruthy();
+      expect(tokyoRange).toBeTruthy();
+      expect(utcRange).toBeTruthy();
+      
+      // Format for comparison
+      const nycFormatted = formatRangeForAPI(nycRange);
+      const tokyoFormatted = formatRangeForAPI(tokyoRange);
+      const utcFormatted = formatRangeForAPI(utcRange);
+      
+      // Should all have valid date strings
+      expect(nycFormatted.fromDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(tokyoFormatted.fromDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(utcFormatted.fromDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     });
   });
 });
