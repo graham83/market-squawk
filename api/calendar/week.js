@@ -55,6 +55,8 @@ export default async function handler(req, res) {
     
     // Build table rows
     const rows = events.map((ev, i) => {
+      const eventDate = new Date(ev.date);
+      const dayName = eventDate.toLocaleDateString('en-US', { weekday: 'short' });
       const timeET = formatTimeET(ev.date);
       const eventName = escapeHtml(ev.event || 'Unknown Event');
       const country = escapeHtml(ev.country || 'Unknown');
@@ -63,6 +65,7 @@ export default async function handler(req, res) {
       const sourceUrl = ev.source?.url || '#';
       
       return `<tr>
+        <td class="px-4 py-2 border-b border-gray-200">${dayName}</td>
         <td class="px-4 py-2 border-b border-gray-200">${timeET} ET</td>
         <td class="px-4 py-2 border-b border-gray-200">${eventName}</td>
         <td class="px-4 py-2 border-b border-gray-200">${country}</td>
@@ -184,6 +187,7 @@ export default async function handler(req, res) {
     <table>
       <thead>
         <tr>
+          <th>Day</th>
           <th>Time (ET)</th>
           <th>Event</th>
           <th>Country</th>
@@ -192,7 +196,7 @@ export default async function handler(req, res) {
         </tr>
       </thead>
       <tbody>
-        ${rows || '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">No events scheduled for this week</td></tr>'}
+        ${rows || '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #6b7280;">No events scheduled for this week</td></tr>'}
       </tbody>
     </table>
     <div class="footer">
