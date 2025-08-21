@@ -32,7 +32,11 @@ export default async function handler(req, res) {
     const url = `${API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
 
     const upstream = await fetch(url, {
-      headers: { accept: 'application/json' },
+      headers: { 
+        'accept': 'application/json',
+        'user-agent': 'Market-Squawk-Calendar/1.0 (+https://marketsquawk.ai)',
+        'referer': 'https://marketsquawk.ai'
+      },
       // Node 18+ supports AbortSignal.timeout
       signal: AbortSignal.timeout(10000),
     });
