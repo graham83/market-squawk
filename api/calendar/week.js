@@ -25,16 +25,18 @@ export default async function handler(req, res) {
     // Compute week range
     const { fromDate, toDate } = computeWeekRange(startDate);
     
-  // Fetch events from the internal JSON API to leverage its CDN cache
-  // Build an absolute URL using the request's host and protocol
-  const proto = (req.headers['x-forwarded-proto'] || 'https');
-  const host = (req.headers.host || 'localhost:3000');
-  const apiUrl = `${proto}://${host}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+    // Fetch events directly from upstream API
+    const API_BASE = process.env.CALENDAR_API_BASE || 'https://data-dev.pricesquawk.com';
+    const apiUrl = `${API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
     
     let events = [];
     try {
-  const response = await fetch(apiUrl, {
-        headers: { 'accept': 'application/json' },
+      const response = await fetch(apiUrl, {
+        headers: { 
+          'accept': 'application/json',
+          'user-agent': 'Market-Squawk-Calendar/1.0 (+https://marketsquawk.ai)',
+          'referer': 'https://marketsquawk.ai'
+        },
         // Add timeout
         signal: AbortSignal.timeout(8000)
       });
