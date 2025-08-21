@@ -15,17 +15,17 @@ export function computeWeekRange(date) {
     throw new Error('Invalid date provided');
   }
   
-  // Get Monday of the week
+  // Get Monday of the week (using UTC methods for consistency)
   const startOfWeek = new Date(refDate);
-  const dayOfWeek = startOfWeek.getDay();
+  const dayOfWeek = startOfWeek.getUTCDay();
   const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Handle Sunday (0) as last day
   
-  startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
+  startOfWeek.setUTCDate(startOfWeek.getUTCDate() + diffToMonday);
   startOfWeek.setUTCHours(0, 0, 0, 0);
   
   // Get Sunday of the week  
   const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(endOfWeek.getDate() + 6);
+  endOfWeek.setUTCDate(endOfWeek.getUTCDate() + 6);
   endOfWeek.setUTCHours(23, 59, 59, 999);
   
   return {
@@ -53,7 +53,7 @@ export function getWeekStartDate(date) {
 export function linkForWeekOffset(currentWeekStart, weekOffset) {
   const currentDate = new Date(currentWeekStart);
   const offsetDate = new Date(currentDate);
-  offsetDate.setDate(offsetDate.getDate() + weekOffset);
+  offsetDate.setUTCDate(offsetDate.getUTCDate() + weekOffset);
   
   const weekStart = getWeekStartDate(offsetDate);
   // Use relative path so the environment (local/dev/prod) base URL is applied correctly
