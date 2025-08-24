@@ -106,6 +106,10 @@ npm run build
 - [React DevTools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
+## 🤖 AI Assistance
+
+This project has been developed with assistance from advanced AI models. For detailed information about the AI tools and models used, see [AI_ASSISTANCE.md](AI_ASSISTANCE.md).
+
 ## 🤝 Contributing
 
 1. Fork the repository
