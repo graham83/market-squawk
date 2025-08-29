@@ -1,9 +1,13 @@
 {
   "rewrites": [
+    { "source": "/calendar/today", "destination": "/api/calendar/today" },
     { "source": "/calendar/week", "destination": "/api/calendar/week" },
     { "source": "/calendar/week/:start", "destination": "/api/calendar/week?start=:start" }
   ],
   "functions": {
+    "api/calendar/today.js": {
+      "maxDuration": 30
+    },
     "api/calendar/week.js": {
       "maxDuration": 30
     },
