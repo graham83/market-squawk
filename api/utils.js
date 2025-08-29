@@ -89,3 +89,58 @@ export function formatTimeET(isoDateString) {
     hour12: false 
   });
 }
+
+/**
+ * Compute single day range (00:00:00 to 23:59:59) for a given date
+ * @param {Date|string} date - Reference date (Date object or ISO string)
+ * @returns {Object} Object with fromDate and toDate as ISO strings (same date)
+ */
+export function computeDayRange(date) {
+  const refDate = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(refDate.getTime())) {
+    throw new Error('Invalid date provided');
+  }
+  
+  // Start of day (using UTC methods for consistency)
+  const startOfDay = new Date(refDate);
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  
+  // End of day
+  const endOfDay = new Date(refDate);
+  endOfDay.setUTCHours(23, 59, 59, 999);
+  
+  const dayString = startOfDay.toISOString().split('T')[0]; // YYYY-MM-DD format
+  
+  return {
+    fromDate: dayString,
+    toDate: dayString  // Same day for single day range
+  };
+}
+
+/**
+ * Get current date in Eastern Time timezone
+ * @returns {string} Current date in ET as YYYY-MM-DD string
+ */
+export function getTodayInET() {
+  const now = new Date();
+  return now.toLocaleDateString('en-CA', { 
+    timeZone: 'America/New_York'
+  });
+}
+
+/**
+ * Format date for display in ET timezone (full date)
+ * @param {string} isoDateString - ISO date string
+ * @returns {string} Formatted date string in ET (e.g., "Friday, August 29, 2025")
+ */
+export function formatDateET(isoDateString) {
+  const date = new Date(isoDateString);
+  return date.toLocaleDateString('en-US', { 
+    timeZone: 'America/New_York',
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
