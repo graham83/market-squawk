@@ -7,6 +7,13 @@
     <priority>1.0</priority>
   </url>
   
+     <!-- Current day -->
+  <url>
+    <loc>https://marketsquawk.ai/calendar/today</loc>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
   <!-- Current week -->
   <url>
     <loc>https://marketsquawk.ai/calendar/week</loc>
@@ -69,11 +76,6 @@
   </url>
   <url>
     <loc>https://marketsquawk.ai/calendar/week/2024-09-30</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://marketsquawk.ai/calendar/week/2024-10-07</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
