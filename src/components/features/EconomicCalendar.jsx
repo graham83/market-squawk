@@ -14,7 +14,7 @@ import useEvents from '../../hooks/useEvents';
 import useTimezone from '../../hooks/useTimezone';
 import useTheme from '../../hooks/useTheme.jsx';
 import typewriterSound, { commentaryAudio } from '../../utils/soundUtils';
-import { getCommentaryUrl } from '../../services/marketCommentaryService';
+import { fetchMorningReport } from '../../services/marketCommentaryService';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
 import { getDateRangeForPeriod, formatRangeForAPI } from '../../utils/dateRangeUtils';
 import { getImportanceConfig, IMPORTANCE_LEVELS } from '../../utils/importanceUtils';
@@ -29,6 +29,8 @@ const EconomicCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isCommentaryPlaying, setIsCommentaryPlaying] = useState(false);
   const [commentaryError, setCommentaryError] = useState(null);
+  const [morningReportSummary, setMorningReportSummary] = useState(null);
+  const [showSummaryTemporarily, setShowSummaryTemporarily] = useState(false);
 
   // Timezone management
   const { selectedTimezone, updateTimezone } = useTimezone();
@@ -103,7 +105,12 @@ const EconomicCalendar = () => {
 
     commentaryAudio.onPlaybackEnd(() => {
       setIsCommentaryPlaying(false);
-      // Typewriter sounds are automatically restored in the commentary audio manager
+      // Ensure typewriter sounds remain enabled after commentary ends
+      // (the commentary manager automatically restores the previous state,
+      // but we want to ensure it's enabled since audio toggle is still on)
+      if (isAudioEnabled) {
+        typewriterSound.setEnabled(true);
+      }
     });
 
     // Cleanup on unmount
@@ -111,7 +118,7 @@ const EconomicCalendar = () => {
       commentaryAudio.cleanup();
       typewriterSound.cleanup();
     };
-  }, []);
+  }, [isAudioEnabled]);
 
   const handleRefresh = () => {
     refresh();
@@ -143,21 +150,35 @@ const EconomicCalendar = () => {
       
       // Try to fetch and play market commentary
       try {
-        const commentaryUrl = await getCommentaryUrl();
-        if (commentaryUrl) {
-          console.log('Found commentary URL:', commentaryUrl);
-          const success = await commentaryAudio.playCommentary(commentaryUrl, typewriterSound);
-          if (success) {
-            setIsCommentaryPlaying(true);
-            console.log('Commentary playback started successfully');
+        // Fetch the full morning report to get both commentary URL and summary
+        const morningReport = await fetchMorningReport();
+        if (morningReport) {
+          // Set the summary for the NextEventTypewriter to show temporarily
+          if (morningReport.summary) {
+            setMorningReportSummary(morningReport.summary);
+            setShowSummaryTemporarily(true);
+          }
+          
+          // Try to play commentary if available
+          const commentaryUrl = morningReport.brief;
+          if (commentaryUrl && typeof commentaryUrl === 'string' && commentaryUrl.toLowerCase().includes('.mp3')) {
+            console.log('Found commentary URL:', commentaryUrl);
+            const success = await commentaryAudio.playCommentary(commentaryUrl, typewriterSound);
+            if (success) {
+              setIsCommentaryPlaying(true);
+              console.log('Commentary playback started successfully');
+            } else {
+              console.warn('Failed to start commentary playback');
+              // Still enable typewriter sounds as fallback
+              typewriterSound.setEnabled(true);
+            }
           } else {
-            console.warn('Failed to start commentary playback');
-            // Still enable typewriter sounds as fallback
+            console.log('No commentary available, enabling typewriter sounds');
+            // No commentary available, just enable typewriter sounds
             typewriterSound.setEnabled(true);
           }
         } else {
-          console.log('No commentary available, enabling typewriter sounds');
-          // No commentary available, just enable typewriter sounds
+          console.log('No morning report available, enabling typewriter sounds');
           typewriterSound.setEnabled(true);
         }
       } catch (error) {
@@ -167,10 +188,12 @@ const EconomicCalendar = () => {
         typewriterSound.setEnabled(true);
       }
     } else {
-      // Audio disabled - stop everything
+      // Audio disabled - stop everything and clear summary
       commentaryAudio.stopCommentary();
       typewriterSound.setEnabled(false);
       setIsCommentaryPlaying(false);
+      setMorningReportSummary(null);
+      setShowSummaryTemporarily(false);
     }
   };
 
@@ -291,7 +314,13 @@ const EconomicCalendar = () => {
       )}
 
       {/* Next Event Terminal Display */}
-      <NextEventTypewriter events={events} selectedEvent={selectedEvent} selectedTimezone={selectedTimezone} />
+      <NextEventTypewriter 
+        events={events} 
+        selectedEvent={selectedEvent} 
+        selectedTimezone={selectedTimezone} 
+        morningReportSummary={showSummaryTemporarily ? morningReportSummary : null}
+        onSummaryDisplayComplete={() => setShowSummaryTemporarily(false)}
+      />
 
       {/* Filter Controls */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
