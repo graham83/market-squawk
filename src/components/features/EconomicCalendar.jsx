@@ -13,6 +13,7 @@ import TimezoneSelector from '../ui/TimezoneSelector';
 import useEvents from '../../hooks/useEvents';
 import useTimezone from '../../hooks/useTimezone';
 import useTheme from '../../hooks/useTheme.jsx';
+import eventService from '../../services/eventService.js';
 import typewriterSound, { commentaryAudio } from '../../utils/soundUtils';
 import { fetchMorningReport } from '../../services/marketCommentaryService';
 import { formatDateInTimezone } from '../../utils/timezoneUtils';
@@ -21,7 +22,8 @@ import { getImportanceConfig, IMPORTANCE_LEVELS } from '../../utils/importanceUt
 
 const EconomicCalendar = () => {
   // Component state for filtering
-  const [selectedPeriod, setSelectedPeriod] = useState('thisWeek');
+  const [selectedPeriod, setSelectedPeriod] = useState(null); // Will be set by smart default logic
+  const [isInitialized, setIsInitialized] = useState(false);
   const [selectedImportance, setSelectedImportance] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [eventsPerPage, setEventsPerPage] = useState(10);
@@ -40,6 +42,11 @@ const EconomicCalendar = () => {
 
   // Get date range using the tested utilities
   const getDateRange = () => {
+    // Return null if not initialized yet to prevent API calls
+    if (!selectedPeriod) {
+      return null;
+    }
+    
     const range = getDateRangeForPeriod(selectedPeriod, selectedTimezone);
     if (range) {
       return formatRangeForAPI(range);
@@ -56,6 +63,12 @@ const EconomicCalendar = () => {
   // Build API filters with useMemo to recalculate when dependencies change
   const apiFilters = useMemo(() => {
     const dateRange = getDateRange();
+    
+    // Return null if no date range available (not initialized)
+    if (!dateRange) {
+      return null;
+    }
+    
     const filters = {
       fromDate: dateRange.fromDate,
       toDate: dateRange.toDate
@@ -71,8 +84,51 @@ const EconomicCalendar = () => {
 
   // API integration with dynamic filtering
   const { events, loading, error, refresh } = useEvents({
-    filters: apiFilters
+    filters: apiFilters,
+    autoFetch: !!apiFilters // Only auto-fetch when apiFilters is not null
   });
+
+  // Smart default period initialization
+  useEffect(() => {
+    if (isInitialized || !selectedTimezone) return;
+
+    const initializeDefaultPeriod = async () => {
+      try {
+        // First, check if there are events for today
+        const todayRange = getDateRangeForPeriod('today', selectedTimezone);
+        const todayFilters = formatRangeForAPI(todayRange);
+        
+        const todayEvents = await eventService.fetchEvents(todayFilters);
+        
+        if (todayEvents && todayEvents.length > 0) {
+          // Events exist for today, use 'today'
+          setSelectedPeriod('today');
+        } else {
+          // No events for today, check tomorrow
+          const tomorrowRange = getDateRangeForPeriod('tomorrow', selectedTimezone);
+          const tomorrowFilters = formatRangeForAPI(tomorrowRange);
+          
+          const tomorrowEvents = await eventService.fetchEvents(tomorrowFilters);
+          
+          if (tomorrowEvents && tomorrowEvents.length > 0) {
+            // Events exist for tomorrow, use 'tomorrow'
+            setSelectedPeriod('tomorrow');
+          } else {
+            // No events for today or tomorrow, default to 'today'
+            setSelectedPeriod('today');
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing default period:', error);
+        // Fallback to 'today' on error
+        setSelectedPeriod('today');
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    initializeDefaultPeriod();
+  }, [selectedTimezone, isInitialized]);
 
   // Define period options
   const periodOptions = [
