@@ -134,13 +134,26 @@ export const useEvents = (options = {}) => {
 
   // Create a stable string representation of filters for comparison
   const filtersKey = useMemo(() => {
-    if (!filters) return null;
-    return JSON.stringify(filters);
+    if (!filters) return '';
+    // Sort keys to ensure consistent ordering
+    const sortedKeys = Object.keys(filters).sort();
+    const sortedFilters = {};
+    sortedKeys.forEach(key => {
+      sortedFilters[key] = filters[key];
+    });
+    return JSON.stringify(sortedFilters);
   }, [filters]);
+
+  // Store previous filters key to detect real changes
+  const prevFiltersKeyRef = useRef(filtersKey);
 
   // Auto-fetch on mount and when filters change
   useEffect(() => {
-    if (autoFetch && filters) {
+    // Only fetch if filters actually changed or on initial mount
+    const filtersChanged = prevFiltersKeyRef.current !== filtersKey;
+    prevFiltersKeyRef.current = filtersKey;
+
+    if (autoFetch && filters && filtersChanged) {
       const doFetch = async () => {
         setLoading(true);
         setError(null);
