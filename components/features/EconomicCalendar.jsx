@@ -100,13 +100,6 @@ const EconomicCalendar = ({ initialData = null }) => {
 
   // Handle initial period based on SSR data source
   useEffect(() => {
-    console.log('SSR initialization check:', {
-      hasInitialData: !!initialData,
-      dataSource: initialData?.dataSource,
-      isInitialized,
-      eventsLength: initialData?.events?.length
-    });
-    
     if (initialData && !isInitialized) {
       // If we have initial data but no dataSource, still initialize with a default
       const periodToSet = initialData.dataSource || 'today';
@@ -120,12 +113,11 @@ const EconomicCalendar = ({ initialData = null }) => {
           setSelectedPeriod('tomorrow');
           break;
         case 'week':
-          setSelectedPeriod('week');
+          setSelectedPeriod('thisWeek');  // Map 'week' to 'thisWeek'
           break;
         default:
           setSelectedPeriod('today');
       }
-      console.log('Setting isInitialized to true from SSR data with period:', periodToSet);
       setIsInitialized(true);
       return;
     }
@@ -136,13 +128,6 @@ const EconomicCalendar = ({ initialData = null }) => {
   
   // Smart default period initialization (client-side only, skip if we have SSR data)
   useEffect(() => {
-    console.log('Client initialization check:', {
-      isInitialized,
-      selectedTimezone,
-      hasSSRData: hasSSRData.current,
-      willReturn: isInitialized || !selectedTimezone || hasSSRData.current
-    });
-    
     if (isInitialized || !selectedTimezone || hasSSRData.current) return;
 
     const initializeDefaultPeriod = async () => {
@@ -188,19 +173,11 @@ const EconomicCalendar = ({ initialData = null }) => {
   
   // Fetch data only when user changes filters (not on initial mount with SSR)
   useEffect(() => {
-    console.log('Filter fetch check:', {
-      hasUserInteracted,
-      apiFilters,
-      isInitialized,
-      hasFetchEvents: !!fetchEvents
-    });
-    
     // Only fetch if user has actually interacted with filters
     if (!hasUserInteracted) return;
     
     // Fetch if we have filters and are initialized
     if (apiFilters && isInitialized && fetchEvents) {
-      console.log('Fetching events with filters:', apiFilters);
       fetchEvents(apiFilters);
     }
   }, [apiFilters, isInitialized, hasUserInteracted, fetchEvents]); // Dependencies for filter changes
