@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-// Base API configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.CALENDAR_API_BASE || 'https://data-dev.pricesquawk.com';
+// Base API configuration - use our cached Vercel API endpoints
+// In production, this will use the relative path, hitting our cached endpoints
+// In development, it will use localhost
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api';
 
 // Create axios instance with default configuration
 const api = axios.create({

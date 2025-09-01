@@ -40,14 +40,34 @@ export default function HomePage({ initialData, pageMetadata }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req, res }) {
   try {
+    // Set cache headers for the SSR response
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=300, stale-while-revalidate=600'
+    );
+    
     // Get current date in Eastern Time
     const todayET = getTodayInET();
     const tomorrowET = new Date(new Date(todayET).getTime() + 24 * 60 * 60 * 1000)
       .toISOString().split('T')[0];
     
-    const API_BASE = process.env.CALENDAR_API_BASE || 'https://data-dev.pricesquawk.com';
+    // Determine base URL for API calls
+    const getBaseUrl = () => {
+      // In production, use the deployment URL
+      if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`;
+      }
+      // In development, use localhost
+      if (process.env.NODE_ENV === 'development') {
+        return 'http://localhost:3000';
+      }
+      // Fallback to production domain
+      return 'https://marketsquawk.ai';
+    };
+    
+    const baseUrl = getBaseUrl();
     
     let events = [];
     let morningReport = null;
@@ -55,16 +75,14 @@ export async function getServerSideProps() {
     
     // Smart fallback strategy: today → tomorrow → week
     
-    // Try 1: Today's events
+    // Try 1: Today's events (using our cached API)
     try {
       const { fromDate, toDate } = computeDayRange(todayET);
-      const todayUrl = `${API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+      const todayUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
       
       const response = await fetch(todayUrl, {
         headers: { 
-          'accept': 'application/json',
-          'user-agent': 'Market-Squawk-Calendar/1.0 (+https://marketsquawk.ai)',
-          'referer': 'https://marketsquawk.ai'
+          'accept': 'application/json'
         },
         signal: AbortSignal.timeout(8000)
       });
@@ -86,13 +104,11 @@ export async function getServerSideProps() {
     if (events.length === 0) {
       try {
         const { fromDate, toDate } = computeDayRange(tomorrowET);
-        const tomorrowUrl = `${API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+        const tomorrowUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
         
         const response = await fetch(tomorrowUrl, {
           headers: { 
-            'accept': 'application/json',
-            'user-agent': 'Market-Squawk-Calendar/1.0 (+https://marketsquawk.ai)',
-            'referer': 'https://marketsquawk.ai'
+            'accept': 'application/json'
           },
           signal: AbortSignal.timeout(8000)
         });
@@ -115,13 +131,11 @@ export async function getServerSideProps() {
     if (events.length === 0) {
       try {
         const { fromDate, toDate } = computeWeekRange(todayET);
-        const weekUrl = `${API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+        const weekUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
         
         const response = await fetch(weekUrl, {
           headers: { 
-            'accept': 'application/json',
-            'user-agent': 'Market-Squawk-Calendar/1.0 (+https://marketsquawk.ai)',
-            'referer': 'https://marketsquawk.ai'
+            'accept': 'application/json'
           },
           signal: AbortSignal.timeout(8000)
         });
@@ -136,14 +150,12 @@ export async function getServerSideProps() {
       }
     }
     
-    // Try to fetch morning report
+    // Try to fetch morning report (using our cached API)
     try {
-      const morningReportUrl = `${API_BASE}/morning_report`;
+      const morningReportUrl = `${baseUrl}/api/morning-report`;
       const response = await fetch(morningReportUrl, {
         headers: { 
-          'accept': 'application/json',
-          'user-agent': 'Market-Squawk-Calendar/1.0 (+https://marketsquawk.ai)',
-          'referer': 'https://marketsquawk.ai'
+          'accept': 'application/json'
         },
         signal: AbortSignal.timeout(8000)
       });

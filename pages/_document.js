@@ -11,8 +11,6 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         
-        {/* DNS prefetch for API */}
-        <link rel="dns-prefetch" href="//data-dev.pricesquawk.com" />
         
         {/* Security headers */}
         <meta name="robots" content="index, follow" />
