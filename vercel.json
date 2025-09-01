@@ -1,4 +1,5 @@
 {
+  "framework": "nextjs",
   "rewrites": [
     { "source": "/calendar/today", "destination": "/api/calendar/today" },
     { "source": "/calendar/week", "destination": "/api/calendar/week" },
