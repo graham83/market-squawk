@@ -53,18 +53,13 @@ export async function getServerSideProps({ req, res }) {
     const tomorrowET = new Date(new Date(todayET).getTime() + 24 * 60 * 60 * 1000)
       .toISOString().split('T')[0];
     
-    // Determine base URL for API calls
+    // Determine base URL for API calls - use absolute URL to avoid auth issues
     const getBaseUrl = () => {
-      // In production deployments, use the actual request URL
-      if (process.env.VERCEL) {
-        // Use the actual request host for Vercel deployments
-        const proto = req.headers['x-forwarded-proto'] || 'https';
-        const host = req.headers['x-forwarded-host'] || req.headers.host;
-        if (host) {
-          return `${proto}://${host}`;
-        }
+      // Use VERCEL_URL if available (this includes the deployment-specific URL)
+      if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`;
       }
-      // In development, use the request host
+      // In development, use localhost
       if (process.env.NODE_ENV === 'development') {
         const host = req.headers.host || 'localhost:3000';
         return `http://${host}`;
@@ -85,7 +80,7 @@ export async function getServerSideProps({ req, res }) {
     
     // Smart fallback strategy: today → tomorrow → week
     
-    // Try 1: Today's events (using our cached API)
+    // Try 1: Today's events (using our cached API with absolute URL)
     try {
       const { fromDate, toDate } = computeDayRange(todayET);
       const todayUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
