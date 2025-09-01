@@ -55,9 +55,14 @@ export async function getServerSideProps({ req, res }) {
     
     // Determine base URL for API calls
     const getBaseUrl = () => {
-      // In production, use the deployment URL
-      if (process.env.VERCEL_URL) {
-        return `https://${process.env.VERCEL_URL}`;
+      // In production deployments, use the actual request URL
+      if (process.env.VERCEL) {
+        // Use the actual request host for Vercel deployments
+        const proto = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers['x-forwarded-host'] || req.headers.host;
+        if (host) {
+          return `${proto}://${host}`;
+        }
       }
       // In development, use the request host
       if (process.env.NODE_ENV === 'development') {
@@ -70,6 +75,10 @@ export async function getServerSideProps({ req, res }) {
     
     const baseUrl = getBaseUrl();
     
+    // Log for debugging in production
+    console.log('[SSR] Base URL:', baseUrl);
+    console.log('[SSR] Today ET:', todayET);
+    
     let events = [];
     let morningReport = null;
     let dataSource = '';
@@ -80,6 +89,8 @@ export async function getServerSideProps({ req, res }) {
     try {
       const { fromDate, toDate } = computeDayRange(todayET);
       const todayUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+      
+      console.log('[SSR] Fetching today:', todayUrl);
       
       const response = await fetch(todayUrl, {
         headers: { 
@@ -92,13 +103,17 @@ export async function getServerSideProps({ req, res }) {
         const data = await response.json();
         const todayEvents = Array.isArray(data) ? data : [];
         
+        console.log('[SSR] Today events count:', todayEvents.length);
+        
         if (todayEvents.length > 0) {
           events = todayEvents;
           dataSource = 'today';
         }
+      } else {
+        console.warn('[SSR] Today API response not ok:', response.status);
       }
     } catch (error) {
-      console.warn('Today API failed:', error.message);
+      console.warn('[SSR] Today API failed:', error.message);
     }
     
     // Try 2: Tomorrow's events (if today has no events)
@@ -106,6 +121,8 @@ export async function getServerSideProps({ req, res }) {
       try {
         const { fromDate, toDate } = computeDayRange(tomorrowET);
         const tomorrowUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+        
+        console.log('[SSR] Fetching tomorrow:', tomorrowUrl);
         
         const response = await fetch(tomorrowUrl, {
           headers: { 
@@ -118,13 +135,17 @@ export async function getServerSideProps({ req, res }) {
           const data = await response.json();
           const tomorrowEvents = Array.isArray(data) ? data : [];
           
+          console.log('[SSR] Tomorrow events count:', tomorrowEvents.length);
+          
           if (tomorrowEvents.length > 0) {
             events = tomorrowEvents;
             dataSource = 'tomorrow';
           }
+        } else {
+          console.warn('[SSR] Tomorrow API response not ok:', response.status);
         }
       } catch (error) {
-        console.warn('Tomorrow API failed:', error.message);
+        console.warn('[SSR] Tomorrow API failed:', error.message);
       }
     }
     
