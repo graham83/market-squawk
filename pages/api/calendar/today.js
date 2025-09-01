@@ -1,4 +1,4 @@
-import { computeDayRange, getTodayInET, escapeHtml, formatTimeET, formatDateET } from '../utils.js';
+import { computeDayRange, getTodayInET, escapeHtml, formatTimeET, formatDateET } from '../../../lib/utils.js';
 
 /**
  * Vercel Serverless Function for Daily Economic Calendar

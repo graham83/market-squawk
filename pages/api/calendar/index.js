@@ -1,6 +1,6 @@
 // JSON API: /api/calendar
 // Proxies economic calendar data from upstream and supports optional filtering.
-import { computeWeekRange } from '../utils.js';
+import { computeWeekRange } from '../../../lib/utils.js';
 
 export default async function handler(req, res) {
   try {

@@ -1,7 +1,7 @@
 // API endpoint for warming up the cache via Vercel Cron
 // This endpoint will be called automatically by Vercel's cron scheduler
 
-import { getTodayInET, computeDayRange, computeWeekRange } from '../utils.js';
+import { getTodayInET, computeDayRange, computeWeekRange } from '../../../lib/utils.js';
 
 export default async function handler(req, res) {
   // Verify this is a cron job request (optional security)
