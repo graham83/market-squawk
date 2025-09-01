@@ -100,9 +100,19 @@ const EconomicCalendar = ({ initialData = null }) => {
 
   // Handle initial period based on SSR data source
   useEffect(() => {
-    if (initialData && initialData.dataSource && !isInitialized) {
+    console.log('SSR initialization check:', {
+      hasInitialData: !!initialData,
+      dataSource: initialData?.dataSource,
+      isInitialized,
+      eventsLength: initialData?.events?.length
+    });
+    
+    if (initialData && !isInitialized) {
+      // If we have initial data but no dataSource, still initialize with a default
+      const periodToSet = initialData.dataSource || 'today';
+      
       // Set period based on what data was fetched server-side
-      switch (initialData.dataSource) {
+      switch (periodToSet) {
         case 'today':
           setSelectedPeriod('today');
           break;
@@ -115,6 +125,7 @@ const EconomicCalendar = ({ initialData = null }) => {
         default:
           setSelectedPeriod('today');
       }
+      console.log('Setting isInitialized to true from SSR data with period:', periodToSet);
       setIsInitialized(true);
       return;
     }
@@ -125,6 +136,13 @@ const EconomicCalendar = ({ initialData = null }) => {
   
   // Smart default period initialization (client-side only, skip if we have SSR data)
   useEffect(() => {
+    console.log('Client initialization check:', {
+      isInitialized,
+      selectedTimezone,
+      hasSSRData: hasSSRData.current,
+      willReturn: isInitialized || !selectedTimezone || hasSSRData.current
+    });
+    
     if (isInitialized || !selectedTimezone || hasSSRData.current) return;
 
     const initializeDefaultPeriod = async () => {
