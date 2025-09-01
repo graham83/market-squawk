@@ -40,7 +40,8 @@
       "Bash(npm test:*)",
       "Bash(node:*)",
       "Bash(gh issue view:*)",
-      "Bash(vercel logs:*)"
+      "Bash(vercel logs:*)",
+      "Bash(npx vitest run:*)"
     ],
     "deny": []
   }
