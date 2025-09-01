@@ -42,23 +42,26 @@ export const ThemeProvider = ({ children }) => {
 
 // Custom hook to use theme
 export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  
-  // During SSR or if not within provider, return default values
-  if (!context) {
-    // Check if we're in SSR or missing provider
-    if (typeof window === 'undefined') {
-      // SSR - return default values
-      return { 
-        isDark: true, 
-        toggleTheme: () => {} // no-op during SSR
-      };
-    } else {
-      // Client-side missing provider - this is an error
-      throw new Error('useTheme must be used within a ThemeProvider');
+  try {
+    const context = useContext(ThemeContext);
+    
+    // If context exists, return it
+    if (context) {
+      return context;
     }
+    
+    // If no context, provide default values (for SSR or before hydration)
+    return { 
+      isDark: true, 
+      toggleTheme: () => {} // no-op during SSR/initial render
+    };
+  } catch (error) {
+    // If useContext throws (shouldn't happen in React 18+), provide defaults
+    return { 
+      isDark: true, 
+      toggleTheme: () => {}
+    };
   }
-  return context;
 };
 
 export default useTheme;
