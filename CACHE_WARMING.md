@@ -1,4 +1,4 @@
-# Cache Warming Strategies for Market Squawk
+# Cache Warming Strategies for Market Squawk AI
 
 ## Current Implementation
 
