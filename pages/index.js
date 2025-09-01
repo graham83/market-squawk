@@ -53,37 +53,7 @@ export async function getServerSideProps({ req, res }) {
     const tomorrowET = new Date(new Date(todayET).getTime() + 24 * 60 * 60 * 1000)
       .toISOString().split('T')[0];
     
-    // For Vercel preview deployments, we need to fetch directly from external API
-    // because preview deployments have authentication that blocks internal requests
-    const isVercelPreview = process.env.VERCEL && process.env.VERCEL_ENV === 'preview';
     const EXTERNAL_API_BASE = process.env.CALENDAR_API_BASE || 'https://data-dev.pricesquawk.com';
-    
-    // Determine base URL for different environments
-    let baseUrl, apiPath;
-    if (isVercelPreview) {
-      // Preview deployments: use external API directly
-      baseUrl = EXTERNAL_API_BASE;
-      apiPath = '/calendar';
-    } else if (process.env.VERCEL_URL) {
-      // Production Vercel: use internal API with full URL
-      baseUrl = `https://${process.env.VERCEL_URL}`;
-      apiPath = '/api/calendar';
-    } else if (process.env.NODE_ENV === 'development') {
-      // Local development
-      const host = req.headers.host || 'localhost:3000';
-      baseUrl = `http://${host}`;
-      apiPath = '/api/calendar';
-    } else {
-      // Fallback
-      baseUrl = 'https://marketsquawk.ai';
-      apiPath = '/api/calendar';
-    }
-    
-    // Log for debugging in production
-    console.log('[SSR] Is Vercel Preview:', isVercelPreview);
-    console.log('[SSR] Base URL:', baseUrl);
-    console.log('[SSR] API Path:', apiPath);
-    console.log('[SSR] Today ET:', todayET);
     
     let events = [];
     let morningReport = null;
@@ -91,17 +61,20 @@ export async function getServerSideProps({ req, res }) {
     
     // Smart fallback strategy: today → tomorrow → week
     
-    // Try 1: Today's events
+    // Try 1: Today's events (using Next.js server fetch with caching)
     try {
       const { fromDate, toDate } = computeDayRange(todayET);
-      const todayUrl = `${baseUrl}${apiPath}?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
-      
-      console.log('[SSR] Fetching today:', todayUrl);
+      const todayUrl = `${EXTERNAL_API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
       
       const response = await fetch(todayUrl, {
         headers: { 
           'accept': 'application/json',
           'user-agent': 'Market-Squawk-SSR/1.0'
+        },
+        // Next.js fetch caching configuration
+        next: { 
+          revalidate: 300, // Cache for 5 minutes
+          tags: ['calendar-today']
         },
         signal: AbortSignal.timeout(8000)
       });
@@ -110,14 +83,10 @@ export async function getServerSideProps({ req, res }) {
         const data = await response.json();
         const todayEvents = Array.isArray(data) ? data : [];
         
-        console.log('[SSR] Today events count:', todayEvents.length);
-        
         if (todayEvents.length > 0) {
           events = todayEvents;
           dataSource = 'today';
         }
-      } else {
-        console.warn('[SSR] Today API response not ok:', response.status);
       }
     } catch (error) {
       console.warn('[SSR] Today API failed:', error.message);
@@ -127,14 +96,17 @@ export async function getServerSideProps({ req, res }) {
     if (events.length === 0) {
       try {
         const { fromDate, toDate } = computeDayRange(tomorrowET);
-        const tomorrowUrl = `${baseUrl}${apiPath}?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
-        
-        console.log('[SSR] Fetching tomorrow:', tomorrowUrl);
+        const tomorrowUrl = `${EXTERNAL_API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
         
         const response = await fetch(tomorrowUrl, {
           headers: { 
             'accept': 'application/json',
             'user-agent': 'Market-Squawk-SSR/1.0'
+          },
+          // Next.js fetch caching configuration
+          next: { 
+            revalidate: 300, // Cache for 5 minutes
+            tags: ['calendar-tomorrow']
           },
           signal: AbortSignal.timeout(8000)
         });
@@ -143,14 +115,10 @@ export async function getServerSideProps({ req, res }) {
           const data = await response.json();
           const tomorrowEvents = Array.isArray(data) ? data : [];
           
-          console.log('[SSR] Tomorrow events count:', tomorrowEvents.length);
-          
           if (tomorrowEvents.length > 0) {
             events = tomorrowEvents;
             dataSource = 'tomorrow';
           }
-        } else {
-          console.warn('[SSR] Tomorrow API response not ok:', response.status);
         }
       } catch (error) {
         console.warn('[SSR] Tomorrow API failed:', error.message);
@@ -161,12 +129,17 @@ export async function getServerSideProps({ req, res }) {
     if (events.length === 0) {
       try {
         const { fromDate, toDate } = computeWeekRange(todayET);
-        const weekUrl = `${baseUrl}${apiPath}?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+        const weekUrl = `${EXTERNAL_API_BASE}/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
         
         const response = await fetch(weekUrl, {
           headers: { 
             'accept': 'application/json',
             'user-agent': 'Market-Squawk-SSR/1.0'
+          },
+          // Next.js fetch caching configuration
+          next: { 
+            revalidate: 300, // Cache for 5 minutes
+            tags: ['calendar-week']
           },
           signal: AbortSignal.timeout(8000)
         });
