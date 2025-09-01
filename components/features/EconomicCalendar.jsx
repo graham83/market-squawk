@@ -170,14 +170,22 @@ const EconomicCalendar = ({ initialData = null }) => {
   
   // Fetch data only when user changes filters (not on initial mount with SSR)
   useEffect(() => {
+    console.log('Filter fetch check:', {
+      hasUserInteracted,
+      apiFilters,
+      isInitialized,
+      hasFetchEvents: !!fetchEvents
+    });
+    
     // Only fetch if user has actually interacted with filters
     if (!hasUserInteracted) return;
     
     // Fetch if we have filters and are initialized
     if (apiFilters && isInitialized && fetchEvents) {
+      console.log('Fetching events with filters:', apiFilters);
       fetchEvents(apiFilters);
     }
-  }, [apiFilters, isInitialized, hasUserInteracted]); // Dependencies for filter changes
+  }, [apiFilters, isInitialized, hasUserInteracted, fetchEvents]); // Dependencies for filter changes
 
   // Define period options
   const periodOptions = [
