@@ -11,7 +11,7 @@ import api from './api';
  */
 export const fetchMorningReport = async () => {
   try {
-    const response = await api.get('/morning_report');
+    const response = await api.get('/morning-report');
     return response.data;
   } catch (error) {
     console.error('Failed to fetch morning report:', error);
