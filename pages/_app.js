@@ -1,5 +1,5 @@
 import '../src/index.css';
-import { ThemeProvider } from '../src/hooks/useTheme.jsx';
+import { ThemeProvider } from '../hooks/useTheme.jsx';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 
