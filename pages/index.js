@@ -59,9 +59,10 @@ export async function getServerSideProps({ req, res }) {
       if (process.env.VERCEL_URL) {
         return `https://${process.env.VERCEL_URL}`;
       }
-      // In development, use localhost
+      // In development, use the request host
       if (process.env.NODE_ENV === 'development') {
-        return 'http://localhost:3000';
+        const host = req.headers.host || 'localhost:3000';
+        return `http://${host}`;
       }
       // Fallback to production domain
       return 'https://marketsquawk.ai';
@@ -143,7 +144,9 @@ export async function getServerSideProps({ req, res }) {
         if (response.ok) {
           const data = await response.json();
           events = Array.isArray(data) ? data : [];
-          dataSource = 'week';
+          if (events.length > 0) {
+            dataSource = 'week';
+          }
         }
       } catch (error) {
         console.warn('Week API failed:', error.message);
