@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import eventService from '../services/eventService.js';
 
 /**
@@ -51,7 +51,7 @@ export const useEvents = (options = {}) => {
       setLastFetch(new Date());
       hasFetchedRef.current = true;
       
-      if (import.meta.env.DEV) {
+      if (process.env.NODE_ENV === 'development') {
         console.log(`Fetched ${fetchedEvents.length} events`);
       }
     } catch (err) {
@@ -132,9 +132,15 @@ export const useEvents = (options = {}) => {
     }
   }, []);
 
+  // Create a stable string representation of filters for comparison
+  const filtersKey = useMemo(() => {
+    if (!filters) return null;
+    return JSON.stringify(filters);
+  }, [filters]);
+
   // Auto-fetch on mount and when filters change
   useEffect(() => {
-    if (autoFetch) {
+    if (autoFetch && filters) {
       const doFetch = async () => {
         setLoading(true);
         setError(null);
@@ -153,8 +159,8 @@ export const useEvents = (options = {}) => {
           setLastFetch(new Date());
           hasFetchedRef.current = true;
           
-          if (import.meta.env.DEV) {
-            console.log(`Fetched ${fetchedEvents.length} events with filters:`, filters);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`Fetched ${fetchedEvents.length} events with filters:`, allFilters);
           }
         } catch (err) {
           setError(err.message);
@@ -167,7 +173,7 @@ export const useEvents = (options = {}) => {
       
       doFetch();
     }
-  }, [autoFetch, JSON.stringify(filters)]); // Use JSON.stringify for deep comparison
+  }, [autoFetch, filtersKey, dateRange]); // Use filtersKey for deep comparison
 
   // Auto-refetch interval (disabled by default)
   useEffect(() => {

@@ -30,7 +30,7 @@ export const useImportance = () => {
     setSelectedImportance(importance);
     storeImportance(importance);
     
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === 'development') {
       console.log('Importance updated to:', importance);
     }
   }, []);

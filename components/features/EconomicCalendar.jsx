@@ -85,7 +85,7 @@ const EconomicCalendar = ({ initialData = null }) => {
   // API integration with dynamic filtering
   const { events, loading, error, refresh } = useEvents({
     filters: apiFilters,
-    autoFetch: !!apiFilters && !initialData, // Skip auto-fetch if we have initialData
+    autoFetch: !!apiFilters && isInitialized, // Fetch when filters are available and component is initialized
     initialData: initialData
   });
 
