@@ -1,4 +1,4 @@
-import { computeWeekRange, linkForWeekOffset, escapeHtml, formatTimeET } from '../utils.js';
+import { computeWeekRange, linkForWeekOffset, escapeHtml, formatTimeET } from '../../../lib/utils.js';
 
 /**
  * Vercel Serverless Function for Weekly Economic Calendar

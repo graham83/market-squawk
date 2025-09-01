@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { computeWeekRange, getWeekStartDate, linkForWeekOffset, escapeHtml, formatTimeET } from '../utils.js';
+import { computeWeekRange, getWeekStartDate, linkForWeekOffset, escapeHtml, formatTimeET } from '../../../lib/utils.js';
 
 describe('API Utilities', () => {
   beforeEach(() => {
