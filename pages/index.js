@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import EconomicCalendar from '../components/features/EconomicCalendar';
-import { getTodayInET, computeDayRange, computeWeekRange, escapeHtml, formatDateET } from '../api/utils.js';
+import { getTodayInET, computeDayRange, computeWeekRange, escapeHtml, formatDateET } from './api/utils.js';
 
 export default function HomePage({ initialData, pageMetadata }) {
   return (

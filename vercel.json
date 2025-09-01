@@ -5,14 +5,23 @@
     { "source": "/calendar/week/:start", "destination": "/api/calendar/week?start=:start" }
   ],
   "functions": {
-    "api/calendar/today.js": {
+    "pages/api/calendar/today.js": {
       "maxDuration": 30
     },
-    "api/calendar/week.js": {
+    "pages/api/calendar/week.js": {
       "maxDuration": 30
     },
-    "api/calendar/index.js": {
+    "pages/api/calendar/index.js": {
       "maxDuration": 15
+    },
+    "pages/api/cron/warm-cache.js": {
+      "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/warm-cache",
+      "schedule": "*/5 * * * *"
+    }
+  ]
 }
