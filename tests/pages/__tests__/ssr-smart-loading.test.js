@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getTodayInET, computeDayRange, computeWeekRange } from '../../lib/utils.js';
+import { getTodayInET, computeDayRange, computeWeekRange } from '../../../lib/utils.js';
 
 // Mock fetch globally
 global.fetch = vi.fn();
