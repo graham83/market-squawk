@@ -290,16 +290,10 @@ const EconomicCalendar = ({ initialData = null }) => {
   };
 
   return (
-    <div className={`min-h-screen p-6 transition-colors duration-300 ${
-      isDark 
-        ? 'bg-gray-900 text-white' 
-        : 'bg-white text-gray-900'
-    }`}>
+    <div className="min-h-screen p-6 transition-colors duration-300 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <Typography variant="h2" className={`font-bold ${
-          isDark ? 'text-white' : 'text-gray-900'
-        }`}>
+        <Typography variant="h2" className="font-bold text-gray-900 dark:text-white">
           Economic Calendar
         </Typography>
         <div className="flex items-center space-x-4">
@@ -308,7 +302,7 @@ const EconomicCalendar = ({ initialData = null }) => {
               variant="outlined"
               color="gray"
               size="sm"
-              className={`border-gray-600 hover:bg-gray-700 ${
+              className={`border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 ${
                 isAudioEnabled ? (isCommentaryPlaying ? 'text-green-400' : 'text-grey-400') : 'text-orange-400'
               }`}
               onClick={handleAudioToggle}
@@ -351,9 +345,7 @@ const EconomicCalendar = ({ initialData = null }) => {
             variant="outlined"
             color="gray"
             size="sm"
-            className={`border-gray-600 hover:bg-gray-700 ${
-              isDark ? 'text-yellow-400' : 'text-blue-400'
-            }`}
+            className="border-gray-600 hover:bg-gray-700 text-blue-400 dark:text-yellow-400"
             onClick={toggleTheme}
           >
             {isDark ? (
@@ -414,35 +406,25 @@ const EconomicCalendar = ({ initialData = null }) => {
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Period Selector */}
         <div>
-          <Typography variant="h6" className={`mb-2 ${
-            isDark ? 'text-gray-300' : 'text-gray-700'
-          }`}>
+          <Typography variant="h6" className="mb-2 text-gray-700 dark:text-gray-300">
             Select Period
           </Typography>
           <Select 
             value={selectedPeriod}
             onChange={setSelectedPeriod}
-            className={isDark 
-              ? "bg-gray-800 border-gray-700 text-white" 
-              : "bg-white border-gray-300 text-gray-900"
-            }
+            className="bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             containerProps={{
               className: "min-w-0"
             }}
             menuProps={{
-              className: isDark 
-                ? "bg-gray-800 border-gray-700 text-white" 
-                : "bg-white border-gray-300 text-gray-900"
+              className: "bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             }}
           >
             {periodOptions.map(period => (
               <Option 
                 key={period.value} 
                 value={period.value} 
-                className={isDark 
-                  ? "text-white hover:bg-gray-700" 
-                  : "text-gray-900 hover:bg-gray-100"
-                }
+                className="text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 {period.label}
               </Option>
@@ -452,35 +434,25 @@ const EconomicCalendar = ({ initialData = null }) => {
 
         {/* Importance Selector */}
         <div>
-          <Typography variant="h6" className={`mb-2 ${
-            isDark ? 'text-gray-300' : 'text-gray-700'
-          }`}>
+          <Typography variant="h6" className="mb-2 text-gray-700 dark:text-gray-300">
             Importance
           </Typography>
           <Select 
             value={selectedImportance}
             onChange={setSelectedImportance}
-            className={isDark 
-              ? "bg-gray-800 border-gray-700 text-white" 
-              : "bg-white border-gray-300 text-gray-900"
-            }
+            className="bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             containerProps={{
               className: "min-w-0"
             }}
             menuProps={{
-              className: isDark 
-                ? "bg-gray-800 border-gray-700 text-white" 
-                : "bg-white border-gray-300 text-gray-900"
+              className: "bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             }}
           >
             {importanceOptions.map(importance => (
               <Option 
                 key={importance.value} 
                 value={importance.value} 
-                className={isDark 
-                  ? "text-white hover:bg-gray-700" 
-                  : "text-gray-900 hover:bg-gray-100"
-                }
+                className="text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 <div className="flex items-center justify-between w-full">
                   <span>{importance.label}</span>
@@ -507,84 +479,47 @@ const EconomicCalendar = ({ initialData = null }) => {
       </div>
 
       {/* Events Table */}
-      <Card className={isDark 
-        ? "bg-gray-800 border border-gray-700" 
-        : "bg-white border border-gray-300"
-      }>
+      <Card className="bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className={isDark 
-                ? "border-b border-gray-700" 
-                : "border-b border-gray-300"
-              }>
-                <th className={`p-4 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>DATE & TIME</th>
-                <th className={`p-4 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>EVENT</th>
-                <th className={`p-4 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>COUNTRY</th>
-                <th className={`p-4 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>IMPORTANCE</th>
-                <th className={`p-4 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>CATEGORY</th>
-                <th className={`p-4 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>SOURCE</th>
+              <tr className="border-b border-gray-300 dark:border-gray-700">
+                <th className="p-4 text-gray-700 dark:text-gray-300">DATE & TIME</th>
+                <th className="p-4 text-gray-700 dark:text-gray-300">EVENT</th>
+                <th className="p-4 text-gray-700 dark:text-gray-300">COUNTRY</th>
+                <th className="p-4 text-gray-700 dark:text-gray-300">IMPORTANCE</th>
+                <th className="p-4 text-gray-700 dark:text-gray-300">CATEGORY</th>
+                <th className="p-4 text-gray-700 dark:text-gray-300">SOURCE</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 // Loading skeleton rows
                 [...Array(eventsPerPage)].map((_, index) => (
-                  <tr key={`skeleton-${index}`} className={isDark 
-                    ? "border-b border-gray-700" 
-                    : "border-b border-gray-300"
-                  }>
+                  <tr key={`skeleton-${index}`} className="border-b border-gray-300 dark:border-gray-700">
                     <td className="p-4">
                       <div className="animate-pulse">
-                        <div className={`h-4 rounded mb-2 ${
-                          isDark ? 'bg-gray-600' : 'bg-gray-300'
-                        }`}></div>
-                        <div className={`h-3 rounded w-3/4 ${
-                          isDark ? 'bg-gray-700' : 'bg-gray-200'
-                        }`}></div>
+                        <div className="h-4 rounded mb-2 bg-gray-300 dark:bg-gray-600"></div>
+                        <div className="h-3 rounded w-3/4 bg-gray-200 dark:bg-gray-700"></div>
                       </div>
                     </td>
                     <td className="p-4">
                       <div className="animate-pulse">
-                        <div className={`h-4 rounded mb-2 ${
-                          isDark ? 'bg-gray-600' : 'bg-gray-300'
-                        }`}></div>
-                        <div className={`h-3 rounded w-1/2 ${
-                          isDark ? 'bg-gray-700' : 'bg-gray-200'
-                        }`}></div>
+                        <div className="h-4 rounded mb-2 bg-gray-300 dark:bg-gray-600"></div>
+                        <div className="h-3 rounded w-1/2 bg-gray-200 dark:bg-gray-700"></div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <div className={`animate-pulse h-4 rounded w-12 ${
-                        isDark ? 'bg-gray-600' : 'bg-gray-300'
-                      }`}></div>
+                      <div className="animate-pulse h-4 rounded w-12 bg-gray-300 dark:bg-gray-600"></div>
                     </td>
                     <td className="p-4">
-                      <div className={`animate-pulse h-6 rounded w-16 ${
-                        isDark ? 'bg-gray-600' : 'bg-gray-300'
-                      }`}></div>
+                      <div className="animate-pulse h-6 rounded w-16 bg-gray-300 dark:bg-gray-600"></div>
                     </td>
                     <td className="p-4">
-                      <div className={`animate-pulse h-4 rounded w-20 ${
-                        isDark ? 'bg-gray-600' : 'bg-gray-300'
-                      }`}></div>
+                      <div className="animate-pulse h-4 rounded w-20 bg-gray-300 dark:bg-gray-600"></div>
                     </td>
                     <td className="p-4">
-                      <div className={`animate-pulse h-4 rounded w-16 ${
-                        isDark ? 'bg-gray-600' : 'bg-gray-300'
-                      }`}></div>
+                      <div className="animate-pulse h-4 rounded w-16 bg-gray-300 dark:bg-gray-600"></div>
                     </td>
                   </tr>
                 ))
@@ -596,16 +531,10 @@ const EconomicCalendar = ({ initialData = null }) => {
                       <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3a4 4 0 118 0v4m-4 8a2 2 0 100-4 2 2 0 000 4zm0 0v4a2 2 0 004 0v-4" />
                       </svg>
-                      <Typography variant="h6" className={isDark 
-                        ? "text-gray-500" 
-                        : "text-gray-400"
-                      }>
+                      <Typography variant="h6" className="text-gray-400 dark:text-gray-500">
                         No events found
                       </Typography>
-                      <Typography variant="small" className={isDark 
-                        ? "text-gray-600" 
-                        : "text-gray-500"
-                      }>
+                      <Typography variant="small" className="text-gray-500 dark:text-gray-600">
                         Try adjusting your filters or refresh the page
                       </Typography>
                     </div>
@@ -615,11 +544,7 @@ const EconomicCalendar = ({ initialData = null }) => {
                 currentEvents.map((event, index) => (
                 <tr 
                   key={event._id} 
-                  className={`cursor-pointer transition-colors ${
-                    isDark 
-                      ? 'border-b border-gray-700 hover:bg-gray-700/50' 
-                      : 'border-b border-gray-300 hover:bg-gray-100/50'
-                  }`}
+                  className="cursor-pointer transition-colors border-b border-gray-300 hover:bg-gray-100/50 dark:border-gray-700 dark:hover:bg-gray-700/50"
                   onClick={() => handleRowClick(event)}
                 >
                   <td className="p-4">
@@ -627,14 +552,10 @@ const EconomicCalendar = ({ initialData = null }) => {
                       const formatted = formatDateInTimezone(event.date, selectedTimezone);
                       return (
                         <div>
-                          <div className={`font-mono text-sm ${
-                            isDark ? 'text-white' : 'text-gray-900'
-                          }`}>
+                          <div className="font-mono text-sm text-gray-900 dark:text-white">
                             {formatted.date}
                           </div>
-                          <div className={`font-mono text-xs ${
-                            isDark ? 'text-gray-400' : 'text-gray-500'
-                          }`}>
+                          <div className="font-mono text-xs text-gray-500 dark:text-gray-400">
                             {formatted.time}
                           </div>
                         </div>
@@ -642,7 +563,7 @@ const EconomicCalendar = ({ initialData = null }) => {
                     })()}
                   </td>
                   <td className="p-4">
-                    <div className={isDark ? 'text-white' : 'text-gray-900'}>{event.event}</div>
+                    <div className="text-gray-900 dark:text-white">{event.event}</div>
                     {event.tags && event.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {event.tags.map((tag, tagIndex) => (
@@ -651,17 +572,14 @@ const EconomicCalendar = ({ initialData = null }) => {
                             value={tag}
                             size="sm"
                             variant="outlined"
-                            className={isDark 
-                              ? "bg-gray-700 text-gray-300 border-gray-600 text-xs" 
-                              : "bg-gray-200 text-gray-700 border-gray-300 text-xs"
-                            }
+                            className="bg-gray-200 text-gray-700 border-gray-300 text-xs dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
                           />
                         ))}
                       </div>
                     )}
                   </td>
                   <td className="p-4">
-                    <span className={isDark ? 'text-white' : 'text-gray-900'}>{event.country}</span>
+                    <span className="text-gray-900 dark:text-white">{event.country}</span>
                   </td>
                   <td className="p-4">
                     <Chip
@@ -680,9 +598,7 @@ const EconomicCalendar = ({ initialData = null }) => {
                     />
                   </td>
                   <td className="p-4">
-                    <span className={`text-sm capitalize ${
-                      isDark ? 'text-gray-400' : 'text-gray-500'
-                    }`}>
+                    <span className="text-sm capitalize text-gray-500 dark:text-gray-400">
                       {event.category.replace('_', ' ')}
                     </span>
                   </td>
@@ -691,11 +607,7 @@ const EconomicCalendar = ({ initialData = null }) => {
                       href={event.source.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`text-sm ${
-                        isDark 
-                          ? 'text-blue-400 hover:text-blue-300' 
-                          : 'text-blue-600 hover:text-blue-500'
-                      }`}
+                      className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
                     >
                       {event.source.name}
                     </a>
@@ -710,9 +622,7 @@ const EconomicCalendar = ({ initialData = null }) => {
 
       {/* Pagination */}
       <div className="flex items-center justify-between mt-6">
-        <div className={`text-sm ${
-          isDark ? 'text-gray-400' : 'text-gray-600'
-        }`}>
+        <div className="text-sm text-gray-600 dark:text-gray-400">
           Showing {indexOfFirstEvent + 1} to {Math.min(indexOfLastEvent, sortedEvents.length)} of {sortedEvents.length} results
         </div>
         <div className="flex space-x-2">
@@ -724,11 +634,8 @@ const EconomicCalendar = ({ initialData = null }) => {
             size="sm"
             className={`${
               currentPage === 1
-                ? (isDark ? 'border-gray-700 text-gray-600' : 'border-gray-300 text-gray-400')
-                : (isDark 
-                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
-                    : 'border-gray-400 text-gray-600 hover:bg-gray-100'
-                  )
+                ? 'border-gray-300 text-gray-400 dark:border-gray-700 dark:text-gray-600'
+                : 'border-gray-400 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
             }`}
           >
             «
@@ -747,10 +654,7 @@ const EconomicCalendar = ({ initialData = null }) => {
                 className={
                   currentPage === pageNumber
                     ? ""
-                    : (isDark 
-                        ? "border-gray-600 text-gray-300 hover:bg-gray-700" 
-                        : "border-gray-400 text-gray-600 hover:bg-gray-100"
-                      )
+                    : "border-gray-400 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                 }
               >
                 {pageNumber}
@@ -766,11 +670,8 @@ const EconomicCalendar = ({ initialData = null }) => {
             size="sm"
             className={`${
               currentPage === totalPages
-                ? (isDark ? 'border-gray-700 text-gray-600' : 'border-gray-300 text-gray-400')
-                : (isDark 
-                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
-                    : 'border-gray-400 text-gray-600 hover:bg-gray-100'
-                  )
+                ? 'border-gray-300 text-gray-400 dark:border-gray-700 dark:text-gray-600'
+                : 'border-gray-400 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
             }`}
           >
             »
@@ -780,9 +681,7 @@ const EconomicCalendar = ({ initialData = null }) => {
 
       {/* Rows per page selector */}
       <div className="flex items-center justify-center mt-4">
-        <div className={`flex items-center space-x-2 text-sm ${
-          isDark ? 'text-gray-400' : 'text-gray-600'
-        }`}>
+        <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
           <span>Show</span>
           {[10, 100, 1000].map((option) => (
             <Button
@@ -794,10 +693,7 @@ const EconomicCalendar = ({ initialData = null }) => {
               className={`min-w-0 px-2 py-1 ${
                 eventsPerPage === option
                   ? ""
-                  : (isDark 
-                      ? "text-gray-400 hover:text-gray-300 hover:bg-gray-700/50" 
-                      : "text-gray-600 hover:text-gray-700 hover:bg-gray-100/50"
-                    )
+                  : "text-gray-600 hover:text-gray-700 hover:bg-gray-100/50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-700/50"
               }`}
             >
               {option}
