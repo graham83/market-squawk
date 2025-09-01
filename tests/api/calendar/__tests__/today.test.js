@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import handler from '../today.js';
-import { getTodayInET, computeDayRange, formatDateET } from '../../utils.js';
+import handler from '../../../../pages/api/calendar/today.js';
+import { getTodayInET, computeDayRange, formatDateET } from '../../../../lib/utils.js';
 
 // Mock fetch globally
 global.fetch = vi.fn();

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeWeekRange, linkForWeekOffset, getWeekStartDate } from '../../utils.js';
+import { computeWeekRange, linkForWeekOffset, getWeekStartDate } from '../../../../lib/utils.js';
 
 describe('Week Navigation Endpoints', () => {
   describe('Date-specific week generation', () => {

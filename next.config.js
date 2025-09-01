@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   
   // Experimental features disabled for stable build
+  
 
   // Configure image optimization
   images: {
