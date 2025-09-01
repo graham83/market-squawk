@@ -30,7 +30,7 @@ export const useTimezone = () => {
     setSelectedTimezone(timezone);
     storeTimezone(timezone);
     
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === 'development') {
       console.log('Timezone updated to:', timezone);
     }
   }, []);
