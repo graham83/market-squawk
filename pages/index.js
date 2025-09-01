@@ -53,25 +53,36 @@ export async function getServerSideProps({ req, res }) {
     const tomorrowET = new Date(new Date(todayET).getTime() + 24 * 60 * 60 * 1000)
       .toISOString().split('T')[0];
     
-    // Determine base URL for API calls - use absolute URL to avoid auth issues
-    const getBaseUrl = () => {
-      // Use VERCEL_URL if available (this includes the deployment-specific URL)
-      if (process.env.VERCEL_URL) {
-        return `https://${process.env.VERCEL_URL}`;
-      }
-      // In development, use localhost
-      if (process.env.NODE_ENV === 'development') {
-        const host = req.headers.host || 'localhost:3000';
-        return `http://${host}`;
-      }
-      // Fallback to production domain
-      return 'https://marketsquawk.ai';
-    };
+    // For Vercel preview deployments, we need to fetch directly from external API
+    // because preview deployments have authentication that blocks internal requests
+    const isVercelPreview = process.env.VERCEL && process.env.VERCEL_ENV === 'preview';
+    const EXTERNAL_API_BASE = process.env.CALENDAR_API_BASE || 'https://data-dev.pricesquawk.com';
     
-    const baseUrl = getBaseUrl();
+    // Determine base URL for different environments
+    let baseUrl, apiPath;
+    if (isVercelPreview) {
+      // Preview deployments: use external API directly
+      baseUrl = EXTERNAL_API_BASE;
+      apiPath = '/calendar';
+    } else if (process.env.VERCEL_URL) {
+      // Production Vercel: use internal API with full URL
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+      apiPath = '/api/calendar';
+    } else if (process.env.NODE_ENV === 'development') {
+      // Local development
+      const host = req.headers.host || 'localhost:3000';
+      baseUrl = `http://${host}`;
+      apiPath = '/api/calendar';
+    } else {
+      // Fallback
+      baseUrl = 'https://marketsquawk.ai';
+      apiPath = '/api/calendar';
+    }
     
     // Log for debugging in production
+    console.log('[SSR] Is Vercel Preview:', isVercelPreview);
     console.log('[SSR] Base URL:', baseUrl);
+    console.log('[SSR] API Path:', apiPath);
     console.log('[SSR] Today ET:', todayET);
     
     let events = [];
@@ -80,16 +91,17 @@ export async function getServerSideProps({ req, res }) {
     
     // Smart fallback strategy: today → tomorrow → week
     
-    // Try 1: Today's events (using our cached API with absolute URL)
+    // Try 1: Today's events
     try {
       const { fromDate, toDate } = computeDayRange(todayET);
-      const todayUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+      const todayUrl = `${baseUrl}${apiPath}?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
       
       console.log('[SSR] Fetching today:', todayUrl);
       
       const response = await fetch(todayUrl, {
         headers: { 
-          'accept': 'application/json'
+          'accept': 'application/json',
+          'user-agent': 'Market-Squawk-SSR/1.0'
         },
         signal: AbortSignal.timeout(8000)
       });
@@ -115,13 +127,14 @@ export async function getServerSideProps({ req, res }) {
     if (events.length === 0) {
       try {
         const { fromDate, toDate } = computeDayRange(tomorrowET);
-        const tomorrowUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+        const tomorrowUrl = `${baseUrl}${apiPath}?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
         
         console.log('[SSR] Fetching tomorrow:', tomorrowUrl);
         
         const response = await fetch(tomorrowUrl, {
           headers: { 
-            'accept': 'application/json'
+            'accept': 'application/json',
+            'user-agent': 'Market-Squawk-SSR/1.0'
           },
           signal: AbortSignal.timeout(8000)
         });
@@ -148,11 +161,12 @@ export async function getServerSideProps({ req, res }) {
     if (events.length === 0) {
       try {
         const { fromDate, toDate } = computeWeekRange(todayET);
-        const weekUrl = `${baseUrl}/api/calendar?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
+        const weekUrl = `${baseUrl}${apiPath}?fromDate=${encodeURIComponent(fromDate)}&toDate=${encodeURIComponent(toDate)}`;
         
         const response = await fetch(weekUrl, {
           headers: { 
-            'accept': 'application/json'
+            'accept': 'application/json',
+            'user-agent': 'Market-Squawk-SSR/1.0'
           },
           signal: AbortSignal.timeout(8000)
         });
