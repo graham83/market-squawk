@@ -1,0 +1,1112 @@
+[
+  {
+    "_id": "686dff94ea7a38a27d141e9e",
+    "date": "2025-07-01T14:00:00.000Z",
+    "country": "USA",
+    "event": "Job Openings and Labor Turnover Survey (JOLTS) - May",
+    "importance": "medium",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": ["jolts"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff948199b59acbb67743",
+    "date": "2025-07-01T14:00:00.000Z",
+    "country": "USA",
+    "event": "Construction Spending - May",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "housing",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff94875725b78c7c1f05",
+    "date": "2025-07-02T14:00:00.000Z",
+    "country": "USA",
+    "event": "Metropolitan Area Employment and Unemployment - May",
+    "importance": "low",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff94517c8aad964998ad",
+    "date": "2025-07-02T14:30:00.000Z",
+    "country": "USA",
+    "event": "EIA Petroleum Status Report",
+    "importance": "medium",
+    "source": {
+      "name": "EIA",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+    },
+    "category": "energy",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff9441f2e2bdb2db0895",
+    "date": "2025-07-02T17:00:00.000Z",
+    "country": "USA",
+    "event": "17-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff946e4fff76c908b63d",
+    "date": "2025-07-03T12:30:00.000Z",
+    "country": "USA",
+    "event": "Employment Situation - June",
+    "importance": "high",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff948ace312c86d967bc",
+    "date": "2025-07-03T12:30:00.000Z",
+    "country": "USA",
+    "event": "U.S. International Trade in Goods and Services - May",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "trade",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff94d7cba46e6f2ccd3d",
+    "date": "2025-07-03T12:30:00.000Z",
+    "country": "USA",
+    "event": "Initial Jobless Claims",
+    "importance": "medium",
+    "source": {
+      "name": "Department of Labor",
+      "url": "Weekly Thursday Release"
+    },
+    "category": "employment",
+    "tags": ["initial", "claims", "weekly"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff94e81e7d65bbc2db46",
+    "date": "2025-07-03T14:00:00.000Z",
+    "country": "USA",
+    "event": "Manufacturers' Shipments, Inventories and Orders - May",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "manufacturing",
+    "tags": ["monthly", "manufacturing"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff944cd29f03d577f042",
+    "date": "2025-07-03T17:00:00.000Z",
+    "country": "USA",
+    "event": "4-Week & 8-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.558Z",
+    "updated_at": "2025-07-09T05:35:16.558Z"
+  },
+  {
+    "_id": "686dff94025fec61daa89461",
+    "date": "2025-07-07T17:00:00.000Z",
+    "country": "USA",
+    "event": "13-Week & 26-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94d4d8c00364e9fef7",
+    "date": "2025-07-08T17:00:00.000Z",
+    "country": "USA",
+    "event": "6-Week & 52-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff946cf4171f6c1a0b22",
+    "date": "2025-07-08T17:00:00.000Z",
+    "country": "USA",
+    "event": "3-Year Treasury Note Auction",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94eb325e40f64e9a90",
+    "date": "2025-07-09T14:00:00.000Z",
+    "country": "USA",
+    "event": "Monthly Wholesale Trade: Sales and Inventories - May",
+    "importance": "low",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "trade",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94612e37390add5a4d",
+    "date": "2025-07-09T14:30:00.000Z",
+    "country": "USA",
+    "event": "EIA Petroleum Status Report",
+    "importance": "medium",
+    "source": {
+      "name": "EIA",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+    },
+    "category": "energy",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff940b3b6a9fcc205347",
+    "date": "2025-07-09T17:00:00.000Z",
+    "country": "USA",
+    "event": "10-Year Treasury Note Auction (Reopening)",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94b49a8065a33148ad",
+    "date": "2025-07-09T17:00:00.000Z",
+    "country": "USA",
+    "event": "17-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94d1b0d6da308897a6",
+    "date": "2025-07-10T12:30:00.000Z",
+    "country": "USA",
+    "event": "Initial Jobless Claims",
+    "importance": "medium",
+    "source": {
+      "name": "Department of Labor",
+      "url": "Weekly Thursday Release"
+    },
+    "category": "employment",
+    "tags": ["initial", "claims", "weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff944c1bd9668f2929d9",
+    "date": "2025-07-10T14:00:00.000Z",
+    "country": "USA",
+    "event": "Business Formation Statistics - June",
+    "importance": "low",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "other",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff948dacba7bbb0f5871",
+    "date": "2025-07-10T17:00:00.000Z",
+    "country": "USA",
+    "event": "30-Year Treasury Bond Auction (Reopening)",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94409353091c73366e",
+    "date": "2025-07-10T17:00:00.000Z",
+    "country": "USA",
+    "event": "4-Week & 8-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c4ed8dfb3d093bab",
+    "date": "2025-07-14T17:00:00.000Z",
+    "country": "USA",
+    "event": "13-Week & 26-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff947098c7d4e3653c45",
+    "date": "2025-07-15T12:30:00.000Z",
+    "country": "USA",
+    "event": "Consumer Price Index (CPI) - June",
+    "importance": "high",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "inflation",
+    "tags": ["consumer", "cpi"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff948acf3d2e3a533c23",
+    "date": "2025-07-15T12:30:00.000Z",
+    "country": "USA",
+    "event": "Real Earnings - June",
+    "importance": "medium",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "income",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9465ff10ce3891283e",
+    "date": "2025-07-15T17:00:00.000Z",
+    "country": "USA",
+    "event": "6-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a12b8fce17f645d2",
+    "date": "2025-07-16T12:30:00.000Z",
+    "country": "USA",
+    "event": "Producer Price Index (PPI) - June",
+    "importance": "high",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "inflation",
+    "tags": ["producer", "ppi"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9484c1bc93e8f297a8",
+    "date": "2025-07-16T14:30:00.000Z",
+    "country": "USA",
+    "event": "EIA Petroleum Status Report",
+    "importance": "medium",
+    "source": {
+      "name": "EIA",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+    },
+    "category": "energy",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94fb7a592c4e168ad9",
+    "date": "2025-07-16T17:00:00.000Z",
+    "country": "USA",
+    "event": "17-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c8de7ab43a726f4e",
+    "date": "2025-07-17T12:30:00.000Z",
+    "country": "USA",
+    "event": "U.S. Import and Export Price Indexes - June",
+    "importance": "medium",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "trade",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94e7b52d85bc419f6a",
+    "date": "2025-07-17T12:30:00.000Z",
+    "country": "USA",
+    "event": "Advance Monthly Sales for Retail Trade - June",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "retail",
+    "tags": ["advance", "monthly", "retail"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a89cd3d76e4b8ac7",
+    "date": "2025-07-17T12:30:00.000Z",
+    "country": "USA",
+    "event": "Initial Jobless Claims",
+    "importance": "medium",
+    "source": {
+      "name": "Department of Labor",
+      "url": "Weekly Thursday Release"
+    },
+    "category": "employment",
+    "tags": ["initial", "claims", "weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94d9e658a2b75132f8",
+    "date": "2025-07-17T14:00:00.000Z",
+    "country": "USA",
+    "event": "Manufacturing and Trade: Inventories and Sales - May",
+    "importance": "low",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "manufacturing",
+    "tags": ["manufacturing", "monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9428a77b34f2db5ba3",
+    "date": "2025-07-17T17:00:00.000Z",
+    "country": "USA",
+    "event": "4-Week & 8-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94fb3c86d24e7894cb",
+    "date": "2025-07-18T12:30:00.000Z",
+    "country": "USA",
+    "event": "New Residential Construction (Housing Starts) - June",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "housing",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94e85b49f2789cd4a6",
+    "date": "2025-07-18T14:00:00.000Z",
+    "country": "USA",
+    "event": "State Employment and Unemployment - June",
+    "importance": "low",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94b762c3d8f5ac9e74",
+    "date": "2025-07-18T14:00:00.000Z",
+    "country": "USA",
+    "event": "University of Michigan Consumer Sentiment - July Preliminary",
+    "importance": "medium",
+    "source": {
+      "name": "University of Michigan",
+      "url": "https://data.sca.isr.umich.edu/"
+    },
+    "category": "retail",
+    "tags": ["consumer", "preliminary"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94d8c792b73f4e8a51",
+    "date": "2025-07-21T17:00:00.000Z",
+    "country": "USA",
+    "event": "13-Week & 26-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9426b5e4a98de47b3c",
+    "date": "2025-07-22T14:00:00.000Z",
+    "country": "USA",
+    "event": "Usual Weekly Earnings - Q2 2025",
+    "importance": "low",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": ["quarterly", "weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff943b9e7df54b8c92ae",
+    "date": "2025-07-22T17:00:00.000Z",
+    "country": "USA",
+    "event": "6-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a7d628bef4319ce8",
+    "date": "2025-07-23T14:00:00.000Z",
+    "country": "USA",
+    "event": "State Job Openings and Labor Turnover - May",
+    "importance": "low",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94f62b84dc95f7a3e9",
+    "date": "2025-07-23T14:30:00.000Z",
+    "country": "USA",
+    "event": "EIA Petroleum Status Report",
+    "importance": "medium",
+    "source": {
+      "name": "EIA",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+    },
+    "category": "energy",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c9f3a7e86b249d5a",
+    "date": "2025-07-23T17:00:00.000Z",
+    "country": "USA",
+    "event": "20-Year Treasury Bond Auction (Reopening)",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a8b529f7e4dc8b61",
+    "date": "2025-07-23T17:00:00.000Z",
+    "country": "USA",
+    "event": "17-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94e7bc46d85a9c3f52",
+    "date": "2025-07-24T12:30:00.000Z",
+    "country": "USA",
+    "event": "Initial Jobless Claims",
+    "importance": "medium",
+    "source": {
+      "name": "Department of Labor",
+      "url": "Weekly Thursday Release"
+    },
+    "category": "employment",
+    "tags": ["initial", "claims", "weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9435a8bc7e49f28d63",
+    "date": "2025-07-24T14:00:00.000Z",
+    "country": "USA",
+    "event": "New Residential Sales - June",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "housing",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94fb2c8ad94e6b7c81",
+    "date": "2025-07-24T17:00:00.000Z",
+    "country": "USA",
+    "event": "10-Year TIPS Auction",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94dc8e7fa52b9c4e73",
+    "date": "2025-07-24T17:00:00.000Z",
+    "country": "USA",
+    "event": "4-Week & 8-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a7e529b6f43c8d94",
+    "date": "2025-07-25T12:30:00.000Z",
+    "country": "USA",
+    "event": "Advance Report on Durable Goods - June",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "manufacturing",
+    "tags": ["advance", "monthly", "durable_goods"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c5b84ea73f9d6b82",
+    "date": "2025-07-25T14:00:00.000Z",
+    "country": "USA",
+    "event": "Preliminary U.S. Imports of Steel Products - June",
+    "importance": "low",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "trade",
+    "tags": ["preliminary", "monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9482d6bc7e49f3a851",
+    "date": "2025-07-28T14:00:00.000Z",
+    "country": "USA",
+    "event": "Housing Vacancies and Homeownership - Q2 2025",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "housing",
+    "tags": ["quarterly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94eb7529d64e8c9f73",
+    "date": "2025-07-28T17:00:00.000Z",
+    "country": "USA",
+    "event": "2-Year, 5-Year Treasury Note Auctions",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9463d8bc9e7f4a5b82",
+    "date": "2025-07-28T17:00:00.000Z",
+    "country": "USA",
+    "event": "13-Week & 26-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a8c752d6e49f3b61",
+    "date": "2025-07-29T12:30:00.000Z",
+    "country": "USA",
+    "event": "Advance Economic Indicators Report - June",
+    "importance": "medium",
+    "source": {
+      "name": "Census Bureau",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    "category": "other",
+    "tags": ["advance", "monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94f7bc84d95a8c6e73",
+    "date": "2025-07-29T14:00:00.000Z",
+    "country": "USA",
+    "event": "Job Openings and Labor Turnover Survey (JOLTS) - June",
+    "importance": "medium",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": ["jolts", "monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff9485c7bd29f4a6e382",
+    "date": "2025-07-29T17:00:00.000Z",
+    "country": "USA",
+    "event": "2-Year FRN & 7-Year Treasury Note Auctions",
+    "importance": "medium",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c6d8bc7e4f39a851",
+    "date": "2025-07-29T17:00:00.000Z",
+    "country": "USA",
+    "event": "6-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94e8bc7d29f4a6e594",
+    "date": "2025-07-29T17:00:00.000Z",
+    "country": "USA",
+    "event": "17-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94f9bc8d429fa6e173",
+    "date": "2025-07-29T18:00:00.000Z",
+    "country": "USA",
+    "event": "FOMC Meeting - Day 1",
+    "importance": "high",
+    "source": {
+      "name": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    "category": "monetary_policy",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a7bc8d29f4a6e851",
+    "date": "2025-07-30T12:30:00.000Z",
+    "country": "USA",
+    "event": "GDP Q2 2025 Advance Estimate",
+    "importance": "high",
+    "source": {
+      "name": "BEA",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    "category": "gdp",
+    "tags": ["quarterly", "advance"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94e6bc7d29f4a6e283",
+    "date": "2025-07-30T14:00:00.000Z",
+    "country": "USA",
+    "event": "Metropolitan Area Employment and Unemployment - June",
+    "importance": "low",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c5d8bc9e7f4a6e82",
+    "date": "2025-07-30T14:00:00.000Z",
+    "country": "USA",
+    "event": "Business Employment Dynamics - Q4 2024",
+    "importance": "low",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": ["quarterly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94f8bc7d29f4a6e594",
+    "date": "2025-07-30T14:30:00.000Z",
+    "country": "USA",
+    "event": "EIA Petroleum Status Report",
+    "importance": "medium",
+    "source": {
+      "name": "EIA",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+    },
+    "category": "energy",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94d7bc8d29f4a6e472",
+    "date": "2025-07-30T17:00:00.000Z",
+    "country": "USA",
+    "event": "17-Week Treasury Bill Auction",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94b8bc7d29f4a6e193",
+    "date": "2025-07-30T18:00:00.000Z",
+    "country": "USA",
+    "event": "FOMC Rate Decision & Economic Projections",
+    "importance": "high",
+    "source": {
+      "name": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    "category": "monetary_policy",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94c9bc8d29f4a6e285",
+    "date": "2025-07-30T18:30:00.000Z",
+    "country": "USA",
+    "event": "Fed Chair Powell Press Conference",
+    "importance": "high",
+    "source": {
+      "name": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    "category": "monetary_policy",
+    "tags": [],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94f5bc8d29f4a6e396",
+    "date": "2025-07-31T12:30:00.000Z",
+    "country": "USA",
+    "event": "Personal Income and Outlays - June",
+    "importance": "high",
+    "source": {
+      "name": "BEA",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    "category": "income",
+    "tags": ["monthly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94e2bc7d29f4a6e184",
+    "date": "2025-07-31T12:30:00.000Z",
+    "country": "USA",
+    "event": "Employment Cost Index - Q2 2025",
+    "importance": "medium",
+    "source": {
+      "name": "BLS",
+      "url": "https://www.bls.gov/schedule/2025/home.htm"
+    },
+    "category": "employment",
+    "tags": ["quarterly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94d6bc8d29f4a6e572",
+    "date": "2025-07-31T12:30:00.000Z",
+    "country": "USA",
+    "event": "Initial Jobless Claims",
+    "importance": "medium",
+    "source": {
+      "name": "Department of Labor",
+      "url": "Weekly Thursday Release"
+    },
+    "category": "employment",
+    "tags": ["initial", "claims", "weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94a3bc7d29f4a6e861",
+    "date": "2025-07-31T17:00:00.000Z",
+    "country": "USA",
+    "event": "4-Week & 8-Week Treasury Bill Auctions",
+    "importance": "low",
+    "source": {
+      "name": "Treasury",
+      "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf"
+    },
+    "category": "treasury",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "686dff94f7bc8d29f4a6e694",
+    "date": "2025-07-31T20:30:00.000Z",
+    "country": "USA",
+    "event": "Fed Balance Sheet H.4.1",
+    "importance": "low",
+    "source": {
+      "name": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/releases/h41/"
+    },
+    "category": "monetary_policy",
+    "tags": ["weekly"],
+    "created_at": "2025-07-09T05:35:16.559Z",
+    "updated_at": "2025-07-09T05:35:16.559Z"
+  },
+  {
+    "_id": "test-aug-7-today",
+    "date": "2025-08-07T14:00:00.000Z",
+    "country": "USA",
+    "event": "Today Test Event - August 7",
+    "importance": "high",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["today"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  },
+  {
+    "_id": "test-aug-8-tomorrow",
+    "date": "2025-08-08T15:00:00.000Z",
+    "country": "USA",
+    "event": "Tomorrow Test Event - August 8",
+    "importance": "medium",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["tomorrow"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  },
+  {
+    "_id": "test-aug-4-thisweek",
+    "date": "2025-08-04T16:00:00.000Z",
+    "country": "USA",
+    "event": "This Week Monday Event - August 4",
+    "importance": "low",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["thisweek"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  },
+  {
+    "_id": "test-aug-10-thisweek",
+    "date": "2025-08-10T17:00:00.000Z",
+    "country": "USA",
+    "event": "This Week Sunday Event - August 10",
+    "importance": "medium",
+    "source": {
+      "name": "Test",
+      "url": "https://example.com"
+    },
+    "category": "test",
+    "tags": ["thisweek"],
+    "created_at": "2025-08-07T10:00:00.000Z",
+    "updated_at": "2025-08-07T10:00:00.000Z"
+  }
+]
