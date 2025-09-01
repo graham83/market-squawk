@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { 
   Card, 
   Typography, 
@@ -83,9 +83,9 @@ const EconomicCalendar = ({ initialData = null }) => {
   }, [selectedPeriod, selectedImportance, selectedTimezone]);
 
   // API integration with dynamic filtering
-  const { events, loading, error, refresh } = useEvents({
+  const { events, loading, error, refresh, fetchEvents } = useEvents({
     filters: apiFilters,
-    autoFetch: !!apiFilters && isInitialized, // Fetch when filters are available and component is initialized
+    autoFetch: false, // Never auto-fetch - we control it manually
     initialData: initialData
   });
 
@@ -120,9 +120,12 @@ const EconomicCalendar = ({ initialData = null }) => {
     }
   }, [initialData, isInitialized]);
 
-  // Smart default period initialization (client-side only)
+  // Track if we have SSR data (stable across renders)
+  const hasSSRData = useRef(!!initialData?.events);
+  
+  // Smart default period initialization (client-side only, skip if we have SSR data)
   useEffect(() => {
-    if (isInitialized || !selectedTimezone || initialData) return;
+    if (isInitialized || !selectedTimezone || hasSSRData.current) return;
 
     const initializeDefaultPeriod = async () => {
       try {
@@ -161,6 +164,20 @@ const EconomicCalendar = ({ initialData = null }) => {
 
     initializeDefaultPeriod();
   }, [selectedTimezone, isInitialized]);
+
+  // Track if user has interacted with filters
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  
+  // Fetch data only when user changes filters (not on initial mount with SSR)
+  useEffect(() => {
+    // Only fetch if user has actually interacted with filters
+    if (!hasUserInteracted) return;
+    
+    // Fetch if we have filters and are initialized
+    if (apiFilters && isInitialized && fetchEvents) {
+      fetchEvents(apiFilters);
+    }
+  }, [apiFilters, isInitialized, hasUserInteracted]); // Dependencies for filter changes
 
   // Define period options
   const periodOptions = [
@@ -411,7 +428,10 @@ const EconomicCalendar = ({ initialData = null }) => {
           </Typography>
           <Select 
             value={selectedPeriod}
-            onChange={setSelectedPeriod}
+            onChange={(value) => {
+              setSelectedPeriod(value);
+              setHasUserInteracted(true);
+            }}
             className="bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             containerProps={{
               className: "min-w-0"
@@ -439,7 +459,10 @@ const EconomicCalendar = ({ initialData = null }) => {
           </Typography>
           <Select 
             value={selectedImportance}
-            onChange={setSelectedImportance}
+            onChange={(value) => {
+              setSelectedImportance(value);
+              setHasUserInteracted(true);
+            }}
             className="bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             containerProps={{
               className: "min-w-0"

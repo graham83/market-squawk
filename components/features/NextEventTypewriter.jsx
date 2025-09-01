@@ -143,8 +143,24 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
     return () => clearInterval(interval);
   }, []);
 
+  // Track if we should skip fetching (when we have SSR data)
+  const [skipFetching, setSkipFetching] = useState(true);
+  
+  // Allow fetching after component has stabilized
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSkipFetching(false);
+    }, 100); // Small delay to let SSR data settle
+    return () => clearTimeout(timer);
+  }, []);
+  
   // Fetch tomorrow's events when current events don't have upcoming events
   useEffect(() => {
+    // Skip fetch if we're in the initial SSR phase
+    if (skipFetching) {
+      return;
+    }
+    
     const fetchTomorrowEvents = async () => {
       if (!events || events.length === 0) return;
       
