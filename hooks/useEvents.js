@@ -146,14 +146,31 @@ export const useEvents = (options = {}) => {
 
   // Store previous filters key to detect real changes
   const prevFiltersKeyRef = useRef(filtersKey);
+  
+  // Track if we've already used initial data
+  const hasUsedInitialDataRef = useRef(false);
 
   // Auto-fetch on mount and when filters change
   useEffect(() => {
-    // Only fetch if filters actually changed or on initial mount
+    // Skip if autoFetch is disabled
+    if (!autoFetch) return;
+    
+    // If we have initial data and haven't used it yet, skip fetching
+    if (initialData?.events && !hasUsedInitialDataRef.current) {
+      hasUsedInitialDataRef.current = true;
+      return;
+    }
+
+    // Only fetch if filters actually changed
     const filtersChanged = prevFiltersKeyRef.current !== filtersKey;
+    
+    // If filters haven't changed, don't fetch
+    if (!filtersChanged) return;
+    
+    // Update the previous filters key
     prevFiltersKeyRef.current = filtersKey;
 
-    if (autoFetch && filters && filtersChanged) {
+    if (filters) {
       const doFetch = async () => {
         setLoading(true);
         setError(null);
