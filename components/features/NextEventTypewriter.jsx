@@ -117,7 +117,7 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
         if (audioInitialized.current) {
           typewriterSound.playKey(keyType);
         }
-      }, Math.random() * 40 + 24); // Random delay between 24-64ms for realistic typing (20% faster)
+      }, 50); // Fixed delay for consistent SSR hydration
       
       return () => clearTimeout(timeout);
     } else {
