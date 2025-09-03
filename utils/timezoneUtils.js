@@ -97,8 +97,13 @@ export const TIMEZONE_STORAGE_KEY = 'economicCalendar_selectedTimezone';
  */
 export const getStoredTimezone = () => {
   try {
+    // Always return default on server-side to prevent hydration mismatch
+    if (typeof window === 'undefined') {
+      return DEFAULT_TIMEZONE;
+    }
+    
     // Check if we're in a browser environment
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (window.localStorage) {
       return localStorage.getItem(TIMEZONE_STORAGE_KEY) || DEFAULT_TIMEZONE;
     }
     return DEFAULT_TIMEZONE;
@@ -114,8 +119,13 @@ export const getStoredTimezone = () => {
  */
 export const storeTimezone = (timezone) => {
   try {
+    // Skip storage on server-side
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     // Check if we're in a browser environment
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (window.localStorage) {
       localStorage.setItem(TIMEZONE_STORAGE_KEY, timezone);
     }
   } catch (error) {

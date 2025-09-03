@@ -11,11 +11,9 @@ import {
  * @returns {Object} Hook state and actions for timezone management
  */
 export const useTimezone = () => {
-  // Initialize with stored timezone or default
-  const [selectedTimezone, setSelectedTimezone] = useState(() => {
-    const stored = getStoredTimezone();
-    return isValidTimezone(stored) ? stored : DEFAULT_TIMEZONE;
-  });
+  // Initialize with default timezone to prevent hydration mismatch
+  // The real stored value will be set in useEffect after hydration
+  const [selectedTimezone, setSelectedTimezone] = useState(DEFAULT_TIMEZONE);
 
   /**
    * Update the selected timezone and persist to localStorage
@@ -42,17 +40,16 @@ export const useTimezone = () => {
     updateTimezone(DEFAULT_TIMEZONE);
   }, [updateTimezone]);
 
-  // Validate stored timezone on mount and fix if invalid
+  // Load stored timezone after hydration to prevent mismatch
   useEffect(() => {
     const stored = getStoredTimezone();
-    if (stored !== selectedTimezone && isValidTimezone(stored)) {
+    if (isValidTimezone(stored)) {
       setSelectedTimezone(stored);
-    } else if (!isValidTimezone(stored)) {
+    } else if (stored !== DEFAULT_TIMEZONE) {
       // Fix invalid stored timezone
       storeTimezone(DEFAULT_TIMEZONE);
-      setSelectedTimezone(DEFAULT_TIMEZONE);
     }
-  }, [selectedTimezone]);
+  }, []); // Only run once after mount
 
   return {
     selectedTimezone,
