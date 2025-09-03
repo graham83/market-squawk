@@ -10,14 +10,26 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
   const [isTyping, setIsTyping] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const [tomorrowEvents, setTomorrowEvents] = useState([]);
+  const [nextEvent, setNextEvent] = useState(null);
+  const [isHydrated, setIsHydrated] = useState(false);
   const audioInitialized = useRef(false);
   const summaryDisplayedRef = useRef(false);
   
   // Theme management
   const { isDark } = useTheme();
 
+  // Hydration effect - set hydrated flag after mount
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   // Find the next upcoming event (including tomorrow's events if needed)
   const getNextEvent = () => {
+    // Return null during SSR to prevent hydration mismatch
+    if (!isHydrated) {
+      return null;
+    }
+
     const nowInCalendarTz = getCurrentTimeInCalendarTimezone();
     
     // First, try to find upcoming events from the current events list
@@ -42,6 +54,13 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
     
     return null;
   };
+
+  // Update next event when hydration status or events change
+  useEffect(() => {
+    if (isHydrated) {
+      setNextEvent(getNextEvent());
+    }
+  }, [isHydrated, events, tomorrowEvents]);
 
   const formatEventTime = (dateString) => {
     const formatted = formatDateInTimezone(dateString, selectedTimezone, {
@@ -81,7 +100,7 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
     };
   }, []);
   // Use selected event if available, otherwise use next upcoming event
-  const eventToDisplay = selectedEvent || getNextEvent();
+  const eventToDisplay = selectedEvent || nextEvent;
   
   // Determine what text to display based on priority:
   // 1. Morning report summary (if available)
@@ -199,7 +218,7 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
     setCurrentCharIndex(0);
     setIsTyping(false);
     summaryDisplayedRef.current = false;
-  }, [events, selectedEvent, selectedTimezone, morningReportSummary]);
+  }, [events, selectedEvent, selectedTimezone, morningReportSummary, nextEvent]);
 
   return (
     <div className={`rounded-lg p-4 mb-6 font-mono text-sm ${
