@@ -251,29 +251,11 @@ export const isBrowserTimezone = (timezone) => {
 /**
  * Get the current time in the calendar timezone
  * This is used for determining what events are "next" relative to the calendar's timezone
- * @returns {Date} Current time in calendar timezone as a Date object
+ * @returns {Date} Current UTC time - events are stored in UTC and should be compared directly
  */
 export const getCurrentTimeInCalendarTimezone = () => {
-  const now = new Date();
-  
-  // Convert current UTC time to calendar timezone
-  const calendarTimeString = now.toLocaleString('en-CA', {
-    timeZone: CALENDAR_TIMEZONE,
-    year: 'numeric',
-    month: '2-digit', 
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  });
-  
-  // Parse the string back to Date object
-  const [datePart, timePart] = calendarTimeString.split(', ');
-  const [year, month, day] = datePart.split('-').map(Number);
-  const [hour, minute, second] = timePart.split(':').map(Number);
-  
-  // Create Date object representing current time in calendar timezone
-  // This date will be used for comparison with event dates (which are in UTC)
-  return new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+  // Simply return the current UTC time
+  // Event dates are stored in UTC, so we compare UTC to UTC
+  // The calendar timezone is only used for display purposes
+  return new Date();
 };
