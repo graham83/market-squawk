@@ -138,7 +138,7 @@ export const storeTimezone = (timezone) => {
  * @param {string} dateString - The date string to parse
  * @returns {Date} Date object in UTC
  */
-const parseAsUTC = (dateString) => {
+export const parseAsUTC = (dateString) => {
   // If the date string doesn't end with 'Z' and doesn't have timezone info,
   // append 'Z' to ensure it's parsed as UTC
   if (typeof dateString === 'string' && 

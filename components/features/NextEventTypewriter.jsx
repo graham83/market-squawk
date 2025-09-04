@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useTheme from '../../hooks/useTheme.jsx';
 import typewriterSound from '../../utils/soundUtils';
-import { formatDateInTimezone, getCurrentTimeInCalendarTimezone } from '../../utils/timezoneUtils';
+import { formatDateInTimezone, getCurrentTimeInCalendarTimezone, parseAsUTC } from '../../utils/timezoneUtils';
 import eventService from '../../services/eventService.js';
 
 const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningReportSummary, onSummaryDisplayComplete }) => {
@@ -35,8 +35,8 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
     // First, try to find upcoming events from the current events list
     if (events && events.length > 0) {
       const upcomingEvents = events
-        .filter(event => new Date(event.date) > nowInCalendarTz)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .filter(event => parseAsUTC(event.date) > nowInCalendarTz)
+        .sort((a, b) => parseAsUTC(a.date) - parseAsUTC(b.date));
       
       if (upcomingEvents.length > 0) {
         return upcomingEvents[0];
@@ -46,8 +46,8 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
     // If no upcoming events today, try tomorrow's events
     if (tomorrowEvents && tomorrowEvents.length > 0) {
       const tomorrowUpcoming = tomorrowEvents
-        .filter(event => new Date(event.date) > nowInCalendarTz)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .filter(event => parseAsUTC(event.date) > nowInCalendarTz)
+        .sort((a, b) => parseAsUTC(a.date) - parseAsUTC(b.date));
       
       return tomorrowUpcoming[0] || null;
     }
@@ -184,7 +184,7 @@ const NextEventTypewriter = ({ events, selectedEvent, selectedTimezone, morningR
       if (!events || events.length === 0) return;
       
       const nowInCalendarTz = getCurrentTimeInCalendarTimezone();
-      const upcomingEvents = events.filter(event => new Date(event.date) > nowInCalendarTz);
+      const upcomingEvents = events.filter(event => parseAsUTC(event.date) > nowInCalendarTz);
       
       // If no upcoming events today, fetch tomorrow's events
       if (upcomingEvents.length === 0) {
