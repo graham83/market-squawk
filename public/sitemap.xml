@@ -22,7 +22,7 @@
   </url>
   
   <!-- Recent weeks - past 4 weeks -->
-  <url>
+  <!-- <url>
     <loc>https://marketsquawk.ai/calendar/week/2025-08-04</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -41,7 +41,7 @@
     <loc>https://marketsquawk.ai/calendar/week/2025-08-25</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
+  </url> -->
   
   <!-- Current and future weeks - next 5 weeks -->
   <url>
